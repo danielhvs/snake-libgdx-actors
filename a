@@ -1,0 +1,8 @@
+build.gradle
+core/assets/badlogic.jpg
+core/build.gradle
+core/src/br/com/danielhabib/snake/core/MyGdxGame.java
+desktop/build.gradle
+desktop/src/br/com/danielhabib/snake/desktop/DesktopLauncher.java
+gradle.properties
+settings.gradle
