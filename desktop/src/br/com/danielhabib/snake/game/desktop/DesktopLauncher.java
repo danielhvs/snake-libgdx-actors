@@ -1,9 +1,8 @@
-package br.com.danielhabib.snake.desktop;
+package br.com.danielhabib.snake.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-
-import br.com.danielhabib.snake.core.MyGdxGame;
+import br.com.danielhabib.snake.game.MyGdxGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
