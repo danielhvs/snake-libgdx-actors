@@ -10,21 +10,27 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import br.com.danielhabib.snake.MovingRules;
+import br.com.danielhabib.snake.AMovingRules;
+import br.com.danielhabib.snake.FruitRule;
 import br.com.danielhabib.snake.Point;
+import br.com.danielhabib.snake.PoisonedFruitRule;
+import br.com.danielhabib.snake.RestrictedMovingRules;
 import br.com.danielhabib.snake.Snake;
 
 public class SnakeScreen implements Screen {
 
 	private static final int SIZE = 16;
 	private Game game;
-	private Texture boxImage;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private Snake snake;
-	private MovingRules movingRules;
+	private AMovingRules movingRules;
 	private Sprite boxSprite;
 	private Sprite directionSprite;
+	private Sprite appleSprite;
+	private Sprite poisonedSprite;
+	private FruitRule fruitRule;
+	private PoisonedFruitRule poisonRule;
 
 	public SnakeScreen(Game game) {
 		this.game = game;
@@ -36,15 +42,28 @@ public class SnakeScreen implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(true);
 
-		boxImage = new Texture(Gdx.files.internal("box.png"));
-		boxSprite = new Sprite(boxImage);
-		boxSprite.setSize(SIZE, SIZE);
-
-		directionSprite = new Sprite(boxImage);
+		// Snake
+		boxSprite = new Sprite(new Texture(Gdx.files.internal("box.png")));
+		directionSprite = new Sprite(new Texture(Gdx.files.internal("box.png")));
+		setSizeAndFlip(boxSprite);
 		directionSprite.setSize(SIZE / 4, SIZE / 4);
 
+		// Apples
+		appleSprite = new Sprite(new Texture(Gdx.files.internal("apple.png")));
+		poisonedSprite = new Sprite(new Texture(Gdx.files.internal("poisoned.jpg")));
+		setSizeAndFlip(appleSprite);
+		setSizeAndFlip(poisonedSprite);
+
+		// Map
 		snake = new Snake(5, 1).addTail().addTail().addTail();
-		movingRules = new MovingRules();
+		movingRules = new RestrictedMovingRules();
+		fruitRule = new FruitRule(new Point(10, 20));
+		poisonRule = new PoisonedFruitRule(new Point(20, 10));
+	}
+
+	private void setSizeAndFlip(Sprite sprite) {
+		sprite.setSize(SIZE, SIZE);
+		sprite.flip(false, true);
 	}
 
 	@Override
@@ -55,27 +74,42 @@ public class SnakeScreen implements Screen {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			game.setScreen(new Splash(game));
 		}
+
+		// Applying Rules
 		if (Gdx.input.isKeyPressed(Input.Keys.M)) {
 			snake = movingRules.update(snake);
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
+			snake = movingRules.update(snake);
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
 			snake = movingRules.turnLeft(snake);
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
 			snake = movingRules.turnRight(snake);
 		}
+		snake = fruitRule.update(snake);
+		snake = poisonRule.update(snake);
 
 		// Drawing
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
+
+		directionSprite.setPosition(SIZE * (snake.getPosition().getX() + snake.getDirection().getX()),
+				SIZE * (snake.getPosition().getY() + snake.getDirection().getY()));
+		appleSprite.setPosition(fruitRule.getFruitPosition().getX() * SIZE, fruitRule.getFruitPosition().getY() * SIZE);
+		poisonedSprite.setPosition(poisonRule.getFruitPosition().getX() * SIZE,
+				poisonRule.getFruitPosition().getY() * SIZE);
+
 		for (Point position : snake.getPositions()) {
 			boxSprite.setPosition(position.getX() * SIZE, position.getY() * SIZE);
 			boxSprite.draw(batch);
 		}
-		directionSprite.setPosition(SIZE * (snake.getPosition().getX() + snake.getDirection().getX()),
-				SIZE * (snake.getPosition().getY() + snake.getDirection().getY()));
 		directionSprite.draw(batch);
+		appleSprite.draw(batch);
+		poisonedSprite.draw(batch);
+
 		batch.end();
 	}
 
