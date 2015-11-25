@@ -32,6 +32,7 @@ public class SnakeScreen implements Screen {
 	private HoleMovingRules movingRules;
 	private FruitRule fruitRule;
 	private PoisonedFruitRule poisonRule;
+	private float time;
 
 	public SnakeScreen(Game game) {
 		this.game = game;
@@ -78,6 +79,12 @@ public class SnakeScreen implements Screen {
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			game.setScreen(new Splash(game));
+		}
+
+		time += delta;
+		if (time > 0.125f) {
+			snake = movingRules.update(snake);
+			time = 0;
 		}
 
 		// Applying Rules
