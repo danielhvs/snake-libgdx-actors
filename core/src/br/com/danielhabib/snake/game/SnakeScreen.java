@@ -16,6 +16,7 @@ import br.com.danielhabib.snake.HoleMovingRules;
 import br.com.danielhabib.snake.Point;
 import br.com.danielhabib.snake.PoisonedFruitRule;
 import br.com.danielhabib.snake.Snake;
+import br.com.danielhabib.snake.SnakeController;
 
 public class SnakeScreen implements Screen {
 
@@ -33,6 +34,7 @@ public class SnakeScreen implements Screen {
 	private FruitRule fruitRule;
 	private PoisonedFruitRule poisonRule;
 	private float time;
+	private SnakeController controller;
 
 	public SnakeScreen(Game game) {
 		this.game = game;
@@ -65,6 +67,7 @@ public class SnakeScreen implements Screen {
 		fruitRule = new FruitRule(new Point(10, 20));
 		poisonRule = new PoisonedFruitRule(new Point(20, 10));
 		movingRules = new HoleMovingRules(new Hole(new Point(3, 8), new Point(24, 14)));
+		controller = new SnakeController(movingRules);
 	}
 
 	private void setSizeAndFlip(Sprite sprite) {
@@ -89,18 +92,8 @@ public class SnakeScreen implements Screen {
 		}
 
 		// Applying Rules
-		if (Gdx.input.isKeyPressed(Input.Keys.M)) {
-			snake = movingRules.update(snake);
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-			snake = movingRules.update(snake);
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-			snake = movingRules.turnLeft(snake);
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-			snake = movingRules.turnRight(snake);
-		}
+		controlSnake();
+
 		snake = fruitRule.update(snake);
 		snake = poisonRule.update(snake);
 
@@ -132,6 +125,30 @@ public class SnakeScreen implements Screen {
 		poisonedSprite.draw(batch);
 
 		batch.end();
+	}
+
+	private void controlSnake() {
+		if (Gdx.input.isKeyPressed(Input.Keys.M)) {
+			snake = movingRules.update(snake);
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
+			snake = movingRules.update(snake);
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+			snake = movingRules.turnLeft(snake);
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+			snake = movingRules.turnRight(snake);
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+			snake = controller.left(snake);
+		} else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+			snake = controller.right(snake);
+		} else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+			snake = controller.up(snake);
+		} else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+			snake = controller.down(snake);
+		}
 	}
 
 	@Override
