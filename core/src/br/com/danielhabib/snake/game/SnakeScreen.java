@@ -10,25 +10,26 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import br.com.danielhabib.snake.AMovingRules;
 import br.com.danielhabib.snake.FruitRule;
+import br.com.danielhabib.snake.Hole;
+import br.com.danielhabib.snake.HoleMovingRules;
 import br.com.danielhabib.snake.Point;
 import br.com.danielhabib.snake.PoisonedFruitRule;
-import br.com.danielhabib.snake.RestrictedMovingRules;
 import br.com.danielhabib.snake.Snake;
 
 public class SnakeScreen implements Screen {
 
+	private Sprite boxSprite;
+	private Sprite directionSprite;
+	private Sprite appleSprite;
+	private Sprite poisonedSprite;
+	private Sprite holeSprite;
 	private static final int SIZE = 16;
 	private Game game;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private Snake snake;
-	private AMovingRules movingRules;
-	private Sprite boxSprite;
-	private Sprite directionSprite;
-	private Sprite appleSprite;
-	private Sprite poisonedSprite;
+	private HoleMovingRules movingRules;
 	private FruitRule fruitRule;
 	private PoisonedFruitRule poisonRule;
 
@@ -50,15 +51,19 @@ public class SnakeScreen implements Screen {
 
 		// Apples
 		appleSprite = new Sprite(new Texture(Gdx.files.internal("apple.png")));
-		poisonedSprite = new Sprite(new Texture(Gdx.files.internal("poisoned.jpg")));
+		poisonedSprite = new Sprite(new Texture(Gdx.files.internal("poison.png")));
 		setSizeAndFlip(appleSprite);
 		setSizeAndFlip(poisonedSprite);
 
+		// Hole
+		holeSprite = new Sprite(new Texture(Gdx.files.internal("hole.jpg")));
+		setSizeAndFlip(holeSprite);
+
 		// Map
 		snake = new Snake(5, 1).addTail().addTail().addTail();
-		movingRules = new RestrictedMovingRules();
 		fruitRule = new FruitRule(new Point(10, 20));
 		poisonRule = new PoisonedFruitRule(new Point(20, 10));
+		movingRules = new HoleMovingRules(new Hole(new Point(3, 8), new Point(24, 14)));
 	}
 
 	private void setSizeAndFlip(Sprite sprite) {
@@ -102,6 +107,14 @@ public class SnakeScreen implements Screen {
 		poisonedSprite.setPosition(poisonRule.getFruitPosition().getX() * SIZE,
 				poisonRule.getFruitPosition().getY() * SIZE);
 
+		Point point = movingRules.getHole().getInitialPoint();
+		holeSprite.setPosition(point.getX() * SIZE, point.getY() * SIZE);
+		holeSprite.draw(batch);
+
+		point = movingRules.getHole().getFinalPoint();
+		holeSprite.setPosition(point.getX() * SIZE, point.getY() * SIZE);
+		holeSprite.draw(batch);
+
 		for (Point position : snake.getPositions()) {
 			boxSprite.setPosition(position.getX() * SIZE, position.getY() * SIZE);
 			boxSprite.draw(batch);
@@ -139,8 +152,16 @@ public class SnakeScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		dispose(boxSprite);
+		dispose(directionSprite);
+		dispose(appleSprite);
+		dispose(poisonedSprite);
+		dispose(holeSprite);
+		batch.dispose();
+	}
 
+	private void dispose(Sprite sprite) {
+		sprite.getTexture().dispose();
 	}
 
 }
