@@ -1,6 +1,8 @@
 package br.com.danielhabib.snake.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,12 +13,16 @@ public class Splash implements Screen {
 
 	private SpriteBatch batch;
 	private Sprite sprite;
+	private Game game;
+
+	public Splash(Game game) {
+		this.game = game;
+	}
 
 	@Override
 	public void show() {
 		batch = new SpriteBatch();
-		Texture texture = new Texture("badlogic.jpg");
-		sprite = new Sprite(texture);
+		sprite = new Sprite(new Texture("badlogic.jpg"));
 		sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
@@ -28,6 +34,10 @@ public class Splash implements Screen {
 		batch.begin();
 		sprite.draw(batch);
 		batch.end();
+
+		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+			game.setScreen(new SnakeScreen(game));
+		}
 	}
 
 	@Override
@@ -56,8 +66,6 @@ public class Splash implements Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
 	}
 
 }
