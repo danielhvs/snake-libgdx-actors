@@ -60,12 +60,16 @@ public class Splash implements Screen {
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-
+		dispose();
 	}
 
 	@Override
 	public void dispose() {
+		dispose(sprite);
+		batch.dispose();
 	}
 
+	private void dispose(Sprite sprite) {
+		sprite.getTexture().dispose();
+	}
 }

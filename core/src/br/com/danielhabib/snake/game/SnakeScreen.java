@@ -81,6 +81,7 @@ public class SnakeScreen implements Screen {
 			game.setScreen(new Splash(game));
 		}
 
+		// Managing FPS
 		time += delta;
 		if (time > 0.125f) {
 			snake = movingRules.update(snake);
@@ -153,8 +154,7 @@ public class SnakeScreen implements Screen {
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-
+		dispose();
 	}
 
 	@Override
