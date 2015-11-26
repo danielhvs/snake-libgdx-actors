@@ -14,10 +14,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import br.com.danielhabib.snake.AMovingRules;
+import br.com.danielhabib.snake.BoingMovingRules;
+import br.com.danielhabib.snake.Direction;
 import br.com.danielhabib.snake.FruitRule;
 import br.com.danielhabib.snake.Hole;
 import br.com.danielhabib.snake.HoleMovingRules;
-import br.com.danielhabib.snake.MirrorMapMovingRules;
 import br.com.danielhabib.snake.Point;
 import br.com.danielhabib.snake.PoisonedFruitRule;
 import br.com.danielhabib.snake.Snake;
@@ -83,14 +84,16 @@ public class SnakeScreen implements Screen {
 		setSizeAndFlip(holeSprite);
 
 		// Map
-		snake = new Snake(5, 1).addTail().addTail().addTail();
+		snake = new Snake(5, 1, Direction.RIGHT.getDirection()).addTail().addTail().addTail();
 		fruitRule = new FruitRule(new Point(10, 20));
 		poisonRule = new PoisonedFruitRule(new Point(20, 10));
 		hole = new Hole(new Point(3, 8), new Point(24, 14));
 		AMovingRules holeMovingRules = new HoleMovingRules(hole);
 		controller = new SnakeController(holeMovingRules);
 		// movingRules = new MapMovingRules(holeMovingRules, map);
-		movingRules = new MirrorMapMovingRules(holeMovingRules, lastX, lastY);
+		// movingRules = new MirrorMapMovingRules(holeMovingRules, lastX,
+		// lastY);
+		movingRules = new BoingMovingRules(holeMovingRules, lastX, lastY);
 	}
 
 	private void setSizeAndFlip(Sprite sprite) {
