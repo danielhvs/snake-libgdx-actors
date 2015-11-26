@@ -17,7 +17,7 @@ import br.com.danielhabib.snake.AMovingRules;
 import br.com.danielhabib.snake.FruitRule;
 import br.com.danielhabib.snake.Hole;
 import br.com.danielhabib.snake.HoleMovingRules;
-import br.com.danielhabib.snake.MapMovingRules;
+import br.com.danielhabib.snake.MirrorMapMovingRules;
 import br.com.danielhabib.snake.Point;
 import br.com.danielhabib.snake.PoisonedFruitRule;
 import br.com.danielhabib.snake.Snake;
@@ -30,7 +30,7 @@ public class SnakeScreen implements Screen {
 	private Sprite appleSprite;
 	private Sprite poisonedSprite;
 	private Sprite holeSprite;
-	private static final int SIZE = 8;
+	private static final int SIZE = 16;
 	private Game game;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -39,7 +39,7 @@ public class SnakeScreen implements Screen {
 	private PoisonedFruitRule poisonRule;
 	private float time;
 	private SnakeController controller;
-	private MapMovingRules movingRules;
+	private AMovingRules movingRules;
 	private Hole hole;
 	private List<Point> map;
 
@@ -89,7 +89,8 @@ public class SnakeScreen implements Screen {
 		hole = new Hole(new Point(3, 8), new Point(24, 14));
 		AMovingRules holeMovingRules = new HoleMovingRules(hole);
 		controller = new SnakeController(holeMovingRules);
-		movingRules = new MapMovingRules(holeMovingRules, map);
+		// movingRules = new MapMovingRules(holeMovingRules, map);
+		movingRules = new MirrorMapMovingRules(holeMovingRules, lastX, lastY);
 	}
 
 	private void setSizeAndFlip(Sprite sprite) {
