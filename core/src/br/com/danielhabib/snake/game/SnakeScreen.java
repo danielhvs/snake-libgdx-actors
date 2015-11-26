@@ -10,8 +10,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import br.com.danielhabib.snake.AMovingRules;
 import br.com.danielhabib.snake.BoingMovingRules;
@@ -31,7 +33,7 @@ public class SnakeScreen implements Screen {
 	private Sprite appleSprite;
 	private Sprite poisonedSprite;
 	private Sprite holeSprite;
-	private static final int SIZE = 16;
+	private static final int SIZE = 32;
 	private Game game;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -44,12 +46,33 @@ public class SnakeScreen implements Screen {
 	private Hole hole;
 	private List<Point> map;
 
+	private static final int FRAME_COLS = 6; // #1
+	private static final int FRAME_ROWS = 5; // #2
+
+	Animation walkAnimation; // #3
+	Texture walkSheet; // #4
+	TextureRegion[] walkFrames; // #5
+	TextureRegion currentFrame; // #7
+	float stateTime; // #8
+
 	public SnakeScreen(Game game) {
 		this.game = game;
 	}
 
 	@Override
 	public void show() {
+		walkSheet = new Texture(Gdx.files.internal("animation.png")); // #9
+		TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth() / FRAME_COLS, walkSheet.getHeight() / FRAME_ROWS); // #10
+		walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+		int index = 0;
+		for (int i = 0; i < FRAME_ROWS; i++) {
+			for (int j = 0; j < FRAME_COLS; j++) {
+				walkFrames[index++] = tmp[i][j];
+			}
+		}
+		walkAnimation = new Animation(0.025f, walkFrames); // #11
+		stateTime = 0f; // #13
+
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(true);
@@ -106,6 +129,9 @@ public class SnakeScreen implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		stateTime += delta; // #15
+		currentFrame = walkAnimation.getKeyFrame(stateTime, true); // #16
+
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			game.setScreen(new Splash(game));
 		}
@@ -160,6 +186,8 @@ public class SnakeScreen implements Screen {
 		directionSprite.draw(batch);
 		appleSprite.draw(batch);
 		poisonedSprite.draw(batch);
+
+		batch.draw(currentFrame, 50, 50); // #17
 
 		batch.end();
 	}
