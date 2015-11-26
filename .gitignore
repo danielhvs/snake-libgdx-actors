@@ -1,0 +1,15 @@
+gradle.properties
+.gradle/
+.project
+.settings/
+core/.classpath
+core/.project
+core/.settings/
+core/bin/
+desktop/.classpath
+desktop/.project
+desktop/.settings/
+desktop/bin/
+desktop/build/
+gradle/
+gradlew
