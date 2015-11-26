@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Snake";
 		config.width = 800;
-		config.height = 600;
+		config.height = 608;
 		new LwjglApplication(new MyGdxGame(), config);
 	}
 }

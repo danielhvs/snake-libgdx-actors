@@ -1,5 +1,8 @@
 package br.com.danielhabib.snake.game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -10,9 +13,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import br.com.danielhabib.snake.AMovingRules;
 import br.com.danielhabib.snake.FruitRule;
 import br.com.danielhabib.snake.Hole;
 import br.com.danielhabib.snake.HoleMovingRules;
+import br.com.danielhabib.snake.MapMovingRules;
 import br.com.danielhabib.snake.Point;
 import br.com.danielhabib.snake.PoisonedFruitRule;
 import br.com.danielhabib.snake.Snake;
@@ -25,16 +30,18 @@ public class SnakeScreen implements Screen {
 	private Sprite appleSprite;
 	private Sprite poisonedSprite;
 	private Sprite holeSprite;
-	private static final int SIZE = 16;
+	private static final int SIZE = 8;
 	private Game game;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private Snake snake;
-	private HoleMovingRules movingRules;
 	private FruitRule fruitRule;
 	private PoisonedFruitRule poisonRule;
 	private float time;
 	private SnakeController controller;
+	private MapMovingRules movingRules;
+	private Hole hole;
+	private List<Point> map;
 
 	public SnakeScreen(Game game) {
 		this.game = game;
@@ -45,6 +52,19 @@ public class SnakeScreen implements Screen {
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(true);
+
+		// Map
+		map = new ArrayList<Point>();
+		int lastX = -1 + Gdx.graphics.getWidth() / SIZE;
+		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
+		for (int x = 0; x < lastX; x++) {
+			map.add(new Point(x, 0));
+			map.add(new Point(x, lastY));
+		}
+		for (int y = 0; y <= lastY; y++) {
+			map.add(new Point(0, y));
+			map.add(new Point(lastX, y));
+		}
 
 		// Snake
 		boxSprite = new Sprite(new Texture(Gdx.files.internal("box.png")));
@@ -66,8 +86,10 @@ public class SnakeScreen implements Screen {
 		snake = new Snake(5, 1).addTail().addTail().addTail();
 		fruitRule = new FruitRule(new Point(10, 20));
 		poisonRule = new PoisonedFruitRule(new Point(20, 10));
-		movingRules = new HoleMovingRules(new Hole(new Point(3, 8), new Point(24, 14)));
-		controller = new SnakeController(movingRules);
+		hole = new Hole(new Point(3, 8), new Point(24, 14));
+		AMovingRules holeMovingRules = new HoleMovingRules(hole);
+		controller = new SnakeController(holeMovingRules);
+		movingRules = new MapMovingRules(holeMovingRules, map);
 	}
 
 	private void setSizeAndFlip(Sprite sprite) {
@@ -102,24 +124,35 @@ public class SnakeScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 
+		// Snake direction
 		directionSprite.setPosition(SIZE * (snake.getPosition().getX() + snake.getDirection().getX()),
 				SIZE * (snake.getPosition().getY() + snake.getDirection().getY()));
+		// Fruits
 		appleSprite.setPosition(fruitRule.getFruitPosition().getX() * SIZE, fruitRule.getFruitPosition().getY() * SIZE);
 		poisonedSprite.setPosition(poisonRule.getFruitPosition().getX() * SIZE,
 				poisonRule.getFruitPosition().getY() * SIZE);
 
-		Point point = movingRules.getHole().getInitialPoint();
+		// Hole
+		Point point = hole.getInitialPoint();
+		holeSprite.setPosition(point.getX() * SIZE, point.getY() * SIZE);
+		holeSprite.draw(batch);
+		point = hole.getFinalPoint();
 		holeSprite.setPosition(point.getX() * SIZE, point.getY() * SIZE);
 		holeSprite.draw(batch);
 
-		point = movingRules.getHole().getFinalPoint();
-		holeSprite.setPosition(point.getX() * SIZE, point.getY() * SIZE);
-		holeSprite.draw(batch);
-
+		// Snake
 		for (Point position : snake.getPositions()) {
 			boxSprite.setPosition(position.getX() * SIZE, position.getY() * SIZE);
 			boxSprite.draw(batch);
 		}
+
+		// Map
+		for (Point mapPoint : map) {
+			boxSprite.setPosition(mapPoint.getX() * SIZE, mapPoint.getY() * SIZE);
+			boxSprite.draw(batch);
+		}
+
+		// Draw to batch
 		directionSprite.draw(batch);
 		appleSprite.draw(batch);
 		poisonedSprite.draw(batch);
