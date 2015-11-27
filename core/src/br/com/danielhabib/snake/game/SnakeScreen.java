@@ -7,13 +7,18 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 import br.com.danielhabib.snake.AMovingRules;
 import br.com.danielhabib.snake.BoingMovingRules;
@@ -54,6 +59,7 @@ public class SnakeScreen implements Screen {
 	TextureRegion[] walkFrames; // #5
 	TextureRegion currentFrame; // #7
 	float stateTime; // #8
+	private Stage stage;
 
 	public SnakeScreen(Game game) {
 		this.game = game;
@@ -61,6 +67,18 @@ public class SnakeScreen implements Screen {
 
 	@Override
 	public void show() {
+		batch = new SpriteBatch();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(true);
+
+		// TESTS
+		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
+		LabelStyle labelStyle = new LabelStyle(font, Color.RED);
+		Label label = new Label("vlaakwejopqwmcqownj", labelStyle);
+		// FIXME: Optimize passing batch?
+		stage = new Stage();
+		stage.addActor(label);
+
 		walkSheet = new Texture(Gdx.files.internal("animation.png")); // #9
 		TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth() / FRAME_COLS, walkSheet.getHeight() / FRAME_ROWS); // #10
 		walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
@@ -72,10 +90,7 @@ public class SnakeScreen implements Screen {
 		}
 		walkAnimation = new Animation(0.025f, walkFrames); // #11
 		stateTime = 0f; // #13
-
-		batch = new SpriteBatch();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(true);
+		// TESTS
 
 		// Map
 		map = new ArrayList<Point>();
@@ -188,6 +203,7 @@ public class SnakeScreen implements Screen {
 		poisonedSprite.draw(batch);
 
 		batch.draw(currentFrame, 50, 50); // #17
+		stage.draw();
 
 		batch.end();
 	}
