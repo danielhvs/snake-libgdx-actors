@@ -9,4 +9,5 @@ public class MyGdxGame extends Game {
 		setScreen(new Splash(this));
 	}
 
+
 }
