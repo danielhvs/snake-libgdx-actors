@@ -1,5 +1,4 @@
 ## Java
-
 *.class
 *.war
 *.ear
@@ -55,7 +54,6 @@ nbactions.xml
 nb-configuration.xml
 
 ## Gradle
-
 .gradle
 gradle-app.setting
 build/
@@ -65,3 +63,17 @@ gradlew.bat
 
 ## OS Specific
 .DS_Store
+=======
+gradle.properties
+.gradle/
+.project
+.settings/
+core/.classpath
+core/.project
+core/.settings/
+core/bin/
+desktop/.classpath
+desktop/.project
+desktop/.settings/
+desktop/bin/
+desktop/build/
