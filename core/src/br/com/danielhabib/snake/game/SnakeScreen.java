@@ -34,7 +34,7 @@ public class SnakeScreen implements Screen {
 	private Sprite appleSprite;
 	private Sprite poisonedSprite;
 	private Sprite holeSprite;
-	private static final int SIZE = 32;
+	private static final int SIZE = 16;
 	private Game game;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -120,7 +120,7 @@ public class SnakeScreen implements Screen {
 		// movingRules = new MapMovingRules(holeMovingRules, map);
 		// movingRules = new MirrorMapMovingRules(holeMovingRules, lastX,
 		// lastY);
-		movingRules = new BoingMovingRules(holeMovingRules, lastX, lastY);
+		movingRules = new BoingMovingRules(holeMovingRules, 1, 1, lastX - 1, lastY - 1);
 	}
 
 	private void setSizeAndFlip(Sprite sprite) {

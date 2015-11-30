@@ -61,16 +61,15 @@ public class Splash implements Screen {
 		updatedSnakes = new Stack<Snake>();
 
 		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
-		LabelStyle labelStyle = new LabelStyle(font, Color.GREEN);
+		LabelStyle labelStyle = new LabelStyle(font, Color.ORANGE);
 		Label title = new Label("OMG! Crazy Snakes!", labelStyle);
-		title.setFontScale(2);
-
 		Skin skin = new Skin(new TextureAtlas("buttons.pack"));
 		TextButtonStyle buttonStyle = newSnakeButtonStyle(skin);
 		TextButton playButton = newButton("Go go go!", buttonStyle);
 		TextButton quitButton = newButton("I'm out!", buttonStyle);
 		Table table = new Table();
 
+		title.setFontScale(1);
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		table.add(title);
 		table.getCell(title).spaceBottom(100);
@@ -103,6 +102,7 @@ public class Splash implements Screen {
 
 		boxSprite = new Sprite(new Texture(Gdx.files.internal("box.png")));
 		setSizeAndFlip(boxSprite);
+		boxSprite.setColor(Color.YELLOW);
 
 		snakes = newRandomSnakes();
 		movingRules = new MirrorMapMovingRules(new RandomMovingRules(), lastX, lastY);
@@ -168,15 +168,12 @@ public class Splash implements Screen {
 
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
+
 		batch.begin();
 		// Snake
 		for (Snake snake : snakes) {
 			for (Point position : snake.getPositions()) {
 				boxSprite.setPosition(position.getX() * SIZE, position.getY() * SIZE);
-				// Performance?
-				double random = Math.random();
-				boxSprite.setColor(random < 0.2f ? Color.RED
-						: random < 0.4f ? Color.GREEN : random < 0.6 ? Color.BLUE : Color.BLACK);
 				boxSprite.draw(batch);
 			}
 		}
@@ -184,7 +181,6 @@ public class Splash implements Screen {
 
 		stage.act();
 		stage.draw();
-
 	}
 
 	@Override
