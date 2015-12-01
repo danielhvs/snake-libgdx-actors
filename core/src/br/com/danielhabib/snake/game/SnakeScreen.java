@@ -2,6 +2,7 @@ package br.com.danielhabib.snake.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -22,6 +23,7 @@ import br.com.danielhabib.snake.Direction;
 import br.com.danielhabib.snake.FruitRule;
 import br.com.danielhabib.snake.Hole;
 import br.com.danielhabib.snake.HoleMovingRules;
+import br.com.danielhabib.snake.Piece;
 import br.com.danielhabib.snake.Point;
 import br.com.danielhabib.snake.PoisonedFruitRule;
 import br.com.danielhabib.snake.Snake;
@@ -111,16 +113,29 @@ public class SnakeScreen implements Screen {
 		setSizeAndFlip(holeSprite);
 
 		// Map
-		snake = new Snake(5, 1, Direction.RIGHT.getDirection()).addTail().addTail().addTail();
+		snake = newSnakeAtXY(5, 1, Direction.RIGHT);
 		fruitRule = new FruitRule(new Point(10, 20));
 		poisonRule = new PoisonedFruitRule(new Point(20, 10));
 		hole = new Hole(new Point(3, 8), new Point(24, 14));
-		AMovingRules holeMovingRules = new HoleMovingRules(hole);
-		controller = new SnakeController(holeMovingRules);
+		AMovingRules realMovingRules = new HoleMovingRules(hole);
+		// AMovingRules realMovingRules = new RestrictedMovingRules();
+		controller = new SnakeController(realMovingRules);
 		// movingRules = new MapMovingRules(holeMovingRules, map);
 		// movingRules = new MirrorMapMovingRules(holeMovingRules, lastX,
 		// lastY);
-		movingRules = new BoingMovingRules(holeMovingRules, 1, 1, lastX - 1, lastY - 1);
+		movingRules = new BoingMovingRules(realMovingRules, 1, 1, lastX - 1, lastY - 1);
+	}
+
+	// FIXME: DRY
+	private Snake newSnakeAtXY(int x, int y, Direction direction) {
+		Stack<Piece> pieces = new Stack<Piece>();
+		pieces.push(new Piece(new Point(x, y), direction));
+		Snake snake = new Snake(pieces);
+		int size = 10;
+		for (int i = 0; i < size; i++) {
+			snake = snake.addTail();
+		}
+		return snake;
 	}
 
 	private void setSizeAndFlip(Sprite sprite) {
@@ -158,9 +173,6 @@ public class SnakeScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 
-		// Snake direction
-		directionSprite.setPosition(SIZE * (snake.getPosition().getX() + snake.getDirection().getX()),
-				SIZE * (snake.getPosition().getY() + snake.getDirection().getY()));
 		// Fruits
 		appleSprite.setPosition(fruitRule.getFruitPosition().getX() * SIZE, fruitRule.getFruitPosition().getY() * SIZE);
 		poisonedSprite.setPosition(poisonRule.getFruitPosition().getX() * SIZE,
@@ -175,9 +187,17 @@ public class SnakeScreen implements Screen {
 		holeSprite.draw(batch);
 
 		// Snake
-		for (Point position : snake.getPositions()) {
+		for (Piece piece : snake.getPieces()) {
+			Point position = piece.getPoint();
 			boxSprite.setPosition(position.getX() * SIZE, position.getY() * SIZE);
 			boxSprite.draw(batch);
+
+			// Point direction = piece.getDirection().getDirection();
+			// directionSprite.setPosition(SIZE * (piece.getPoint().getX() +
+			// direction.getX()),
+			// SIZE * (piece.getPoint().getY() + direction.getY()));
+			// directionSprite.draw(batch);
+
 		}
 
 		// Map
@@ -187,7 +207,6 @@ public class SnakeScreen implements Screen {
 		}
 
 		// Draw to batch
-		directionSprite.draw(batch);
 		appleSprite.draw(batch);
 		poisonedSprite.draw(batch);
 

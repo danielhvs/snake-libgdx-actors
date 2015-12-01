@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import br.com.danielhabib.snake.AMovingRules;
 import br.com.danielhabib.snake.Direction;
 import br.com.danielhabib.snake.MirrorMapMovingRules;
+import br.com.danielhabib.snake.Piece;
 import br.com.danielhabib.snake.Point;
 import br.com.danielhabib.snake.RandomMovingRules;
 import br.com.danielhabib.snake.Snake;
@@ -134,8 +135,11 @@ public class Splash implements Screen {
 		return stack;
 	}
 
+	// FIXME: DRY
 	private Snake newSnakeAtXY(int x, int y, Direction direction) {
-		Snake snake = new Snake(x, y, direction.getDirection());
+		Stack<Piece> pieces = new Stack<Piece>();
+		pieces.push(new Piece(new Point(x, y), direction));
+		Snake snake = new Snake(pieces);
 		int size = 10;
 		for (int i = 0; i < size; i++) {
 			snake = snake.addTail();
@@ -172,7 +176,8 @@ public class Splash implements Screen {
 		batch.begin();
 		// Snake
 		for (Snake snake : snakes) {
-			for (Point position : snake.getPositions()) {
+			for (Piece piece : snake.getPieces()) {
+				Point position = piece.getPoint();
 				boxSprite.setPosition(position.getX() * SIZE, position.getY() * SIZE);
 				boxSprite.draw(batch);
 			}
