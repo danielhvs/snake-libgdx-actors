@@ -72,4 +72,8 @@ public class Piece {
 		return new Piece(point.cpy(), newDirection);
 	}
 
+	public Piece turn(Direction newDirection) {
+		return turn(newDirection.getDirection());
+	}
+
 }

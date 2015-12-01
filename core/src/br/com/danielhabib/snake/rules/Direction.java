@@ -14,8 +14,8 @@ public enum Direction {
 		return direction;
 	}
 
-	public Direction invert() {
-		return Direction.valueOf(direction.cpy().rotate(180));
+	public Vector2 invert() {
+		return direction.cpy().rotate(180.0f);
 	}
 
 	public static Direction valueOf(Vector2 point) {
