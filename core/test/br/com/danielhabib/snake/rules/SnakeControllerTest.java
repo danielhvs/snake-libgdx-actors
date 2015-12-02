@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.badlogic.gdx.math.Vector2;
-
 public class SnakeControllerTest extends BaseTest {
 	private SnakeController controller;
 
@@ -47,11 +45,11 @@ public class SnakeControllerTest extends BaseTest {
 		assertEquals(Direction.RIGHT, directionOf(controller.left(whenSnakeIs(Direction.RIGHT))));
 	}
 
-	private Vector2 directionOf(Snake snake) {
+	private Direction directionOf(Snake snake) {
 		return snake.getDirection();
 	}
 
-	private Snake whenSnakeIs(Vector2 direction) {
+	private Snake whenSnakeIs(Direction direction) {
 		return newSnake(0, 0, direction);
 	}
 

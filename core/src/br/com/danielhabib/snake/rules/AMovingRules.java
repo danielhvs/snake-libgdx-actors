@@ -3,15 +3,13 @@ package br.com.danielhabib.snake.rules;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.badlogic.gdx.math.Vector2;
-
 public abstract class AMovingRules implements IRule {
 
 	@Override
 	public abstract Snake update(Snake snake);
 
 	public Snake turnLeft(Snake snake) {
-		Map<Vector2, Vector2> leftTurningOffsetMap = new HashMap<Vector2, Vector2>();
+		Map<Direction, Direction> leftTurningOffsetMap = new HashMap<Direction, Direction>();
 		leftTurningOffsetMap.put(Direction.UP, Direction.LEFT);
 		leftTurningOffsetMap.put(Direction.LEFT, Direction.DOWN);
 		leftTurningOffsetMap.put(Direction.DOWN, Direction.RIGHT);
@@ -21,7 +19,7 @@ public abstract class AMovingRules implements IRule {
 	}
 
 	public Snake turnRight(Snake snake) {
-		Map<Vector2, Vector2> rightTurningOffsetMap = new HashMap<Vector2, Vector2>();
+		Map<Direction, Direction> rightTurningOffsetMap = new HashMap<Direction, Direction>();
 		rightTurningOffsetMap.put(Direction.UP, Direction.RIGHT);
 		rightTurningOffsetMap.put(Direction.RIGHT, Direction.DOWN);
 		rightTurningOffsetMap.put(Direction.DOWN, Direction.LEFT);

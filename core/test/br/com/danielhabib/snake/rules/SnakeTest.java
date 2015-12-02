@@ -80,7 +80,7 @@ public class SnakeTest extends BaseTest {
 	public void revert_RevertsSnakePosition() throws Exception {
 		Snake snake = newSnake(0, 0).revert();
 
-		assertPoints(Direction.LEFT, snake.getTail().getDirection());
+		assertEquals(Direction.LEFT, snake.getTail().getDirection());
 	}
 
 	@Test

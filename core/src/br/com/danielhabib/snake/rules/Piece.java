@@ -5,9 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 public class Piece {
 
 	private Vector2 point;
-	private Vector2 direction;
+	private Direction direction;
 
-	public Piece(Vector2 point, Vector2 direction) {
+	public Piece(Vector2 point, Direction direction) {
 		this.point = point;
 		this.direction = direction;
 	}
@@ -16,13 +16,18 @@ public class Piece {
 		return point.cpy();
 	}
 
-	public Vector2 getDirection() {
-		return direction.cpy();
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public Vector2 getVector2() {
+		return direction.getVector2().cpy();
 	}
 
 	public Piece move() {
-		Vector2 newPoint = point.cpy().add(direction);
-		return new Piece(newPoint, direction.cpy());
+		// FIXME: speed
+		Vector2 newPoint = point.cpy().add(direction.getVector2());
+		return new Piece(newPoint, direction);
 	}
 
 	@Override
@@ -65,10 +70,10 @@ public class Piece {
 	}
 
 	public Piece move(Vector2 finalPoint) {
-		return new Piece(finalPoint, direction.cpy());
+		return new Piece(finalPoint, direction);
 	}
 
-	public Piece turn(Vector2 newDirection) {
+	public Piece turn(Direction newDirection) {
 		return new Piece(point.cpy(), newDirection);
 	}
 

@@ -26,9 +26,9 @@ public class Snake {
 
 	public Snake addTail() {
 		Piece tail = getTail();
-		Vector2 tailDirection = tail.getDirection();
+		Direction tailDirection = tail.getDirection();
 		Vector2 point = tail.getPoint().cpy();
-		Vector2 newPoint = point.sub(tail.getDirection());
+		Vector2 newPoint = point.sub(tail.getVector2());
 		Piece newTail = new Piece(newPoint, tailDirection);
 		pieces.push(newTail);
 		return new Snake(pieces);
@@ -38,7 +38,7 @@ public class Snake {
 		Stack<Piece> newPieces = new Stack<Piece>();
 		Vector2 headPoint = newPoint;
 		Stack<Piece> stack = getPieces();
-		Vector2 headDirection = stack.get(0).getDirection();
+		Direction headDirection = stack.get(0).getDirection();
 		for (int i = 0; i < stack.size(); i++) {
 			Piece piece = stack.get(i);
 			Piece newPiece = piece.move(headPoint).turn(headDirection);
@@ -50,7 +50,8 @@ public class Snake {
 	}
 
 	public Snake move() {
-		return move(getPosition().add(getDirection()));
+		// FIXME: speed
+		return move(getPosition().add(getDirection().getVector2()));
 	}
 
 	public Snake removeTail() {
@@ -70,8 +71,8 @@ public class Snake {
 		return getHead().getPoint().cpy();
 	}
 
-	public Vector2 getDirection() {
-		return getHead().getDirection().cpy();
+	public Direction getDirection() {
+		return getHead().getDirection();
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class Snake {
 		return pieces.toString();
 	}
 
-	public Snake turn(Vector2 direction) {
+	public Snake turn(Direction direction) {
 		Piece newHead = getHead().turn(direction);
 		int headIndex = 0;
 		Stack<Piece> newPieces = getPieces();
@@ -93,7 +94,7 @@ public class Snake {
 		Stack<Piece> piecesCopy = getPieces();
 		while (!piecesCopy.isEmpty()) {
 			Piece pop = piecesCopy.pop();
-			Piece newPiece = new Piece(pop.getPoint(), pop.getDirection().rotate(180));
+			Piece newPiece = new Piece(pop.getPoint(), pop.getDirection().invert());
 			newPieces.push(newPiece);
 		}
 		return new Snake(newPieces);
