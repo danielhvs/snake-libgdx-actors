@@ -15,19 +15,19 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import br.com.danielhabib.snake.AMovingRules;
-import br.com.danielhabib.snake.BoingMovingRules;
-import br.com.danielhabib.snake.Direction;
-import br.com.danielhabib.snake.FruitRule;
-import br.com.danielhabib.snake.Hole;
-import br.com.danielhabib.snake.HoleMovingRules;
-import br.com.danielhabib.snake.Piece;
-import br.com.danielhabib.snake.Point;
-import br.com.danielhabib.snake.PoisonedFruitRule;
-import br.com.danielhabib.snake.Snake;
-import br.com.danielhabib.snake.SnakeController;
+import br.com.danielhabib.snake.rules.AMovingRules;
+import br.com.danielhabib.snake.rules.BoingMovingRules;
+import br.com.danielhabib.snake.rules.Direction;
+import br.com.danielhabib.snake.rules.FruitRule;
+import br.com.danielhabib.snake.rules.Hole;
+import br.com.danielhabib.snake.rules.HoleMovingRules;
+import br.com.danielhabib.snake.rules.Piece;
+import br.com.danielhabib.snake.rules.PoisonedFruitRule;
+import br.com.danielhabib.snake.rules.Snake;
+import br.com.danielhabib.snake.rules.SnakeController;
 
 public class SnakeScreen implements Screen {
 
@@ -47,7 +47,7 @@ public class SnakeScreen implements Screen {
 	private SnakeController controller;
 	private AMovingRules movingRules;
 	private Hole hole;
-	private List<Point> map;
+	private List<Vector2> map;
 
 	private static final int FRAME_COLS = 6; // #1
 	private static final int FRAME_ROWS = 5; // #2
@@ -84,16 +84,16 @@ public class SnakeScreen implements Screen {
 		stateTime = 0f; // #13
 
 		// Map
-		map = new ArrayList<Point>();
+		map = new ArrayList<Vector2>();
 		int lastX = -1 + Gdx.graphics.getWidth() / SIZE;
 		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
 		for (int x = 0; x < lastX; x++) {
-			map.add(new Point(x, 0));
-			map.add(new Point(x, lastY));
+			map.add(new Vector2(x, 0));
+			map.add(new Vector2(x, lastY));
 		}
 		for (int y = 0; y <= lastY; y++) {
-			map.add(new Point(0, y));
-			map.add(new Point(lastX, y));
+			map.add(new Vector2(0, y));
+			map.add(new Vector2(lastX, y));
 		}
 
 		// Snake
@@ -114,9 +114,9 @@ public class SnakeScreen implements Screen {
 
 		// Map
 		snake = newSnakeAtXY(5, 1, Direction.RIGHT);
-		fruitRule = new FruitRule(new Point(10, 20));
-		poisonRule = new PoisonedFruitRule(new Point(20, 10));
-		hole = new Hole(new Point(3, 8), new Point(24, 14));
+		fruitRule = new FruitRule(new Vector2(10, 20));
+		poisonRule = new PoisonedFruitRule(new Vector2(20, 10));
+		hole = new Hole(new Vector2(3, 8), new Vector2(24, 14));
 		AMovingRules realMovingRules = new HoleMovingRules(hole);
 		// AMovingRules realMovingRules = new RestrictedMovingRules();
 		controller = new SnakeController(realMovingRules);
@@ -129,7 +129,7 @@ public class SnakeScreen implements Screen {
 	// FIXME: DRY
 	private Snake newSnakeAtXY(int x, int y, Direction direction) {
 		Stack<Piece> pieces = new Stack<Piece>();
-		pieces.push(new Piece(new Point(x, y), direction));
+		pieces.push(new Piece(new Vector2(x, y), direction.getDirection()));
 		Snake snake = new Snake(pieces);
 		int size = 10;
 		for (int i = 0; i < size; i++) {
@@ -174,35 +174,34 @@ public class SnakeScreen implements Screen {
 		batch.begin();
 
 		// Fruits
-		appleSprite.setPosition(fruitRule.getFruitPosition().getX() * SIZE, fruitRule.getFruitPosition().getY() * SIZE);
-		poisonedSprite.setPosition(poisonRule.getFruitPosition().getX() * SIZE,
-				poisonRule.getFruitPosition().getY() * SIZE);
+		appleSprite.setPosition(fruitRule.getFruitPosition().x * SIZE, fruitRule.getFruitPosition().y * SIZE);
+		poisonedSprite.setPosition(poisonRule.getFruitPosition().x * SIZE, poisonRule.getFruitPosition().y * SIZE);
 
 		// Hole
-		Point point = hole.getInitialPoint();
-		holeSprite.setPosition(point.getX() * SIZE, point.getY() * SIZE);
+		Vector2 point = hole.getInitialPoint();
+		holeSprite.setPosition(point.x * SIZE, point.y * SIZE);
 		holeSprite.draw(batch);
 		point = hole.getFinalPoint();
-		holeSprite.setPosition(point.getX() * SIZE, point.getY() * SIZE);
+		holeSprite.setPosition(point.x * SIZE, point.y * SIZE);
 		holeSprite.draw(batch);
 
 		// Snake
 		for (Piece piece : snake.getPieces()) {
-			Point position = piece.getPoint();
-			boxSprite.setPosition(position.getX() * SIZE, position.getY() * SIZE);
+			Vector2 position = piece.getPoint();
+			boxSprite.setPosition(position.x * SIZE, position.y * SIZE);
 			boxSprite.draw(batch);
 
 			// Point direction = piece.getDirection().getDirection();
-			// directionSprite.setPosition(SIZE * (piece.getPoint().getX() +
-			// direction.getX()),
-			// SIZE * (piece.getPoint().getY() + direction.getY()));
+			// directionSprite.setPosition(SIZE * (piece.getPoint().x +
+			// direction.x),
+			// SIZE * (piece.getPoint().y + direction.y));
 			// directionSprite.draw(batch);
 
 		}
 
 		// Map
-		for (Point mapPoint : map) {
-			boxSprite.setPosition(mapPoint.getX() * SIZE, mapPoint.getY() * SIZE);
+		for (Vector2 mapPoint : map) {
+			boxSprite.setPosition(mapPoint.x * SIZE, mapPoint.y * SIZE);
 			boxSprite.draw(batch);
 		}
 

@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,13 +24,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
-import br.com.danielhabib.snake.AMovingRules;
-import br.com.danielhabib.snake.Direction;
-import br.com.danielhabib.snake.MirrorMapMovingRules;
-import br.com.danielhabib.snake.Piece;
-import br.com.danielhabib.snake.Point;
-import br.com.danielhabib.snake.RandomMovingRules;
-import br.com.danielhabib.snake.Snake;
+import br.com.danielhabib.snake.rules.AMovingRules;
+import br.com.danielhabib.snake.rules.Direction;
+import br.com.danielhabib.snake.rules.MirrorMapMovingRules;
+import br.com.danielhabib.snake.rules.Piece;
+import br.com.danielhabib.snake.rules.RandomMovingRules;
+import br.com.danielhabib.snake.rules.Snake;
 
 public class Splash implements Screen {
 
@@ -138,7 +138,7 @@ public class Splash implements Screen {
 	// FIXME: DRY
 	private Snake newSnakeAtXY(int x, int y, Direction direction) {
 		Stack<Piece> pieces = new Stack<Piece>();
-		pieces.push(new Piece(new Point(x, y), direction));
+		pieces.push(new Piece(new Vector2(x, y), direction.getDirection()));
 		Snake snake = new Snake(pieces);
 		int size = 10;
 		for (int i = 0; i < size; i++) {
@@ -177,8 +177,8 @@ public class Splash implements Screen {
 		// Snake
 		for (Snake snake : snakes) {
 			for (Piece piece : snake.getPieces()) {
-				Point position = piece.getPoint();
-				boxSprite.setPosition(position.getX() * SIZE, position.getY() * SIZE);
+				Vector2 position = piece.getPoint();
+				boxSprite.setPosition(position.x * SIZE, position.y * SIZE);
 				boxSprite.draw(batch);
 			}
 		}
