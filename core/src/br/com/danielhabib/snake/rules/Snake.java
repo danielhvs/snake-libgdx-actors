@@ -1,7 +1,5 @@
 package br.com.danielhabib.snake.rules;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 import com.badlogic.gdx.math.Vector2;
@@ -36,17 +34,17 @@ public class Snake {
 		return new Snake(pieces);
 	}
 
-	public Snake move(Vector2 Vector2) {
+	public Snake move(Vector2 newPoint) {
 		Stack<Piece> newPieces = new Stack<Piece>();
-		List<Piece> list = new ArrayList<Piece>(getPieces());
-		Vector2 headVector2 = Vector2;
-		Vector2 headDirection = list.get(0).getDirection();
-		for (int i = 0; i < list.size(); i++) {
-			Piece moved = list.get(i).move(headVector2);
-			Piece turned = moved.turn(headDirection);
-			newPieces.push(turned);
-			headVector2 = list.get(i).getPoint();
-			headDirection = list.get(i).getDirection();
+		Vector2 headPoint = newPoint;
+		Stack<Piece> stack = getPieces();
+		Vector2 headDirection = stack.get(0).getDirection();
+		for (int i = 0; i < stack.size(); i++) {
+			Piece piece = stack.get(i);
+			Piece newPiece = piece.move(headPoint).turn(headDirection);
+			newPieces.push(newPiece);
+			headPoint = piece.getPoint();
+			headDirection = piece.getDirection();
 		}
 		return new Snake(newPieces);
 	}

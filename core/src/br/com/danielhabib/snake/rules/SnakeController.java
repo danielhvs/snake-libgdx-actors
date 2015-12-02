@@ -8,10 +8,11 @@ public class SnakeController {
 		this.movingRules = movingRules;
 	}
 
+	// FIXME: Change to not use Direction.RIGHT, LEFT etc. anymore.
 	public Snake up(Snake snake) {
-		if (Direction.RIGHT.equals(snake.getDirection())) {
+		if (Direction.RIGHT.epsilonEquals(snake.getDirection(), 0.01f)) {
 			return movingRules.turnLeft(snake);
-		} else if (Direction.LEFT.equals(snake.getDirection())) {
+		} else if (Direction.LEFT.epsilonEquals(snake.getDirection(), 0.01f)) {
 			return movingRules.turnRight(snake);
 		} else {
 			return snake;
@@ -19,9 +20,9 @@ public class SnakeController {
 	}
 
 	public Snake down(Snake snake) {
-		if (Direction.RIGHT.equals(snake.getDirection())) {
+		if (Direction.RIGHT.epsilonEquals(snake.getDirection(), 0.01f)) {
 			return movingRules.turnRight(snake);
-		} else if (Direction.LEFT.equals(snake.getDirection())) {
+		} else if (Direction.LEFT.epsilonEquals(snake.getDirection(), 0.01f)) {
 			return movingRules.turnLeft(snake);
 		} else {
 			return snake;
@@ -29,9 +30,9 @@ public class SnakeController {
 	}
 
 	public Snake left(Snake snake) {
-		if (Direction.UP.equals(snake.getDirection())) {
+		if (Direction.UP.epsilonEquals(snake.getDirection(), 0.01f)) {
 			return movingRules.turnLeft(snake);
-		} else if (Direction.DOWN.equals(snake.getDirection())) {
+		} else if (Direction.DOWN.epsilonEquals(snake.getDirection(), 0.01f)) {
 			return movingRules.turnRight(snake);
 		} else {
 			return snake;
@@ -39,9 +40,9 @@ public class SnakeController {
 	}
 
 	public Snake right(Snake snake) {
-		if (Direction.UP.equals(snake.getDirection())) {
+		if (Direction.UP.epsilonEquals(snake.getDirection(), 0.01f)) {
 			return movingRules.turnRight(snake);
-		} else if (Direction.DOWN.equals(snake.getDirection())) {
+		} else if (Direction.DOWN.epsilonEquals(snake.getDirection(), 0.01f)) {
 			return movingRules.turnLeft(snake);
 		} else {
 			return snake;
