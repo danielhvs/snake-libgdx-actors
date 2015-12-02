@@ -32,7 +32,7 @@ import br.com.danielhabib.snake.rules.SnakeController;
 public class SnakeScreen implements Screen {
 
 	private Sprite boxSprite;
-	private Sprite directionSprite;
+	private Sprite headSprite;
 	private Sprite appleSprite;
 	private Sprite poisonedSprite;
 	private Sprite holeSprite;
@@ -97,10 +97,11 @@ public class SnakeScreen implements Screen {
 		}
 
 		// Snake
+		headSprite = new Sprite(new Texture(Gdx.files.internal("head.png")));
 		boxSprite = new Sprite(new Texture(Gdx.files.internal("box.png")));
-		directionSprite = new Sprite(new Texture(Gdx.files.internal("box.png")));
 		setSizeAndFlip(boxSprite);
-		directionSprite.setSize(SIZE / 4, SIZE / 4);
+		setSizeAndFlip(headSprite);
+		headSprite.setOrigin(headSprite.getWidth() / 2, headSprite.getHeight() / 2);
 
 		// Apples
 		appleSprite = new Sprite(new Texture(Gdx.files.internal("apple.png")));
@@ -120,7 +121,7 @@ public class SnakeScreen implements Screen {
 		AMovingRules realMovingRules = new HoleMovingRules(hole);
 		// AMovingRules realMovingRules = new RestrictedMovingRules();
 		controller = new SnakeController(realMovingRules);
-		// movingRules = new MapMovingRules(holeMovingRules, map);
+		// movingRules = new MapMovingRules(realMovingRules, map);
 		// movingRules = new MirrorMapMovingRules(holeMovingRules, lastX,
 		// lastY);
 		movingRules = new BoingMovingRules(realMovingRules, 1, 1, lastX - 1, lastY - 1);
@@ -131,7 +132,7 @@ public class SnakeScreen implements Screen {
 		Stack<Piece> pieces = new Stack<Piece>();
 		pieces.push(new Piece(new Vector2(x, y), direction));
 		Snake snake = new Snake(pieces);
-		int size = 10;
+		int size = 5;
 		for (int i = 0; i < size; i++) {
 			snake = snake.addTail();
 		}
@@ -186,17 +187,17 @@ public class SnakeScreen implements Screen {
 		holeSprite.draw(batch);
 
 		// Snake
-		for (Piece piece : snake.getPieces()) {
-			Vector2 position = piece.getPoint();
+		Vector2 position = snake.getHead().getPoint();
+		headSprite.setRotation(snake.getDirection().getRotation());
+		headSprite.setPosition(position.x * SIZE, position.y * SIZE);
+		headSprite.draw(batch);
+
+		Stack<Piece> pieces = snake.getPieces();
+		for (int i = 1; i < pieces.size(); i++) {
+			Piece piece = pieces.get(i);
+			position = piece.getPoint();
 			boxSprite.setPosition(position.x * SIZE, position.y * SIZE);
 			boxSprite.draw(batch);
-
-			// Point direction = piece.getDirection().getDirection();
-			// directionSprite.setPosition(SIZE * (piece.getPoint().x +
-			// direction.x),
-			// SIZE * (piece.getPoint().y + direction.y));
-			// directionSprite.draw(batch);
-
 		}
 
 		// Map
@@ -265,7 +266,7 @@ public class SnakeScreen implements Screen {
 	@Override
 	public void dispose() {
 		dispose(boxSprite);
-		dispose(directionSprite);
+		dispose(headSprite);
 		dispose(appleSprite);
 		dispose(poisonedSprite);
 		dispose(holeSprite);

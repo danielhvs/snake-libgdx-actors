@@ -6,11 +6,17 @@ import java.util.Map;
 import com.badlogic.gdx.math.Vector2;
 
 public enum Direction {
-	UP(new Vector2(0, -1)), DOWN(new Vector2(0, 1)), LEFT(new Vector2(-1, 0)), RIGHT(new Vector2(1, 0)), NOP(new Vector2(0, 0));
+	UP(new Vector2(0, -1), 0.0f), DOWN(new Vector2(0, 1), 180.0f), LEFT(new Vector2(-1, 0), 270.0f), RIGHT(new Vector2(1, 0), 90.0f);
 	private Vector2 direction;
+	private float rotation;
 
-	private Direction(Vector2 direction) {
+	private Direction(Vector2 direction, float rotation) {
 		this.direction = direction;
+		this.rotation = rotation;
+	}
+
+	public float getRotation() {
+		return rotation;
 	}
 
 	public Vector2 getVector2() {
