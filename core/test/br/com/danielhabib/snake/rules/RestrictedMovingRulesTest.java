@@ -1,6 +1,6 @@
 package br.com.danielhabib.snake.rules;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Stack;
 
 import org.junit.Test;
 
@@ -12,17 +12,18 @@ public class RestrictedMovingRulesTest extends BaseTest {
 	public void move_ThereIsTailInTheWay_DoesntMove() throws Exception {
 		AMovingRules rules = new RestrictedMovingRules();
 
-		Snake snake = snakeSize5();
+		Snake snake = rules.update(snakeSize5());
 
-		for (int i = 0; i < 3; i++) {
-			snake = rules.turnLeft(snake);
-			snake = rules.update(snake);
-		}
-
-		assertEquals(new Vector2(4, -1), snake.getPosition());
+		assertPoints(new Vector2(5, 0), snake.getPosition());
 	}
 
 	private Snake snakeSize5() {
-		return newSnake(5, 0).addTail(4, 0).addTail(3, 0).addTail(2, 0).addTail(1, 0);
+		Stack<Piece> pieces = new Stack<Piece>();
+		pieces.push(new Piece(new Vector2(5, 0), Direction.DOWN));
+		pieces.push(new Piece(new Vector2(4, 0), Direction.RIGHT));
+		pieces.push(new Piece(new Vector2(4, 1), Direction.UP));
+		pieces.push(new Piece(new Vector2(5, 1), Direction.LEFT));
+		pieces.push(new Piece(new Vector2(5, 1), Direction.LEFT));
+		return new Snake(pieces);
 	}
 }

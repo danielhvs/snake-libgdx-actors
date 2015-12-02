@@ -40,7 +40,8 @@ public class HoleMovingRules extends AMovingRules {
 
 	@Override
 	public Snake update(Snake snake) {
-		return snake.getPosition().equals(hole.getInitialPoint()) ? snake.move(hole.getFinalPoint()) : snake.move();
+		return snake.getPosition().epsilonEquals(hole.getInitialPoint(), 0.01f) ? snake.move(hole.getFinalPoint())
+				: snake.move();
 	}
 
 	public Hole getHole() {

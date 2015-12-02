@@ -1,7 +1,5 @@
 package br.com.danielhabib.snake.rules;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
@@ -13,7 +11,7 @@ public class MirrorMapMovingRulesTest extends BaseTest {
 
 		Snake snake = rules.update(newSnake(1, 0, Direction.RIGHT));
 
-		assertEquals(new Vector2(0, 0), snake.getPosition());
+		assertPoints(new Vector2(0, 0), snake.getPosition());
 	}
 
 	@Test
@@ -22,7 +20,7 @@ public class MirrorMapMovingRulesTest extends BaseTest {
 
 		Snake snake = rules.update(newSnake(0, 1, Direction.DOWN));
 
-		assertEquals(new Vector2(0, 0), snake.getPosition());
+		assertPoints(new Vector2(0, 0), snake.getPosition());
 	}
 
 	@Test
@@ -31,7 +29,7 @@ public class MirrorMapMovingRulesTest extends BaseTest {
 
 		Snake snake = rules.update(newSnake(0, 0, Direction.UP));
 
-		assertEquals(new Vector2(0, 1), snake.getPosition());
+		assertPoints(new Vector2(0, 1), snake.getPosition());
 	}
 
 	@Test
@@ -40,6 +38,6 @@ public class MirrorMapMovingRulesTest extends BaseTest {
 
 		Snake snake = rules.update(newSnake(0, 0, Direction.LEFT));
 
-		assertEquals(new Vector2(1, 0), snake.getPosition());
+		assertPoints(new Vector2(1, 0), snake.getPosition());
 	}
 }

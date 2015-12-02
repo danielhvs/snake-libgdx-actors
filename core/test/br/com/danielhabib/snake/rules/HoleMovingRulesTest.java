@@ -1,7 +1,5 @@
 package br.com.danielhabib.snake.rules;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
@@ -19,7 +17,7 @@ public class HoleMovingRulesTest extends BaseTest {
 		Snake finalPosition = rules.update(snake);
 		finalPosition = rules.update(finalPosition);
 
-		assertEquals(finalSnakePosition, finalPosition);
+		assertPoints(finalSnakePosition.getPosition(), finalPosition.getPosition());
 	}
 
 }

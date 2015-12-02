@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
 
-
 public class SnakeTest extends BaseTest {
 
 	@Test
@@ -23,7 +22,7 @@ public class SnakeTest extends BaseTest {
 	public void move_OnlyHead_MovesOnePosition() throws Exception {
 		Snake snake = newSnake(1, 1).move(new Vector2(2, 1));
 
-		assertEquals(newSnake(2, 1), snake);
+		assertSnake(newSnake(2, 1), snake);
 	}
 
 	@Test
@@ -33,7 +32,7 @@ public class SnakeTest extends BaseTest {
 		Snake actual = snake.move(new Vector2(4, 1));
 
 		Snake expected = newSnake(4, 1).addTail(3, 1).addTail(2, 1).addTail(1, 1);
-		assertEquals(expected, actual);
+		assertSnake(expected, actual);
 	}
 
 	@Test
@@ -42,10 +41,10 @@ public class SnakeTest extends BaseTest {
 
 		List<Piece> pieces = snake.getPieces();
 
-		assertEquals(newPiece(new Vector2(3, 1), Direction.RIGHT), pieces.get(0));
-		assertEquals(newPiece(new Vector2(2, 1), Direction.RIGHT), pieces.get(1));
-		assertEquals(newPiece(new Vector2(1, 1), Direction.RIGHT), pieces.get(2));
-		assertEquals(newPiece(new Vector2(0, 1), Direction.RIGHT), pieces.get(3));
+		assertPiece(newPiece(new Vector2(3, 1), Direction.RIGHT), pieces.get(0));
+		assertPiece(newPiece(new Vector2(2, 1), Direction.RIGHT), pieces.get(1));
+		assertPiece(newPiece(new Vector2(1, 1), Direction.RIGHT), pieces.get(2));
+		assertPiece(newPiece(new Vector2(0, 1), Direction.RIGHT), pieces.get(3));
 	}
 
 	@Test
@@ -53,7 +52,7 @@ public class SnakeTest extends BaseTest {
 		Snake snake = newSnake(3, 1).addTail(2, 1).addTail(1, 1).addTail();
 		Snake expected = newSnake(3, 1).addTail(2, 1).addTail(1, 1).addTail(0, 1);
 
-		assertEquals(expected, snake);
+		assertSnake(expected, snake);
 	}
 
 	@Test
@@ -81,16 +80,17 @@ public class SnakeTest extends BaseTest {
 	public void revert_RevertsSnakePosition() throws Exception {
 		Snake snake = newSnake(0, 0).revert();
 
-		assertEquals(Direction.LEFT, snake.getTail().getDirection());
+		assertPoints(Direction.LEFT, snake.getTail().getDirection());
 	}
 
 	@Test
 	public void revert_2PiecedSnake_RevertsSnakePosition() throws Exception {
 		Snake expected = newSnake(0, 0, Direction.LEFT).addTail();
 
-		Snake snake = newSnake(1, 0).addTail().revert();
+		Snake original = newSnake(1, 0).addTail();
+		Snake snake = original.revert();
 
-		assertEquals(expected, snake);
+		assertSnake(expected, snake);
 	}
 
 	@Test
@@ -109,7 +109,7 @@ public class SnakeTest extends BaseTest {
 
 		Snake snake = new Snake(pieces).revert();
 
-		assertEquals(new Snake(expectedPieces), snake);
+		assertSnake(new Snake(expectedPieces), snake);
 	}
 
 	@Test

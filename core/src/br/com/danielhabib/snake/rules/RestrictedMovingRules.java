@@ -9,9 +9,9 @@ public class RestrictedMovingRules extends AMovingRules {
 		Snake futureSnake = snake.move();
 		Stack<Piece> pieces = futureSnake.getPieces();
 		Piece head = futureSnake.getHead();
-		pieces.remove(head);
+		pieces.remove(0);
 		while (!pieces.isEmpty()) {
-			if (pieces.pop().getPoint().equals(head.getPoint())) {
+			if (pieces.pop().getPoint().epsilonEquals(head.getPoint(), 0.01f)) {
 				return snake;
 			}
 		}

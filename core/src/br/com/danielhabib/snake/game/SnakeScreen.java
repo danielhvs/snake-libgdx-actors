@@ -127,9 +127,9 @@ public class SnakeScreen implements Screen {
 	}
 
 	// FIXME: DRY
-	private Snake newSnakeAtXY(int x, int y, Direction direction) {
+	private Snake newSnakeAtXY(int x, int y, Vector2 direction) {
 		Stack<Piece> pieces = new Stack<Piece>();
-		pieces.push(new Piece(new Vector2(x, y), direction.getDirection()));
+		pieces.push(new Piece(new Vector2(x, y), direction));
 		Snake snake = new Snake(pieces);
 		int size = 10;
 		for (int i = 0; i < size; i++) {

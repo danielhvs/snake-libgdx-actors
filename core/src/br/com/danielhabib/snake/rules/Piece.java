@@ -13,11 +13,11 @@ public class Piece {
 	}
 
 	public Vector2 getPoint() {
-		return point;
+		return point.cpy();
 	}
 
 	public Vector2 getDirection() {
-		return direction;
+		return direction.cpy();
 	}
 
 	public Piece move() {
@@ -70,10 +70,6 @@ public class Piece {
 
 	public Piece turn(Vector2 newDirection) {
 		return new Piece(point.cpy(), newDirection);
-	}
-
-	public Piece turn(Direction newDirection) {
-		return turn(newDirection.getDirection());
 	}
 
 }

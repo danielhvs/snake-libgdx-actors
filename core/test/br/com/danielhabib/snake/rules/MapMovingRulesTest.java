@@ -1,7 +1,5 @@
 package br.com.danielhabib.snake.rules;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,7 +17,7 @@ public class MapMovingRulesTest extends BaseTest {
 
 		Snake snake = rules.update(newSnake(ORIGIN, Direction.RIGHT));
 
-		assertEquals(ORIGIN, snake.getPosition());
+		assertPoints(ORIGIN, snake.getPosition());
 	}
 
 	@Test
@@ -29,7 +27,7 @@ public class MapMovingRulesTest extends BaseTest {
 
 		Snake snake = rules.update(newSnake(ORIGIN, Direction.RIGHT));
 
-		assertEquals(new Vector2(1, 0), snake.getPosition());
+		assertPoints(new Vector2(1, 0), snake.getPosition());
 	}
 
 	private List<Vector2> wallAwayFromSnake() {

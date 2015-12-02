@@ -2,90 +2,57 @@ package br.com.danielhabib.snake.rules;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.runner.RunWith;
+import org.junit.Before;
+import org.junit.Test;
 
-import com.googlecode.zohhak.api.TestWith;
-import com.googlecode.zohhak.api.runners.ZohhakRunner;
+import com.badlogic.gdx.math.Vector2;
 
-@RunWith(ZohhakRunner.class)
 public class SnakeControllerTest extends BaseTest {
-	@TestWith({ "LEFT", "RIGHT" })
-	public void up_SnakeCanGoUp_TurnsDirection(Direction direction) throws Exception {
-		SnakeController controller = new SnakeController(new MovingRules());
+	private SnakeController controller;
 
-		Snake snake = newSnake(0, 0, direction);
-		Snake result = controller.up(snake);
-
-		assertEquals(Direction.UP, result.getDirection());
+	@Before
+	public void setup() {
+		controller = new SnakeController(new MovingRules());
 	}
 
-	@TestWith({ "UP", "DOWN" })
-	public void up_SnakeCannotGoUp_MaintainsDirection(Direction direction) throws Exception {
-		SnakeController controller = new SnakeController(new MovingRules());
-
-		Snake snake = newSnake(0, 0, direction);
-		Snake result = controller.up(snake);
-
-		assertEquals(direction, result.getDirection());
+	@Test
+	public void up() throws Exception {
+		assertEquals(Direction.UP, directionOf(controller.up(whenSnakeIs(Direction.UP))));
+		assertEquals(Direction.DOWN, directionOf(controller.up(whenSnakeIs(Direction.DOWN))));
+		assertEquals(Direction.UP, directionOf(controller.up(whenSnakeIs(Direction.LEFT))));
+		assertEquals(Direction.UP, directionOf(controller.up(whenSnakeIs(Direction.RIGHT))));
 	}
 
-	@TestWith({ "LEFT", "RIGHT" })
-	public void down_SnakeCanGoDown_TurnsDirection(Direction direction) throws Exception {
-		SnakeController controller = new SnakeController(new MovingRules());
-
-		Snake snake = newSnake(0, 0, direction);
-		Snake result = controller.down(snake);
-
-		assertEquals(Direction.DOWN, result.getDirection());
+	@Test
+	public void down() throws Exception {
+		assertEquals(Direction.UP, directionOf(controller.down(whenSnakeIs(Direction.UP))));
+		assertEquals(Direction.DOWN, directionOf(controller.down(whenSnakeIs(Direction.DOWN))));
+		assertEquals(Direction.DOWN, directionOf(controller.down(whenSnakeIs(Direction.LEFT))));
+		assertEquals(Direction.DOWN, directionOf(controller.down(whenSnakeIs(Direction.RIGHT))));
 	}
 
-	@TestWith({ "UP", "DOWN" })
-	public void down_SnakeCannotGoDown_MaintainsDirection(Direction direction) throws Exception {
-		SnakeController controller = new SnakeController(new MovingRules());
-
-		Snake snake = newSnake(0, 0, direction);
-		Snake result = controller.down(snake);
-
-		assertEquals(direction, result.getDirection());
+	@Test
+	public void right() throws Exception {
+		assertEquals(Direction.RIGHT, directionOf(controller.right(whenSnakeIs(Direction.UP))));
+		assertEquals(Direction.RIGHT, directionOf(controller.right(whenSnakeIs(Direction.DOWN))));
+		assertEquals(Direction.LEFT, directionOf(controller.right(whenSnakeIs(Direction.LEFT))));
+		assertEquals(Direction.RIGHT, directionOf(controller.right(whenSnakeIs(Direction.RIGHT))));
 	}
 
-	@TestWith({ "LEFT", "RIGHT" })
-	public void left_SnakeCannotGoLeft_MaintainsDirection(Direction direction) throws Exception {
-		SnakeController controller = new SnakeController(new MovingRules());
-
-		Snake snake = newSnake(0, 0, direction);
-		Snake result = controller.left(snake);
-
-		assertEquals(direction, result.getDirection());
+	@Test
+	public void left() throws Exception {
+		assertEquals(Direction.LEFT, directionOf(controller.left(whenSnakeIs(Direction.UP))));
+		assertEquals(Direction.LEFT, directionOf(controller.left(whenSnakeIs(Direction.DOWN))));
+		assertEquals(Direction.LEFT, directionOf(controller.left(whenSnakeIs(Direction.LEFT))));
+		assertEquals(Direction.RIGHT, directionOf(controller.left(whenSnakeIs(Direction.RIGHT))));
 	}
 
-	@TestWith({ "UP", "DOWN" })
-	public void left_SnakeCanGoLeft_TurnsDirection(Direction direction) throws Exception {
-		SnakeController controller = new SnakeController(new MovingRules());
-
-		Snake snake = newSnake(0, 0, direction);
-		Snake result = controller.left(snake);
-
-		assertEquals(Direction.LEFT, result.getDirection());
+	private Vector2 directionOf(Snake snake) {
+		return snake.getDirection();
 	}
 
-	@TestWith({ "UP", "DOWN" })
-	public void right_SnakeCanGoRight_TurnsDirection(Direction direction) throws Exception {
-		SnakeController controller = new SnakeController(new MovingRules());
-
-		Snake snake = newSnake(0, 0, direction);
-		Snake result = controller.right(snake);
-
-		assertEquals(Direction.RIGHT, result.getDirection());
+	private Snake whenSnakeIs(Vector2 direction) {
+		return newSnake(0, 0, direction);
 	}
 
-	@TestWith({ "LEFT", "RIGHT" })
-	public void right_SnakeCannotGoRight_MaintainsDirection(Direction direction) throws Exception {
-		SnakeController controller = new SnakeController(new MovingRules());
-
-		Snake snake = newSnake(0, 0, direction);
-		Snake result = controller.right(snake);
-
-		assertEquals(direction, result.getDirection());
-	}
 }

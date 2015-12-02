@@ -13,7 +13,7 @@ public class FruitRule implements IRule {
 
 	@Override
 	public Snake update(Snake snake) {
-		return snake.getPosition().equals(fruitPosition) ? consumesFruit(snake) : snake;
+		return snake.getPosition().epsilonEquals(fruitPosition, 0.01f) ? consumesFruit(snake) : snake;
 	}
 
 	private Snake consumesFruit(Snake snake) {

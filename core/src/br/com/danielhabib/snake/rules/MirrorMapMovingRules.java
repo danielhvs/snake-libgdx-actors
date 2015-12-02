@@ -5,15 +5,16 @@ import com.badlogic.gdx.math.Vector2;
 public class MirrorMapMovingRules extends AMovingRules {
 
 	private AMovingRules movingRules;
-	private int lastX;
-	private int lastY;
+	private float lastX;
+	private float lastY;
 
-	public MirrorMapMovingRules(AMovingRules movingRules, int lastX, int lastY) {
+	public MirrorMapMovingRules(AMovingRules movingRules, float lastX, float lastY) {
 		this.movingRules = movingRules;
 		this.lastX = lastX;
 		this.lastY = lastY;
 	}
 
+	// FIXME: Requires texture
 	@Override
 	public Snake update(Snake snake) {
 		Snake nextSnake = movingRules.update(snake);

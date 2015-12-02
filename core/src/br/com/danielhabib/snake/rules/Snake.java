@@ -28,10 +28,10 @@ public class Snake {
 
 	public Snake addTail() {
 		Piece tail = getTail();
-		Direction tailDirection = Direction.valueOf(tail.getDirection());
+		Vector2 tailDirection = tail.getDirection();
 		Vector2 point = tail.getPoint().cpy();
 		Vector2 newPoint = point.sub(tail.getDirection());
-		Piece newTail = new Piece(newPoint, tailDirection.getDirection());
+		Piece newTail = new Piece(newPoint, tailDirection);
 		pieces.push(newTail);
 		return new Snake(pieces);
 	}
@@ -40,28 +40,28 @@ public class Snake {
 		Stack<Piece> newPieces = new Stack<Piece>();
 		List<Piece> list = new ArrayList<Piece>(getPieces());
 		Vector2 headVector2 = Vector2;
-		Direction headDirection = Direction.valueOf(list.get(0).getDirection());
+		Vector2 headDirection = list.get(0).getDirection();
 		for (int i = 0; i < list.size(); i++) {
 			Piece moved = list.get(i).move(headVector2);
 			Piece turned = moved.turn(headDirection);
 			newPieces.push(turned);
 			headVector2 = list.get(i).getPoint();
-			headDirection = Direction.valueOf(list.get(i).getDirection());
+			headDirection = list.get(i).getDirection();
 		}
 		return new Snake(newPieces);
 	}
 
 	public Snake move() {
-		return move(getPosition().add(getDirection().getDirection()));
+		return move(getPosition().add(getDirection()));
 	}
 
 	public Snake removeTail() {
 		pieces.pop();
-		return new Snake(pieces);
+		return new Snake(getPieces());
 	}
 
 	public Piece getHead() {
-		return pieces.get(0);
+		return getPieces().get(0);
 	}
 
 	private int getTailIndex() {
@@ -69,11 +69,11 @@ public class Snake {
 	}
 
 	public Vector2 getPosition() {
-		return getHead().getPoint();
+		return getHead().getPoint().cpy();
 	}
 
-	public Direction getDirection() {
-		return Direction.valueOf(getHead().getDirection());
+	public Vector2 getDirection() {
+		return getHead().getDirection().cpy();
 	}
 
 	@Override
@@ -81,19 +81,21 @@ public class Snake {
 		return pieces.toString();
 	}
 
-	public Snake turn(Direction direction) {
+	public Snake turn(Vector2 direction) {
 		Piece newHead = getHead().turn(direction);
 		int headIndex = 0;
-		pieces.remove(headIndex);
-		pieces.insertElementAt(newHead, headIndex);
-		return new Snake(pieces);
+		Stack<Piece> newPieces = getPieces();
+		newPieces.remove(headIndex);
+		newPieces.insertElementAt(newHead, headIndex);
+		return new Snake(newPieces);
 	}
 
 	public Snake revert() {
 		Stack<Piece> newPieces = new Stack<Piece>();
-		while (!pieces.isEmpty()) {
-			Piece pop = pieces.pop();
-			Piece newPiece = new Piece(pop.getPoint(), Direction.valueOf(pop.getDirection()).invert());
+		Stack<Piece> piecesCopy = getPieces();
+		while (!piecesCopy.isEmpty()) {
+			Piece pop = piecesCopy.pop();
+			Piece newPiece = new Piece(pop.getPoint(), pop.getDirection().rotate(180));
 			newPieces.push(newPiece);
 		}
 		return new Snake(newPieces);
