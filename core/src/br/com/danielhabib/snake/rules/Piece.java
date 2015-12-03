@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class Piece {
-
 	private Vector2 point;
 	private Direction direction;
 	private Sprite sprite;
@@ -14,23 +13,25 @@ public class Piece {
 	private static final int SIZE = 16;
 
 	public Piece(Vector2 point, Direction direction, Texture texture) {
+		// super(texture, point, direction);
 		this.point = point;
 		this.direction = direction;
 		this.texture = texture;
 		this.sprite = new Sprite(texture);
 		sprite.setSize(SIZE, SIZE);
 		sprite.flip(false, true);
+		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 	}
 
-	public Vector2 getPoint() {
+	public Vector2 getPosition() {
 		return point.cpy();
 	}
 
-	public Direction getDirection() {
+	public Direction getNormDirection() {
 		return direction;
 	}
 
-	public Vector2 getVector2() {
+	public Vector2 getDirection() {
 		return direction.getVector2().cpy();
 	}
 
@@ -80,17 +81,18 @@ public class Piece {
 	}
 
 	public Piece move(Vector2 finalPoint) {
-		return new Piece(finalPoint, direction, texture);
+		this.point = finalPoint;
+		return this;
 	}
 
 	public Piece turn(Direction newDirection) {
-		return new Piece(point.cpy(), newDirection, texture);
+		this.direction = newDirection;
+		return this;
 	}
 
 	public void draw(SpriteBatch batch) {
-		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
-		sprite.rotate(45.0f);
 		sprite.setPosition(point.x * SIZE, point.y * SIZE);
+		sprite.setRotation(direction.getRotation());
 		sprite.draw(batch);
 	}
 
@@ -98,4 +100,7 @@ public class Piece {
 		return texture;
 	}
 
+	public Sprite getSprite() {
+		return sprite;
+	}
 }

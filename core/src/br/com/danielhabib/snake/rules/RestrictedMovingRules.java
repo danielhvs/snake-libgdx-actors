@@ -4,6 +4,7 @@ import java.util.Stack;
 
 public class RestrictedMovingRules extends AMovingRules {
 
+	// FIXME: Broke
 	@Override
 	public Snake update(Snake snake) {
 		Snake futureSnake = snake.move();
@@ -11,7 +12,7 @@ public class RestrictedMovingRules extends AMovingRules {
 		Piece head = futureSnake.getHead();
 		pieces.remove(0);
 		while (!pieces.isEmpty()) {
-			if (pieces.pop().getPoint().epsilonEquals(head.getPoint(), 0.01f)) {
+			if (pieces.pop().getPosition().epsilonEquals(head.getPosition(), 0.01f)) {
 				return snake;
 			}
 		}

@@ -12,8 +12,8 @@ public class PieceTest extends BaseTest {
 	public void itRepresentsAPointAndADirection() throws Exception {
 		Piece piece = newPiece(new Vector2(0, 0), Direction.RIGHT);
 
-		assertEquals(Direction.RIGHT, piece.getDirection());
-		assertPoints(new Vector2(0, 0), piece.getPoint());
+		assertEquals(Direction.RIGHT, piece.getNormDirection());
+		assertPoints(new Vector2(0, 0), piece.getPosition());
 	}
 
 	@Test
@@ -21,7 +21,7 @@ public class PieceTest extends BaseTest {
 		Piece piece = newPiece(new Vector2(0, 0), Direction.RIGHT);
 		Piece moved = piece.move();
 
-		assertPoints(new Vector2(1, 0), moved.getPoint());
+		assertPoints(new Vector2(1, 0), moved.getPosition());
 	}
 
 	@Test
@@ -30,7 +30,7 @@ public class PieceTest extends BaseTest {
 
 		Piece moved = piece.move(new Vector2(10, 0));
 
-		assertPoints(new Vector2(10, 0), moved.getPoint());
+		assertPoints(new Vector2(10, 0), moved.getPosition());
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class PieceTest extends BaseTest {
 
 		Piece turned = piece.turn(Direction.UP);
 
-		assertEquals(Direction.UP, turned.getDirection());
+		assertEquals(Direction.UP, turned.getNormDirection());
 	}
 
 }

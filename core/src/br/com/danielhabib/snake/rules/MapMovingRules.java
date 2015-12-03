@@ -17,13 +17,13 @@ public class MapMovingRules extends AMovingRules {
 	// FIXME: Texture is needed...
 	@Override
 	public Snake update(Snake snake) {
-		Snake nextPositionSnake = movingRules.update(snake);
+		Vector2 nextPositionSnake = snake.getNextPosition();
 		for (Vector2 tile : map) {
-			if (tile.epsilonEquals(nextPositionSnake.getPosition(), 0.01f)) {
+			if (tile.epsilonEquals(nextPositionSnake, 0.01f)) {
 				return snake;
 			}
 		}
-		return nextPositionSnake;
+		return snake.move();
 	}
 
 }

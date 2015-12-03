@@ -59,7 +59,7 @@ public class SnakeTest extends BaseTest {
 	public void addTail_2PiecedSnake_MaintainsDirection() throws Exception {
 		Snake snake = newSnake(0, 0, Direction.LEFT).addTail();
 
-		assertEquals(Direction.LEFT, snake.getTail().getDirection());
+		assertEquals(Direction.LEFT, snake.getTail().getNormDirection());
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class SnakeTest extends BaseTest {
 	public void revert_RevertsSnakePosition() throws Exception {
 		Snake snake = newSnake(0, 0).revert();
 
-		assertEquals(Direction.LEFT, snake.getTail().getDirection());
+		assertEquals(Direction.LEFT, snake.getTail().getNormDirection());
 	}
 
 	@Test

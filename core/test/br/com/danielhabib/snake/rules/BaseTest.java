@@ -39,8 +39,16 @@ public class BaseTest {
 		return new Snake(pieces);
 	}
 
+	protected Snake newSnake(Stack<Piece> pieces) {
+		return new Snake(pieces);
+	}
+
 	protected Piece newPiece(Vector2 vector, Direction direction) {
 		return new Piece(vector, direction, texture);
+	}
+
+	protected Piece newPiece(int x, int y) {
+		return newPiece(new Vector2(x, y), Direction.RIGHT);
 	}
 
 	protected void assertPoints(Vector2 expected, Vector2 actual) {
@@ -58,7 +66,7 @@ public class BaseTest {
 	}
 
 	protected void assertPiece(Piece expectedPiece, Piece actualPieces) {
-		assertPoints(expectedPiece.getPoint(), actualPieces.getPoint());
-		assertEquals(expectedPiece.getDirection(), actualPieces.getDirection());
+		assertPoints(expectedPiece.getPosition(), actualPieces.getPosition());
+		assertEquals(expectedPiece.getNormDirection(), actualPieces.getNormDirection());
 	}
 }
