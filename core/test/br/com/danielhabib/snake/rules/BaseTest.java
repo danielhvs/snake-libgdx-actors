@@ -4,9 +4,26 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Stack;
 
+import org.junit.Before;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class BaseTest {
+
+	@Mock
+	Texture texture;
+
+	@Mock
+	SpriteBatch batch;
+
+	@Before
+	public void superSetup() {
+		MockitoAnnotations.initMocks(this);
+	}
 
 	protected Snake newSnake(int x, int y) {
 		return newSnake(x, y, Direction.RIGHT);
@@ -18,12 +35,12 @@ public class BaseTest {
 
 	protected Snake newSnake(float x, float y, Direction direction) {
 		Stack<Piece> pieces = new Stack<Piece>();
-		pieces.push(new Piece(new Vector2(x, y), direction));
+		pieces.push(new Piece(new Vector2(x, y), direction, texture));
 		return new Snake(pieces);
 	}
 
 	protected Piece newPiece(Vector2 vector, Direction direction) {
-		return new Piece(vector, direction);
+		return new Piece(vector, direction, texture);
 	}
 
 	protected void assertPoints(Vector2 expected, Vector2 actual) {

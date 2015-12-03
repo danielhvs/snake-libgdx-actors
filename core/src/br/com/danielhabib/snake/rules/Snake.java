@@ -2,6 +2,8 @@ package br.com.danielhabib.snake.rules;
 
 import java.util.Stack;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class Snake {
@@ -20,7 +22,7 @@ public class Snake {
 	}
 
 	public Snake addTail(int x, int y) {
-		pieces.push(new Piece(new Vector2(x, y), getTail().getDirection()));
+		pieces.push(new Piece(new Vector2(x, y), getTail().getDirection(), getHead().getTexture()));
 		return new Snake(pieces);
 	}
 
@@ -29,7 +31,7 @@ public class Snake {
 		Direction tailDirection = tail.getDirection();
 		Vector2 point = tail.getPoint().cpy();
 		Vector2 newPoint = point.sub(tail.getVector2());
-		Piece newTail = new Piece(newPoint, tailDirection);
+		Piece newTail = new Piece(newPoint, tailDirection, tail.getTexture());
 		pieces.push(newTail);
 		return new Snake(pieces);
 	}
@@ -92,9 +94,13 @@ public class Snake {
 	public Snake revert() {
 		Stack<Piece> newPieces = new Stack<Piece>();
 		Stack<Piece> piecesCopy = getPieces();
+		Piece newHead = piecesCopy.pop();
+		Piece newHeadPiece = new Piece(newHead.getPoint(), newHead.getDirection().invert(), getHead().getTexture());
+		newPieces.push(newHeadPiece);
+		Texture tailTexture = getTail().getTexture();
 		while (!piecesCopy.isEmpty()) {
 			Piece pop = piecesCopy.pop();
-			Piece newPiece = new Piece(pop.getPoint(), pop.getDirection().invert());
+			Piece newPiece = new Piece(pop.getPoint(), pop.getDirection().invert(), tailTexture);
 			newPieces.push(newPiece);
 		}
 		return new Snake(newPieces);
@@ -134,6 +140,12 @@ public class Snake {
 			return false;
 		}
 		return true;
+	}
+
+	public void draw(SpriteBatch batch) {
+		for (Piece piece : pieces) {
+			piece.draw(batch);
+		}
 	}
 
 }

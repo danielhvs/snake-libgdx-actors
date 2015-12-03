@@ -1,15 +1,25 @@
 package br.com.danielhabib.snake.rules;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class Piece {
 
 	private Vector2 point;
 	private Direction direction;
+	private Sprite sprite;
+	private Texture texture;
+	private static final int SIZE = 16;
 
-	public Piece(Vector2 point, Direction direction) {
+	public Piece(Vector2 point, Direction direction, Texture texture) {
 		this.point = point;
 		this.direction = direction;
+		this.texture = texture;
+		this.sprite = new Sprite(texture);
+		sprite.setSize(SIZE, SIZE);
+		sprite.flip(false, true);
 	}
 
 	public Vector2 getPoint() {
@@ -27,7 +37,7 @@ public class Piece {
 	public Piece move() {
 		// FIXME: speed
 		Vector2 newPoint = point.cpy().add(direction.getVector2());
-		return new Piece(newPoint, direction);
+		return new Piece(newPoint, direction, texture);
 	}
 
 	@Override
@@ -70,11 +80,22 @@ public class Piece {
 	}
 
 	public Piece move(Vector2 finalPoint) {
-		return new Piece(finalPoint, direction);
+		return new Piece(finalPoint, direction, texture);
 	}
 
 	public Piece turn(Direction newDirection) {
-		return new Piece(point.cpy(), newDirection);
+		return new Piece(point.cpy(), newDirection, texture);
+	}
+
+	public void draw(SpriteBatch batch) {
+		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+		sprite.rotate(45.0f);
+		sprite.setPosition(point.x * SIZE, point.y * SIZE);
+		sprite.draw(batch);
+	}
+
+	public Texture getTexture() {
+		return texture;
 	}
 
 }

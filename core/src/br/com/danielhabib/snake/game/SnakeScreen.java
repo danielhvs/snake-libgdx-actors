@@ -58,6 +58,8 @@ public class SnakeScreen implements Screen {
 	TextureRegion currentFrame; // #7
 	float stateTime; // #8
 	private Stage stage;
+	private Texture boxTexture;
+	private Texture headTexture;
 
 	public SnakeScreen(Game game) {
 		this.game = game;
@@ -96,9 +98,10 @@ public class SnakeScreen implements Screen {
 			map.add(new Vector2(lastX, y));
 		}
 
-		// Snake
-		headSprite = new Sprite(new Texture(Gdx.files.internal("head.png")));
-		boxSprite = new Sprite(new Texture(Gdx.files.internal("box.png")));
+		headTexture = new Texture(Gdx.files.internal("head.png"));
+		headSprite = new Sprite(headTexture);
+		boxTexture = new Texture(Gdx.files.internal("box.png"));
+		boxSprite = new Sprite(boxTexture);
 		setSizeAndFlip(boxSprite);
 		setSizeAndFlip(headSprite);
 		headSprite.setOrigin(headSprite.getWidth() / 2, headSprite.getHeight() / 2);
@@ -130,12 +133,12 @@ public class SnakeScreen implements Screen {
 	// FIXME: DRY
 	private Snake newSnakeAtXY(int x, int y, Direction direction) {
 		Stack<Piece> pieces = new Stack<Piece>();
-		pieces.push(new Piece(new Vector2(x, y), direction));
-		Snake snake = new Snake(pieces);
-		int size = 5;
-		for (int i = 0; i < size; i++) {
-			snake = snake.addTail();
+		pieces.push(new Piece(new Vector2(x, y), direction, headTexture));
+		int size = 4;
+		for (int i = 1; i < size; i++) {
+			pieces.push(new Piece(new Vector2(x - i, y), direction, boxTexture));
 		}
+		Snake snake = new Snake(pieces);
 		return snake;
 	}
 
@@ -156,7 +159,10 @@ public class SnakeScreen implements Screen {
 			game.setScreen(new Splash(game));
 		}
 
+		controlSnake();
+
 		// Managing FPS
+		// FIXME: remove when speed is added
 		time += delta;
 		if (time > 0.125f) {
 			snake = movingRules.update(snake);
@@ -164,7 +170,6 @@ public class SnakeScreen implements Screen {
 		}
 
 		// Applying Rules
-		controlSnake();
 
 		snake = fruitRule.update(snake);
 		snake = poisonRule.update(snake);
@@ -187,18 +192,7 @@ public class SnakeScreen implements Screen {
 		holeSprite.draw(batch);
 
 		// Snake
-		Vector2 position = snake.getHead().getPoint();
-		headSprite.setRotation(snake.getDirection().getRotation());
-		headSprite.setPosition(position.x * SIZE, position.y * SIZE);
-		headSprite.draw(batch);
-
-		Stack<Piece> pieces = snake.getPieces();
-		for (int i = 1; i < pieces.size(); i++) {
-			Piece piece = pieces.get(i);
-			position = piece.getPoint();
-			boxSprite.setPosition(position.x * SIZE, position.y * SIZE);
-			boxSprite.draw(batch);
-		}
+		snake.draw(batch);
 
 		// Map
 		for (Vector2 mapPoint : map) {

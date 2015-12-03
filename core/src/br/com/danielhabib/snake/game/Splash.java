@@ -43,6 +43,7 @@ public class Splash implements Screen {
 	private float time;
 	private Sprite boxSprite;
 	private OrthographicCamera camera;
+	private Texture boxTexture;
 
 	public Splash(Game game) {
 		this.game = game;
@@ -101,7 +102,8 @@ public class Splash implements Screen {
 		stage.addActor(table);
 		Gdx.input.setInputProcessor(stage);
 
-		boxSprite = new Sprite(new Texture(Gdx.files.internal("box.png")));
+		boxTexture = new Texture(Gdx.files.internal("box.png"));
+		boxSprite = new Sprite(boxTexture);
 		setSizeAndFlip(boxSprite);
 		boxSprite.setColor(Color.YELLOW);
 
@@ -138,7 +140,7 @@ public class Splash implements Screen {
 	// FIXME: DRY
 	private Snake newSnakeAtXY(int x, int y, Direction direction) {
 		Stack<Piece> pieces = new Stack<Piece>();
-		pieces.push(new Piece(new Vector2(x, y), direction));
+		pieces.push(new Piece(new Vector2(x, y), direction, boxTexture));
 		Snake snake = new Snake(pieces);
 		int size = 10;
 		for (int i = 0; i < size; i++) {

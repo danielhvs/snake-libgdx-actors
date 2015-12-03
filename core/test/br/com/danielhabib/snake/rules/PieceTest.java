@@ -10,7 +10,7 @@ public class PieceTest extends BaseTest {
 
 	@Test
 	public void itRepresentsAPointAndADirection() throws Exception {
-		Piece piece = new Piece(new Vector2(0, 0), Direction.RIGHT);
+		Piece piece = newPiece(new Vector2(0, 0), Direction.RIGHT);
 
 		assertEquals(Direction.RIGHT, piece.getDirection());
 		assertPoints(new Vector2(0, 0), piece.getPoint());
@@ -18,7 +18,7 @@ public class PieceTest extends BaseTest {
 
 	@Test
 	public void move_MovesTowardsDirection() throws Exception {
-		Piece piece = new Piece(new Vector2(0, 0), Direction.RIGHT);
+		Piece piece = newPiece(new Vector2(0, 0), Direction.RIGHT);
 		Piece moved = piece.move();
 
 		assertPoints(new Vector2(1, 0), moved.getPoint());
@@ -26,7 +26,7 @@ public class PieceTest extends BaseTest {
 
 	@Test
 	public void itCanMoveToSpecificPoint() throws Exception {
-		Piece piece = new Piece(new Vector2(0, 0), Direction.RIGHT);
+		Piece piece = newPiece(new Vector2(0, 0), Direction.RIGHT);
 
 		Piece moved = piece.move(new Vector2(10, 0));
 
@@ -35,7 +35,7 @@ public class PieceTest extends BaseTest {
 
 	@Test
 	public void itCanChangeTheDirection() throws Exception {
-		Piece piece = new Piece(new Vector2(0, 0), Direction.RIGHT);
+		Piece piece = newPiece(new Vector2(0, 0), Direction.RIGHT);
 
 		Piece turned = piece.turn(Direction.UP);
 
