@@ -26,7 +26,7 @@ public class FruitRuleTest extends BaseTest {
 		Snake snakeAte = rule.update(newSnake(0, 0));
 		Snake snakeDidntAte = rule.update(newSnake(0, 0));
 
-		assertEquals(2, snakeAte.getPieces().size());
-		assertEquals(1, snakeDidntAte.getPieces().size());
+		assertEquals(2, snakeAte.copyPieces().size());
+		assertEquals(1, snakeDidntAte.copyPieces().size());
 	}
 }

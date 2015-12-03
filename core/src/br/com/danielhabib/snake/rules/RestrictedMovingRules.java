@@ -8,7 +8,7 @@ public class RestrictedMovingRules extends AMovingRules {
 	@Override
 	public Snake update(Snake snake) {
 		Snake futureSnake = snake.move();
-		Stack<Piece> pieces = futureSnake.getPieces();
+		Stack<Piece> pieces = futureSnake.copyPieces();
 		Piece head = futureSnake.getHead();
 		pieces.remove(0);
 		while (!pieces.isEmpty()) {

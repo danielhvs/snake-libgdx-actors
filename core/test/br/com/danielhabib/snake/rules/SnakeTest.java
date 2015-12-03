@@ -39,7 +39,7 @@ public class SnakeTest extends BaseTest {
 	public void getPosition_ManyPieces_ReturnsAllPositions() throws Exception {
 		Snake snake = newSnake(3, 1).addTail(2, 1).addTail(1, 1).addTail(0, 1);
 
-		List<Piece> pieces = snake.getPieces();
+		List<Piece> pieces = snake.copyPieces();
 
 		assertPiece(newPiece(new Vector2(3, 1), Direction.RIGHT), pieces.get(0));
 		assertPiece(newPiece(new Vector2(2, 1), Direction.RIGHT), pieces.get(1));
@@ -66,7 +66,7 @@ public class SnakeTest extends BaseTest {
 	public void removeTail_OneHeadedSnake_ReturnsSnakeEnd() throws Exception {
 		Snake snake = newSnake(0, 0).removeTail();
 
-		assertEquals(new Stack<Piece>(), snake.getPieces());
+		assertEquals(new Stack<Piece>(), snake.copyPieces());
 	}
 
 	@Test

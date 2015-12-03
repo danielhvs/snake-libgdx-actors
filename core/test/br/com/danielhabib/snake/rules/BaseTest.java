@@ -57,8 +57,8 @@ public class BaseTest {
 	}
 
 	protected void assertSnake(Snake expected, Snake actual) {
-		Stack<Piece> expectedPieces = expected.getPieces();
-		Stack<Piece> actualPieces = actual.getPieces();
+		Stack<Piece> expectedPieces = expected.copyPieces();
+		Stack<Piece> actualPieces = actual.copyPieces();
 		assertEquals("Pieces size", expectedPieces.size(), actualPieces.size());
 		for (int i = 0; i < expectedPieces.size(); i++) {
 			assertPiece(expectedPieces.get(i), actualPieces.get(i));

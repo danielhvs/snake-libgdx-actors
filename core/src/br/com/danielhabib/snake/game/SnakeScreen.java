@@ -36,7 +36,7 @@ public class SnakeScreen implements Screen {
 	private Sprite appleSprite;
 	private Sprite poisonedSprite;
 	private Sprite holeSprite;
-	private static final int SIZE = 16;
+	private static final int SIZE = 32;
 	private Game game;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -100,7 +100,7 @@ public class SnakeScreen implements Screen {
 
 		headTexture = new Texture(Gdx.files.internal("head.png"));
 		headSprite = new Sprite(headTexture);
-		boxTexture = new Texture(Gdx.files.internal("box.png"));
+		boxTexture = new Texture(Gdx.files.internal("box.jpg"));
 		boxSprite = new Sprite(boxTexture);
 		setSizeAndFlip(boxSprite);
 		setSizeAndFlip(headSprite);
@@ -134,7 +134,7 @@ public class SnakeScreen implements Screen {
 	private Snake newSnakeAtXY(int x, int y, Direction direction) {
 		Stack<Piece> pieces = new Stack<Piece>();
 		pieces.push(new Piece(new Vector2(x, y), direction, headTexture));
-		int size = 4;
+		int size = 10;
 		for (int i = 1; i < size; i++) {
 			pieces.push(new Piece(new Vector2(x - i, y), direction, boxTexture));
 		}
@@ -165,14 +165,14 @@ public class SnakeScreen implements Screen {
 		// FIXME: remove when speed is added
 		time += delta;
 		if (time > 0.125f) {
-			snake = movingRules.update(snake);
+			// movingRules.update(snake);
 			time = 0;
 		}
 
 		// Applying Rules
 
-		snake = fruitRule.update(snake);
-		snake = poisonRule.update(snake);
+		fruitRule.update(snake);
+		poisonRule.update(snake);
 
 		// Drawing
 		camera.update();

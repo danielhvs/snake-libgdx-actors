@@ -178,7 +178,7 @@ public class Splash implements Screen {
 		batch.begin();
 		// Snake
 		for (Snake snake : snakes) {
-			for (Piece piece : snake.getPieces()) {
+			for (Piece piece : snake.copyPieces()) {
 				Vector2 position = piece.getPosition();
 				boxSprite.setPosition(position.x * SIZE, position.y * SIZE);
 				boxSprite.draw(batch);

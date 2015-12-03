@@ -10,9 +10,6 @@ public class Snake {
 
 	private Stack<Piece> pieces;
 
-	public Snake() {
-	}
-
 	public Snake(Stack<Piece> pieces) {
 		this.pieces = pieces;
 	}
@@ -55,7 +52,6 @@ public class Snake {
 	}
 
 	public Snake move() {
-		// FIXME: speed
 		return move(getNextPosition());
 	}
 
@@ -65,11 +61,11 @@ public class Snake {
 
 	public Snake removeTail() {
 		pieces.pop();
-		return new Snake(getPieces());
+		return this;
 	}
 
 	public Piece getHead() {
-		return getPieces().get(0);
+		return copyPieces().get(0);
 	}
 
 	private int getTailIndex() {
@@ -96,7 +92,7 @@ public class Snake {
 
 	public Snake revert() {
 		Stack<Piece> newPieces = new Stack<Piece>();
-		Stack<Piece> piecesCopy = getPieces();
+		Stack<Piece> piecesCopy = copyPieces();
 		Piece newHead = piecesCopy.pop();
 		Piece newHeadPiece = new Piece(newHead.getPosition(), newHead.getNormDirection().invert(), getHead().getTexture());
 		newPieces.push(newHeadPiece);
@@ -106,10 +102,11 @@ public class Snake {
 			Piece newPiece = new Piece(pop.getPosition(), pop.getNormDirection().invert(), tailTexture);
 			newPieces.push(newPiece);
 		}
-		return new Snake(newPieces);
+		this.pieces = newPieces;
+		return this;
 	}
 
-	public Stack<Piece> getPieces() {
+	public Stack<Piece> copyPieces() {
 		Stack<Piece> copy = new Stack<Piece>();
 		copy.addAll(pieces);
 		return copy;

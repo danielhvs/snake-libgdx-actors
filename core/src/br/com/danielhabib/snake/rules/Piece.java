@@ -10,7 +10,7 @@ public class Piece {
 	private Direction direction;
 	private Sprite sprite;
 	private Texture texture;
-	private static final int SIZE = 16;
+	private static final int SIZE = 32;
 
 	public Piece(Vector2 point, Direction direction, Texture texture) {
 		// super(texture, point, direction);
