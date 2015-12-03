@@ -4,7 +4,6 @@ import java.util.Stack;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Snake {
@@ -35,25 +34,23 @@ public class Snake {
 	}
 
 	public Snake move(Vector2 newPoint) {
-		Stack<Piece> newPieces = new Stack<Piece>();
 		Vector2 headPoint = newPoint;
 		Direction headDirection = pieces.get(0).getNormDirection();
 		for (int i = 0; i < pieces.size(); i++) {
 			Piece piece = pieces.get(i);
 			Vector2 lastHeadPoint = piece.getPosition();
 			Direction lastDirection = piece.getNormDirection();
-			Piece newPiece = piece.move(headPoint).turn(headDirection);
-			newPieces.push(newPiece);
+
+			piece.move(headPoint).turn(headDirection);
+
 			headPoint = lastHeadPoint;
 			headDirection = lastDirection;
 		}
-		pieces.clear();
-		pieces.addAll(newPieces);
 		return this;
 	}
 
-	public Stack<Rectangle> getNextPositions() {
-		Stack<Rectangle> nextPositions = new Stack<Rectangle>();
+	public Stack<Vector2> getNextPositions() {
+		Stack<Vector2> nextPositions = new Stack<Vector2>();
 		for (Piece piece : pieces) {
 			nextPositions.add(piece.getNextPosition());
 		}

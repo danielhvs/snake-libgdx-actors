@@ -3,7 +3,6 @@ package br.com.danielhabib.snake.rules;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Piece {
@@ -39,12 +38,8 @@ public class Piece {
 		return this;
 	}
 
-	public Rectangle getNextPosition() {
-		Rectangle rectangle = new Rectangle();
-		Vector2 nextPosition = getPosition().add(getDirection());
-		rectangle.setPosition(nextPosition.x * Entity.SIZE, nextPosition.y * Entity.SIZE);
-		rectangle.setSize(Entity.SIZE);
-		return rectangle;
+	public Vector2 getNextPosition() {
+		return getPosition().add(getDirection());
 	}
 
 	@Override
