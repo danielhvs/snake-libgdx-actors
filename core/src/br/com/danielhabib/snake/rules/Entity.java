@@ -1,7 +1,7 @@
 package br.com.danielhabib.snake.rules;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -9,20 +9,18 @@ import com.badlogic.gdx.math.Vector2;
 public abstract class Entity {
 
 	public static int SIZE = 32;
-
-	protected Texture texture;
-	protected Vector2 pos, direction;
+	protected Vector2 pos;
+	private Sprite sprite;
 
 	public Entity(Texture texture, Vector2 pos, Vector2 direction) {
-		this.texture = texture;
 		this.pos = pos;
-		this.direction = direction;
+		this.sprite = new Sprite(texture);
 	}
 
 	public abstract void update();
 
-	public void render(SpriteBatch sb) {
-		sb.draw(texture, pos.x, pos.y);
+	public void render(SpriteBatch batch) {
+		sprite.draw(batch);
 	}
 
 	public Vector2 getPosition() {
@@ -30,12 +28,8 @@ public abstract class Entity {
 	}
 
 	public Rectangle getBounds() {
-		return new Rectangle(pos.x, pos.y, texture.getWidth(), texture.getHeight());
+		return new Rectangle(pos.x * SIZE, pos.y * SIZE, sprite.getWidth(), sprite.getHeight());
 	}
 
-	public void setDirection(float x, float y) {
-		direction.set(x, y);
-		direction.scl(Gdx.graphics.getDeltaTime());
-	}
 
 }
