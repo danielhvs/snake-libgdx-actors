@@ -10,11 +10,14 @@ public abstract class Entity {
 
 	public static int SIZE = 32;
 	protected Vector2 pos;
-	private Sprite sprite;
+	protected Sprite sprite;
 
-	public Entity(Texture texture, Vector2 pos, Vector2 direction) {
+	public Entity(Texture texture, Vector2 pos) {
 		this.pos = pos;
 		this.sprite = new Sprite(texture);
+		sprite.setSize(SIZE, SIZE);
+		sprite.flip(false, true);
+		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 	}
 
 	public abstract void update();

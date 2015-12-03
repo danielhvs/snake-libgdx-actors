@@ -26,6 +26,7 @@ import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.PoisonedFruitRule;
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.rules.SnakeController;
+import br.com.danielhabib.snake.rules.Wall;
 
 public class SnakeScreen implements Screen {
 
@@ -45,7 +46,7 @@ public class SnakeScreen implements Screen {
 	private SnakeController controller;
 	private AMovingRules movingRules;
 	private Hole hole;
-	private List<Vector2> map;
+	private List<Entity> map;
 	private Texture boxTexture;
 	private Texture headTexture;
 	private float fps = 8;
@@ -61,19 +62,6 @@ public class SnakeScreen implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(true);
 
-		// Map
-		map = new ArrayList<Vector2>();
-		int lastX = -1 + Gdx.graphics.getWidth() / SIZE;
-		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
-		for (int x = 0; x < lastX; x++) {
-			map.add(new Vector2(x, 0));
-			map.add(new Vector2(x, lastY));
-		}
-		for (int y = 0; y <= lastY; y++) {
-			map.add(new Vector2(0, y));
-			map.add(new Vector2(lastX, y));
-		}
-
 		headTexture = new Texture(Gdx.files.internal("head.png"));
 		headSprite = new Sprite(headTexture);
 		boxTexture = new Texture(Gdx.files.internal("box.jpg"));
@@ -81,6 +69,20 @@ public class SnakeScreen implements Screen {
 		setSizeAndFlip(boxSprite);
 		setSizeAndFlip(headSprite);
 		headSprite.setOrigin(headSprite.getWidth() / 2, headSprite.getHeight() / 2);
+
+		// Map
+		map = new ArrayList<Entity>();
+		int lastX = -1 + Gdx.graphics.getWidth() / SIZE;
+		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
+		for (int x = 0; x < lastX; x++) {
+			map.add(new Wall(boxTexture, new Vector2(x, 0)));
+			map.add(new Wall(boxTexture, new Vector2(x, lastY)));
+		}
+                //FIXME!? <=?
+		for (int y = 0; y <= lastY; y++) {
+			map.add(new Wall(boxTexture, new Vector2(0, y)));
+			map.add(new Wall(boxTexture, new Vector2(lastX, y)));
+		}
 
 		// Apples
 		appleSprite = new Sprite(new Texture(Gdx.files.internal("apple.png")));
@@ -154,6 +156,10 @@ public class SnakeScreen implements Screen {
 		fruitRule.update(snake);
 		poisonRule.update(snake);
 
+		for (Entity mapPoint : map) {
+			mapPoint.update();
+		}
+
 		// Drawing
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
@@ -175,9 +181,8 @@ public class SnakeScreen implements Screen {
 		snake.draw(batch);
 
 		// Map
-		for (Vector2 mapPoint : map) {
-			boxSprite.setPosition(mapPoint.x * SIZE, mapPoint.y * SIZE);
-			boxSprite.draw(batch);
+		for (Entity mapPoint : map) {
+			mapPoint.render(batch);
 		}
 
 		// Draw to batch
