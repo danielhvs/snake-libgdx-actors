@@ -17,6 +17,7 @@ public class BoingMovingRules extends AMovingRules {
 		this.lastY = lastY;
 	}
 
+	// FIXME: Broke!?
 	@Override
 	public Snake update(Snake snake) {
 		Snake nextSnake = movingRules.update(snake);

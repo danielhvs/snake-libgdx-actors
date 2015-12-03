@@ -51,9 +51,10 @@ public class Snake {
 
 	public Stack<Vector2> getNextPositions() {
 		Stack<Vector2> nextPositions = new Stack<Vector2>();
-		for (Piece piece : pieces) {
-			nextPositions.add(piece.getNextPosition());
+		for (int i = 1; i < pieces.size(); i++) {
+			nextPositions.push(pieces.get(i).getNextPosition());
 		}
+		nextPositions.push(getHead().getNextPosition());
 		return nextPositions;
 	}
 

@@ -16,14 +16,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import br.com.danielhabib.snake.rules.AMovingRules;
-import br.com.danielhabib.snake.rules.BoingMovingRules;
 import br.com.danielhabib.snake.rules.Direction;
 import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.FruitRule;
 import br.com.danielhabib.snake.rules.Hole;
-import br.com.danielhabib.snake.rules.HoleMovingRules;
 import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.PoisonedFruitRule;
+import br.com.danielhabib.snake.rules.RestrictedMovingRules;
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.rules.SnakeController;
 import br.com.danielhabib.snake.rules.Wall;
@@ -78,7 +77,7 @@ public class SnakeScreen implements Screen {
 			map.add(new Wall(boxTexture, new Vector2(x, 0)));
 			map.add(new Wall(boxTexture, new Vector2(x, lastY)));
 		}
-                //FIXME!? <=?
+		//FIXME!? <=?
 		for (int y = 0; y <= lastY; y++) {
 			map.add(new Wall(boxTexture, new Vector2(0, y)));
 			map.add(new Wall(boxTexture, new Vector2(lastX, y)));
@@ -99,13 +98,15 @@ public class SnakeScreen implements Screen {
 		fruitRule = new FruitRule(new Vector2(3, 4));
 		poisonRule = new PoisonedFruitRule(new Vector2(8, 17));
 		hole = new Hole(new Vector2(3, 8), new Vector2(19, 9));
-		AMovingRules realMovingRules = new HoleMovingRules(hole);
-		// AMovingRules realMovingRules = new RestrictedMovingRules();
+		// AMovingRules realMovingRules = new HoleMovingRules(hole);
+		AMovingRules realMovingRules = new RestrictedMovingRules();
 		controller = new SnakeController(realMovingRules);
 		// movingRules = new MapMovingRules(realMovingRules, map);
 		// movingRules = new MirrorMapMovingRules(holeMovingRules, lastX,
 		// lastY);
-		movingRules = new BoingMovingRules(realMovingRules, 1, 1, lastX - 1, lastY - 1);
+		// movingRules = new BoingMovingRules(realMovingRules, 1, 1, lastX - 1,
+		// lastY - 1);
+		movingRules = realMovingRules;
 	}
 
 	// FIXME: DRY
