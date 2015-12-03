@@ -4,6 +4,7 @@ import java.util.Stack;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Snake {
@@ -49,6 +50,14 @@ public class Snake {
 		pieces.clear();
 		pieces.addAll(newPieces);
 		return this;
+	}
+
+	public Stack<Rectangle> getNextPositions() {
+		Stack<Rectangle> nextPositions = new Stack<Rectangle>();
+		for (Piece piece : pieces) {
+			nextPositions.add(piece.getNextPosition());
+		}
+		return nextPositions;
 	}
 
 	public Snake move() {

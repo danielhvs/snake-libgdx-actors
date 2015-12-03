@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import br.com.danielhabib.snake.rules.AMovingRules;
 import br.com.danielhabib.snake.rules.BoingMovingRules;
 import br.com.danielhabib.snake.rules.Direction;
+import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.FruitRule;
 import br.com.danielhabib.snake.rules.Hole;
 import br.com.danielhabib.snake.rules.HoleMovingRules;
@@ -36,7 +37,7 @@ public class SnakeScreen implements Screen {
 	private Sprite appleSprite;
 	private Sprite poisonedSprite;
 	private Sprite holeSprite;
-	private static final int SIZE = 32;
+	private static final int SIZE = Entity.SIZE;
 	private Game game;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -136,7 +137,7 @@ public class SnakeScreen implements Screen {
 	private Snake newSnakeAtXY(int x, int y, Direction direction) {
 		Stack<Piece> pieces = new Stack<Piece>();
 		pieces.push(new Piece(new Vector2(x, y), direction, headTexture));
-		int size = 4;
+		int size = 10;
 		for (int i = 1; i < size; i++) {
 			pieces.push(new Piece(new Vector2(x - i, y), direction, boxTexture));
 		}
@@ -219,6 +220,7 @@ public class SnakeScreen implements Screen {
 		batch.end();
 	}
 
+	// This will be the "speed"
 	private void setFPS(float fps) {
 		this.fps = fps;
 		this.threshold = 1 / fps;
@@ -271,6 +273,7 @@ public class SnakeScreen implements Screen {
 		dispose();
 	}
 
+	// FIXME: call dispose on snake pieces too..?
 	@Override
 	public void dispose() {
 		dispose(boxSprite);

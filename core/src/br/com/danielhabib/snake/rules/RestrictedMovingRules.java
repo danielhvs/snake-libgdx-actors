@@ -2,21 +2,21 @@ package br.com.danielhabib.snake.rules;
 
 import java.util.Stack;
 
+import com.badlogic.gdx.math.Rectangle;
+
 public class RestrictedMovingRules extends AMovingRules {
 
 	// FIXME: Broke
 	@Override
 	public Snake update(Snake snake) {
-		Snake futureSnake = snake.move();
-		Stack<Piece> pieces = futureSnake.copyPieces();
-		Piece head = futureSnake.getHead();
-		pieces.remove(0);
-		while (!pieces.isEmpty()) {
-			if (pieces.pop().getPosition().epsilonEquals(head.getPosition(), 0.01f)) {
+		Stack<Rectangle> nextPositions = snake.getNextPositions();
+		Rectangle headPosition = nextPositions.pop();
+		for (Rectangle piecePosition : nextPositions) {
+			if (headPosition.contains(piecePosition) || headPosition.overlaps(piecePosition)) {
 				return snake;
 			}
 		}
-		return futureSnake;
+		return snake.move();
 	}
 
 }

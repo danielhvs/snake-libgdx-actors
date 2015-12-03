@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class Entity {
 
+	public static int SIZE = 32;
+
 	protected Texture texture;
 	protected Vector2 pos, direction;
 

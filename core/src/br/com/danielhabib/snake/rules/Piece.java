@@ -3,6 +3,7 @@ package br.com.danielhabib.snake.rules;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Piece {
@@ -10,15 +11,13 @@ public class Piece {
 	private Direction direction;
 	private Sprite sprite;
 	private Texture texture;
-	private static final int SIZE = 32;
 
 	public Piece(Vector2 point, Direction direction, Texture texture) {
-		// super(texture, point, direction);
 		this.point = point;
 		this.direction = direction;
 		this.texture = texture;
 		this.sprite = new Sprite(texture);
-		sprite.setSize(SIZE, SIZE);
+		sprite.setSize(Entity.SIZE, Entity.SIZE);
 		sprite.flip(false, true);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 	}
@@ -36,9 +35,16 @@ public class Piece {
 	}
 
 	public Piece move() {
-		// FIXME: speed
-		Vector2 newPoint = point.cpy().add(direction.getVector2());
-		return new Piece(newPoint, direction, texture);
+		point.add(direction.getVector2());
+		return this;
+	}
+
+	public Rectangle getNextPosition() {
+		Rectangle rectangle = new Rectangle();
+		Vector2 nextPosition = getPosition().add(getDirection());
+		rectangle.setPosition(nextPosition.x * Entity.SIZE, nextPosition.y * Entity.SIZE);
+		rectangle.setSize(Entity.SIZE);
+		return rectangle;
 	}
 
 	@Override
@@ -91,7 +97,7 @@ public class Piece {
 	}
 
 	public void draw(SpriteBatch batch) {
-		sprite.setPosition(point.x * SIZE, point.y * SIZE);
+		sprite.setPosition(point.x * Entity.SIZE, point.y * Entity.SIZE);
 		sprite.setRotation(direction.getRotation());
 		sprite.draw(batch);
 	}
