@@ -60,6 +60,8 @@ public class SnakeScreen implements Screen {
 	private Stage stage;
 	private Texture boxTexture;
 	private Texture headTexture;
+	private float fps = 8;
+	private float threshold = 0.125f;
 
 	public SnakeScreen(Game game) {
 		this.game = game;
@@ -118,9 +120,9 @@ public class SnakeScreen implements Screen {
 
 		// Map
 		snake = newSnakeAtXY(5, 1, Direction.RIGHT);
-		fruitRule = new FruitRule(new Vector2(10, 20));
-		poisonRule = new PoisonedFruitRule(new Vector2(20, 10));
-		hole = new Hole(new Vector2(3, 8), new Vector2(24, 14));
+		fruitRule = new FruitRule(new Vector2(3, 4));
+		poisonRule = new PoisonedFruitRule(new Vector2(8, 17));
+		hole = new Hole(new Vector2(3, 8), new Vector2(19, 9));
 		AMovingRules realMovingRules = new HoleMovingRules(hole);
 		// AMovingRules realMovingRules = new RestrictedMovingRules();
 		controller = new SnakeController(realMovingRules);
@@ -134,7 +136,7 @@ public class SnakeScreen implements Screen {
 	private Snake newSnakeAtXY(int x, int y, Direction direction) {
 		Stack<Piece> pieces = new Stack<Piece>();
 		pieces.push(new Piece(new Vector2(x, y), direction, headTexture));
-		int size = 10;
+		int size = 4;
 		for (int i = 1; i < size; i++) {
 			pieces.push(new Piece(new Vector2(x - i, y), direction, boxTexture));
 		}
@@ -158,19 +160,26 @@ public class SnakeScreen implements Screen {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			game.setScreen(new Splash(game));
 		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
+			System.out.println(threshold);
+			setFPS(fps * 1.1f);
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
+			System.out.println(threshold);
+			setFPS(fps * 0.9f);
+		}
 
 		controlSnake();
 
 		// Managing FPS
-		// FIXME: remove when speed is added
+		// FIXME: is this going to be the speed?
 		time += delta;
-		if (time > 0.125f) {
-			// movingRules.update(snake);
+		if (time > threshold) {
+			movingRules.update(snake);
 			time = 0;
 		}
 
 		// Applying Rules
-
 		fruitRule.update(snake);
 		poisonRule.update(snake);
 
@@ -208,6 +217,11 @@ public class SnakeScreen implements Screen {
 		stage.draw();
 
 		batch.end();
+	}
+
+	private void setFPS(float fps) {
+		this.fps = fps;
+		this.threshold = 1 / fps;
 	}
 
 	private void controlSnake() {
