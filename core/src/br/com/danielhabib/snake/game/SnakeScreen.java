@@ -28,7 +28,6 @@ import br.com.danielhabib.snake.rules.RulesManager;
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.rules.SnakeController;
 import br.com.danielhabib.snake.rules.SnakeDrawable;
-import br.com.danielhabib.snake.rules.StaticEntity;
 import br.com.danielhabib.snake.rules.WormHole;
 
 public class SnakeScreen implements Screen {
@@ -74,19 +73,19 @@ public class SnakeScreen implements Screen {
 		int lastX = -1 + Gdx.graphics.getWidth() / SIZE;
 		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
 		for (int x = 0; x < lastX; x++) {
-			map.add(new StaticEntity(wallTexture, new Vector2(x, 0)));
-			map.add(new StaticEntity(wallTexture, new Vector2(x, lastY)));
+			map.add(new Entity(wallTexture, new Vector2(x, 0)));
+			map.add(new Entity(wallTexture, new Vector2(x, lastY)));
 		}
 		for (int y = 0; y <= lastY; y++) {
-			map.add(new StaticEntity(wallTexture, new Vector2(0, y)));
-			map.add(new StaticEntity(wallTexture, new Vector2(lastX, y)));
+			map.add(new Entity(wallTexture, new Vector2(0, y)));
+			map.add(new Entity(wallTexture, new Vector2(lastX, y)));
 		}
 
-		StaticEntity apple = new StaticEntity(appleTexture, new Vector2(3, 4));
-		StaticEntity poisonedApple = new StaticEntity(poisonTexture, new Vector2(8, 17));
-		StaticEntity boingApple = new StaticEntity(boingTexture, new Vector2(15, 12));
-		StaticEntity lastHole = new StaticEntity(holeTexture, new Vector2(13, 12));
-		Hole initialHole = new Hole(holeTexture, new Vector2(3, 8));
+		Entity apple = new Entity(appleTexture, new Vector2(3, 4));
+		Entity poisonedApple = new Entity(poisonTexture, new Vector2(8, 17));
+		Entity boingApple = new Entity(boingTexture, new Vector2(15, 12));
+		Entity lastHole = new Entity(holeTexture, new Vector2(13, 12));
+		Entity initialHole = new Hole(holeTexture, new Vector2(3, 8));
 
 		// Rules
 		snake = newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
