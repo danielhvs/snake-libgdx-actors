@@ -77,14 +77,10 @@ public class Piece extends Entity {
 		return this;
 	}
 
-	private static float x = 0;
 	@Override
 	public void update() {
 		sprite.setPosition(pos.x * Entity.SIZE, pos.y * Entity.SIZE);
-		x += Math.PI / 400;
-		// sprite.setRotation(direction.getRotation());
-		// sprite.rotate((float) (12.5f * Math.sin(x)));
-		sprite.rotate(20);
+		sprite.rotate(10);
 	}
 
 }

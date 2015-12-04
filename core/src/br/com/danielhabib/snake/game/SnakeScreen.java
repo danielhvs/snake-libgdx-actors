@@ -31,7 +31,6 @@ import br.com.danielhabib.snake.rules.Wall;
 public class SnakeScreen implements Screen {
 
 	private Sprite boxSprite;
-	private Sprite headSprite;
 	private Sprite appleSprite;
 	private Sprite poisonedSprite;
 	private Sprite holeSprite;
@@ -52,6 +51,7 @@ public class SnakeScreen implements Screen {
 	private float fps = 8;
 	private float threshold = 0.125f;
 	private DrawableManager manager;
+	private Texture tailTexture;
 
 	public SnakeScreen(Game game) {
 		this.game = game;
@@ -64,13 +64,11 @@ public class SnakeScreen implements Screen {
 		camera.setToOrtho(true);
 
 		headTexture = new Texture(Gdx.files.internal("head.png"));
-		headSprite = new Sprite(headTexture);
+		tailTexture = new Texture(Gdx.files.internal("tail.png"));
 		pieceTexture = new Texture(Gdx.files.internal("circle.png"));
 		Texture wallTexture = new Texture(Gdx.files.internal("box.png"));
 		boxSprite = new Sprite(pieceTexture);
 		setSizeAndFlip(boxSprite);
-		setSizeAndFlip(headSprite);
-		headSprite.setOrigin(headSprite.getWidth() / 2, headSprite.getHeight() / 2);
 
 		// Map
 		map = new ArrayList<SnakeDrawable>();
@@ -122,9 +120,11 @@ public class SnakeScreen implements Screen {
 		Stack<Piece> pieces = new Stack<Piece>();
 		pieces.push(new Head(new Vector2(x, y), direction, headTexture));
 		int size = 10;
-		for (int i = 1; i < size; i++) {
+		int i = 1;
+		for (i = 1; i < size - 1; i++) {
 			pieces.push(new Piece(new Vector2(x - i, y), direction, pieceTexture));
 		}
+		pieces.push(new Tail(new Vector2(x - i, y), direction, tailTexture));
 		Snake snake = new Snake(pieces);
 		return snake;
 	}
@@ -149,6 +149,10 @@ public class SnakeScreen implements Screen {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
 			System.out.println(threshold);
 			setFPS(fps * 0.9f);
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+			System.out.println(threshold);
+			threshold = Integer.MAX_VALUE;
 		}
 
 		controlSnake();
@@ -250,7 +254,6 @@ public class SnakeScreen implements Screen {
 	@Override
 	public void dispose() {
 		dispose(boxSprite);
-		dispose(headSprite);
 		dispose(appleSprite);
 		dispose(poisonedSprite);
 		dispose(holeSprite);

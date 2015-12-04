@@ -17,7 +17,7 @@ public abstract class Entity implements SnakeDrawable {
 		this.sprite = new Sprite(texture);
 		sprite.setSize(SIZE, SIZE);
 		sprite.flip(false, true);
-		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+		sprite.setOriginCenter();
 	}
 
 	@Override
