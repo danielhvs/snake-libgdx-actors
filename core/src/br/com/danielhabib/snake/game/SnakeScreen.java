@@ -95,9 +95,8 @@ public class SnakeScreen implements Screen {
 		AFruitRule boingRule = new AFruitRule(boingApple, drawingManager, new BoingFruitRule());
 
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
-		// AMovingRules realMovingRules = new RestrictedMovingRules();
 		controller = new SnakeController(realMovingRules);
-		movingRules = new MapMovingRules(new BoingMovingRules(), map);
+		movingRules = new MapMovingRules(new BoingMovingRules(), realMovingRules, map);
 		// movingRules = new MirrorMapMovingRules(holeMovingRules, lastX,
 		// lastY);
 

@@ -16,23 +16,26 @@ public class MapMovingRulesTest extends BaseTest {
 	private static final Vector2 ORIGIN = new Vector2(0, 0);
 
 	@Mock
-	IRule movingRule;
+	IRule movingRuleWhenCollided;
+
+	@Mock
+	IRule movingRuleWhenFree;
 
 	@Test
 	public void move_ThereIsAWall_ApplyMovingRule() throws Exception {
 		List<Entity> map = wallNextToSnake();
-		AMovingRules rules = new MapMovingRules(movingRule, map);
+		AMovingRules rules = new MapMovingRules(movingRuleWhenCollided, new MovingRules(), map);
 
 		Snake snake = newSnake(ORIGIN, Direction.RIGHT);
 		rules.update(snake);
 
-		verify(movingRule).update(snake);
+		verify(movingRuleWhenCollided).update(snake);
 	}
 
 	@Test
 	public void move_ThereIsNotAWall_Moves() throws Exception {
 		List<Entity> map = wallAwayFromSnake();
-		AMovingRules rules = new MapMovingRules(new MovingRules(), map);
+		AMovingRules rules = new MapMovingRules(movingRuleWhenCollided, new MovingRules(), map);
 
 		Snake snake = rules.update(newSnake(ORIGIN, Direction.RIGHT));
 
@@ -41,7 +44,7 @@ public class MapMovingRulesTest extends BaseTest {
 
 	@Test
 	public void move_ThereIsTailInTheWay_DoesntMove() throws Exception {
-		AMovingRules rules = new MapMovingRules(movingRule, Collections.<Entity> emptyList());
+		AMovingRules rules = new MapMovingRules(movingRuleWhenCollided, movingRuleWhenFree, Collections.<Entity> emptyList());
 
 		Snake snake = rules.update(snakeSize5());
 

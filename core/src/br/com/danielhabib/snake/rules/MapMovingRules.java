@@ -7,19 +7,23 @@ import com.badlogic.gdx.math.Vector2;
 
 public class MapMovingRules extends AMovingRules {
 
-	private IRule rule;
+	private IRule ruleWhenCollided;
 	private List<Entity> map;
+	private IRule ruleWhenFree;
 
-	public MapMovingRules(IRule rule, List<Entity> map) {
-		this.rule = rule;
+	public MapMovingRules(IRule ruleWhenCollided, IRule ruleWhenFree, List<Entity> map) {
+		this.ruleWhenCollided = ruleWhenCollided;
+		this.ruleWhenFree = ruleWhenFree;
 		this.map = map;
 	}
 
+	// FIXME: Add a rule when colided with itself? Maybe can be used to notify
+	// the event.
 	@Override
 	public Snake update(Snake snake) {
-		return snakeWouldEatItSelf(snake) ? snake 
-				: snakeWouldColide(snake) ? rule.update(snake) 
-										  : snake.move();
+		return snakeWouldEatItSelf(snake) ? snake
+				: snakeWouldColide(snake) ? ruleWhenCollided.update(snake)
+										  : ruleWhenFree.update(snake);
 	}
 
 	private boolean snakeWouldColide(Snake snake) {
