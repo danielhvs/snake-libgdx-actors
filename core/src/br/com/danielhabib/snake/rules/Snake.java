@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import br.com.danielhabib.snake.game.Head;
 import br.com.danielhabib.snake.game.Tail;
 
 public class Snake implements SnakeDrawable {
@@ -82,7 +83,6 @@ public class Snake implements SnakeDrawable {
 		} else if (size == 2) {// head and tail
 			pieces.remove(getTailIndex());
 		} else {
-			// FIXME: if < 2....
 			Piece piece = pieces.get(getTailIndex() - 1);
 			getTail().move(piece.getPosition());
 			getTail().turn(piece.getNormDirection());
@@ -121,13 +121,18 @@ public class Snake implements SnakeDrawable {
 		Stack<Piece> newPieces = new Stack<Piece>();
 		Stack<Piece> piecesCopy = copyPieces();
 		Piece newHead = piecesCopy.pop();
-		Piece newHeadPiece = new Piece(newHead.getPosition(), newHead.getNormDirection().invert(),
+		Piece newHeadPiece = new Head(newHead.getPosition(), newHead.getNormDirection().invert(),
 				getTextureOf(getHead()));
 		newPieces.push(newHeadPiece);
 		Texture tailTexture = getTextureOf(getTail());
-		while (!piecesCopy.isEmpty()) {
+		while (piecesCopy.size() > 1) {
 			Piece pop = piecesCopy.pop();
-			Piece newPiece = new Piece(pop.getPosition(), pop.getNormDirection().invert(), tailTexture);
+			Piece newPiece = new Piece(pop.getPosition(), pop.getNormDirection().invert(), pieceTexture);
+			newPieces.push(newPiece);
+		}
+		if (piecesCopy.size() == 1) {
+			Piece pop = piecesCopy.pop();
+			Piece newPiece = new Tail(pop.getPosition(), pop.getNormDirection().invert(), tailTexture);
 			newPieces.push(newPiece);
 		}
 		this.pieces = newPieces;

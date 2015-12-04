@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import br.com.danielhabib.snake.rules.AMovingRules;
+import br.com.danielhabib.snake.rules.BoingMovingRules;
 import br.com.danielhabib.snake.rules.Direction;
 import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.FruitRule;
@@ -63,7 +64,7 @@ public class SnakeScreen implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(true);
 
-		headTexture = new Texture(Gdx.files.internal("head.png"));
+		headTexture = new Texture(Gdx.files.internal("head.jpg"));
 		tailTexture = new Texture(Gdx.files.internal("tail.png"));
 		pieceTexture = new Texture(Gdx.files.internal("circle.png"));
 		Texture wallTexture = new Texture(Gdx.files.internal("box.png"));
@@ -82,8 +83,6 @@ public class SnakeScreen implements Screen {
 			map.add(new Wall(wallTexture, new Vector2(0, y)));
 			map.add(new Wall(wallTexture, new Vector2(lastX, y)));
 		}
-
-
 
 		// Apples
 		appleSprite = new Sprite(new Texture(Gdx.files.internal("apple.png")));
@@ -106,9 +105,7 @@ public class SnakeScreen implements Screen {
 		// movingRules = new MapMovingRules(realMovingRules, map);
 		// movingRules = new MirrorMapMovingRules(holeMovingRules, lastX,
 		// lastY);
-		// movingRules = new BoingMovingRules(realMovingRules, 1, 1, lastX - 1,
-		// lastY - 1);
-		movingRules = realMovingRules;
+		movingRules = new BoingMovingRules(1, 1, lastX - 1, lastY - 1);
 
 		manager = new DrawableManager();
 		manager.addDrawables(map);

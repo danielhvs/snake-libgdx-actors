@@ -14,10 +14,13 @@ public class Tail extends Piece {
 		super(pos, direction, texture);
 	}
 
+	private double x = 0.0f;
 	@Override
 	public void update() {
 		sprite.setPosition(pos.x * Entity.SIZE, pos.y * Entity.SIZE);
 		sprite.setRotation(direction.getRotation());
+		x += Math.PI / 40;
+		sprite.rotate((float) (15 * Math.sin(x)));
 	}
 
 
