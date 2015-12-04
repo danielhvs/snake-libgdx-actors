@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public abstract class Entity {
+public abstract class Entity implements SnakeDrawable {
 
 	public static int SIZE = 32;
 	protected Vector2 pos;
@@ -20,8 +20,12 @@ public abstract class Entity {
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 	}
 
-	public abstract void update();
+	@Override
+	public void update() {
+		sprite.setPosition(pos.x * SIZE, pos.y * SIZE);
+	}
 
+	@Override
 	public void render(SpriteBatch batch) {
 		sprite.draw(batch);
 	}
@@ -34,5 +38,8 @@ public abstract class Entity {
 		return new Rectangle(pos.x * SIZE, pos.y * SIZE, sprite.getWidth(), sprite.getHeight());
 	}
 
+	public Sprite getSprite() {
+		return sprite;
+	}
 
 }

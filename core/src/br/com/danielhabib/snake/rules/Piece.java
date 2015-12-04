@@ -1,28 +1,14 @@
 package br.com.danielhabib.snake.rules;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class Piece {
-	private Vector2 point;
-	private Direction direction;
-	private Sprite sprite;
-	private Texture texture;
+public class Piece extends Entity {
+	protected Direction direction;
 
-	public Piece(Vector2 point, Direction direction, Texture texture) {
-		this.point = point;
+	public Piece(Vector2 pos, Direction direction, Texture texture) {
+		super(texture, pos);
 		this.direction = direction;
-		this.texture = texture;
-		this.sprite = new Sprite(texture);
-		sprite.setSize(Entity.SIZE, Entity.SIZE);
-		sprite.flip(false, true);
-		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
-	}
-
-	public Vector2 getPosition() {
-		return point.cpy();
 	}
 
 	public Direction getNormDirection() {
@@ -34,7 +20,7 @@ public class Piece {
 	}
 
 	public Piece move() {
-		point.add(direction.getVector2());
+		pos.add(direction.getVector2());
 		return this;
 	}
 
@@ -47,7 +33,7 @@ public class Piece {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((direction == null) ? 0 : direction.hashCode());
-		result = prime * result + ((point == null) ? 0 : point.hashCode());
+		result = prime * result + ((pos == null) ? 0 : pos.hashCode());
 		return result;
 	}
 
@@ -66,11 +52,11 @@ public class Piece {
 		if (direction != other.direction) {
 			return false;
 		}
-		if (point == null) {
-			if (other.point != null) {
+		if (pos == null) {
+			if (other.pos != null) {
 				return false;
 			}
-		} else if (!point.equals(other.point)) {
+		} else if (!pos.equals(other.pos)) {
 			return false;
 		}
 		return true;
@@ -78,11 +64,11 @@ public class Piece {
 
 	@Override
 	public String toString() {
-		return "Piece [" + point + ":" + direction + "]";
+		return "Piece [" + pos + ":" + direction + "]";
 	}
 
 	public Piece move(Vector2 finalPoint) {
-		this.point = finalPoint;
+		this.pos = finalPoint;
 		return this;
 	}
 
@@ -91,17 +77,14 @@ public class Piece {
 		return this;
 	}
 
-	public void draw(SpriteBatch batch) {
-		sprite.setPosition(point.x * Entity.SIZE, point.y * Entity.SIZE);
-		sprite.setRotation(direction.getRotation());
-		sprite.draw(batch);
+	private static float x = 0;
+	@Override
+	public void update() {
+		sprite.setPosition(pos.x * Entity.SIZE, pos.y * Entity.SIZE);
+		x += Math.PI / 400;
+		// sprite.setRotation(direction.getRotation());
+		// sprite.rotate((float) (12.5f * Math.sin(x)));
+		sprite.rotate(20);
 	}
 
-	public Texture getTexture() {
-		return texture;
-	}
-
-	public Sprite getSprite() {
-		return sprite;
-	}
 }

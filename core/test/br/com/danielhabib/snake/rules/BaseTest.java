@@ -1,6 +1,7 @@
 package br.com.danielhabib.snake.rules;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.util.Stack;
 
@@ -23,6 +24,9 @@ public class BaseTest {
 	@Before
 	public void superSetup() {
 		MockitoAnnotations.initMocks(this);
+		when(texture.getWidth()).thenReturn(32);
+		when(texture.getHeight()).thenReturn(32);
+
 	}
 
 	protected Snake newSnake(int x, int y) {

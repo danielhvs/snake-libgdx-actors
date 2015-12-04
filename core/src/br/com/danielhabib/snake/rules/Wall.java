@@ -9,11 +9,4 @@ public class Wall extends Entity {
 		super(texture, pos);
 	}
 
-	@Override
-	public void update() {
-		double random = Math.random();
-		sprite.rotate(random < 0.5 ? 2.0f : -2.0f);
-		sprite.setPosition(pos.x * SIZE, pos.y * SIZE);
-	}
-
 }

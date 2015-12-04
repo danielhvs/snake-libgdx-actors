@@ -25,6 +25,7 @@ import br.com.danielhabib.snake.rules.PoisonedFruitRule;
 import br.com.danielhabib.snake.rules.RestrictedMovingRules;
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.rules.SnakeController;
+import br.com.danielhabib.snake.rules.SnakeDrawable;
 import br.com.danielhabib.snake.rules.Wall;
 
 public class SnakeScreen implements Screen {
@@ -45,11 +46,12 @@ public class SnakeScreen implements Screen {
 	private SnakeController controller;
 	private AMovingRules movingRules;
 	private Hole hole;
-	private List<Entity> map;
-	private Texture boxTexture;
+	private List<SnakeDrawable> map;
+	private Texture pieceTexture;
 	private Texture headTexture;
 	private float fps = 8;
 	private float threshold = 0.125f;
+	private DrawableManager manager;
 
 	public SnakeScreen(Game game) {
 		this.game = game;
@@ -63,25 +65,27 @@ public class SnakeScreen implements Screen {
 
 		headTexture = new Texture(Gdx.files.internal("head.png"));
 		headSprite = new Sprite(headTexture);
-		boxTexture = new Texture(Gdx.files.internal("box.jpg"));
-		boxSprite = new Sprite(boxTexture);
+		pieceTexture = new Texture(Gdx.files.internal("circle.png"));
+		Texture wallTexture = new Texture(Gdx.files.internal("box.png"));
+		boxSprite = new Sprite(pieceTexture);
 		setSizeAndFlip(boxSprite);
 		setSizeAndFlip(headSprite);
 		headSprite.setOrigin(headSprite.getWidth() / 2, headSprite.getHeight() / 2);
 
 		// Map
-		map = new ArrayList<Entity>();
+		map = new ArrayList<SnakeDrawable>();
 		int lastX = -1 + Gdx.graphics.getWidth() / SIZE;
 		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
 		for (int x = 0; x < lastX; x++) {
-			map.add(new Wall(boxTexture, new Vector2(x, 0)));
-			map.add(new Wall(boxTexture, new Vector2(x, lastY)));
+			map.add(new Wall(wallTexture, new Vector2(x, 0)));
+			map.add(new Wall(wallTexture, new Vector2(x, lastY)));
 		}
-		//FIXME!? <=?
 		for (int y = 0; y <= lastY; y++) {
-			map.add(new Wall(boxTexture, new Vector2(0, y)));
-			map.add(new Wall(boxTexture, new Vector2(lastX, y)));
+			map.add(new Wall(wallTexture, new Vector2(0, y)));
+			map.add(new Wall(wallTexture, new Vector2(lastX, y)));
 		}
+
+
 
 		// Apples
 		appleSprite = new Sprite(new Texture(Gdx.files.internal("apple.png")));
@@ -107,15 +111,19 @@ public class SnakeScreen implements Screen {
 		// movingRules = new BoingMovingRules(realMovingRules, 1, 1, lastX - 1,
 		// lastY - 1);
 		movingRules = realMovingRules;
+
+		manager = new DrawableManager();
+		manager.addDrawables(map);
+		manager.addDrawable(snake);
 	}
 
 	// FIXME: DRY
 	private Snake newSnakeAtXY(int x, int y, Direction direction) {
 		Stack<Piece> pieces = new Stack<Piece>();
-		pieces.push(new Piece(new Vector2(x, y), direction, headTexture));
+		pieces.push(new Head(new Vector2(x, y), direction, headTexture));
 		int size = 10;
 		for (int i = 1; i < size; i++) {
-			pieces.push(new Piece(new Vector2(x - i, y), direction, boxTexture));
+			pieces.push(new Piece(new Vector2(x - i, y), direction, pieceTexture));
 		}
 		Snake snake = new Snake(pieces);
 		return snake;
@@ -157,9 +165,7 @@ public class SnakeScreen implements Screen {
 		fruitRule.update(snake);
 		poisonRule.update(snake);
 
-		for (Entity mapPoint : map) {
-			mapPoint.update();
-		}
+		manager.update();
 
 		// Drawing
 		camera.update();
@@ -178,13 +184,7 @@ public class SnakeScreen implements Screen {
 		holeSprite.setPosition(point.x * SIZE, point.y * SIZE);
 		holeSprite.draw(batch);
 
-		// Snake
-		snake.draw(batch);
-
-		// Map
-		for (Entity mapPoint : map) {
-			mapPoint.render(batch);
-		}
+		manager.render(batch);
 
 		// Draw to batch
 		appleSprite.draw(batch);

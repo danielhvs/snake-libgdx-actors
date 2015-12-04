@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class Snake {
+public class Snake implements SnakeDrawable {
 
 	private Stack<Piece> pieces;
 
@@ -19,7 +19,7 @@ public class Snake {
 	}
 
 	public Snake addTail(int x, int y) {
-		pieces.push(new Piece(new Vector2(x, y), getTail().getNormDirection(), getHead().getTexture()));
+		pieces.push(new Piece(new Vector2(x, y), getTail().getNormDirection(), getTextureOf(getHead())));
 		return this;
 	}
 
@@ -28,7 +28,7 @@ public class Snake {
 		Direction tailDirection = tail.getNormDirection();
 		Vector2 point = tail.getPosition().cpy();
 		Vector2 newPoint = point.sub(tail.getDirection());
-		Piece newTail = new Piece(newPoint, tailDirection, tail.getTexture());
+		Piece newTail = new Piece(newPoint, tailDirection, tail.getSprite().getTexture());
 		pieces.push(newTail);
 		return this;
 	}
@@ -101,9 +101,10 @@ public class Snake {
 		Stack<Piece> newPieces = new Stack<Piece>();
 		Stack<Piece> piecesCopy = copyPieces();
 		Piece newHead = piecesCopy.pop();
-		Piece newHeadPiece = new Piece(newHead.getPosition(), newHead.getNormDirection().invert(), getHead().getTexture());
+		Piece newHeadPiece = new Piece(newHead.getPosition(), newHead.getNormDirection().invert(),
+				getTextureOf(getHead()));
 		newPieces.push(newHeadPiece);
-		Texture tailTexture = getTail().getTexture();
+		Texture tailTexture = getTextureOf(getTail());
 		while (!piecesCopy.isEmpty()) {
 			Piece pop = piecesCopy.pop();
 			Piece newPiece = new Piece(pop.getPosition(), pop.getNormDirection().invert(), tailTexture);
@@ -111,6 +112,10 @@ public class Snake {
 		}
 		this.pieces = newPieces;
 		return this;
+	}
+
+	private Texture getTextureOf(Piece piece) {
+		return piece.getSprite().getTexture();
 	}
 
 	public Stack<Piece> copyPieces() {
@@ -149,9 +154,17 @@ public class Snake {
 		return true;
 	}
 
-	public void draw(SpriteBatch batch) {
+	@Override
+	public void update() {
 		for (Piece piece : pieces) {
-			piece.draw(batch);
+			piece.update();
+		}
+	}
+
+	@Override
+	public void render(SpriteBatch batch) {
+		for (Piece piece : pieces) {
+			piece.render(batch);
 		}
 	}
 }
