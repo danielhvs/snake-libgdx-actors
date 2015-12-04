@@ -1,17 +1,22 @@
 package br.com.danielhabib.snake.rules;
 
+import java.util.List;
 import java.util.Stack;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import br.com.danielhabib.snake.game.Tail;
+
 public class Snake implements SnakeDrawable {
 
-	private Stack<Piece> pieces;
+	private List<Piece> pieces;
+	private Texture pieceTexture;
 
-	public Snake(Stack<Piece> pieces) {
+	public Snake(List<Piece> pieces, Texture pieceTexture) {
 		this.pieces = pieces;
+		this.pieceTexture = pieceTexture;
 	}
 
 	public Piece getTail() {
@@ -19,7 +24,7 @@ public class Snake implements SnakeDrawable {
 	}
 
 	public Snake addTail(int x, int y) {
-		pieces.push(new Piece(new Vector2(x, y), getTail().getNormDirection(), getTextureOf(getHead())));
+		pieces.add(new Piece(new Vector2(x, y), getTail().getNormDirection(), getTextureOf(getHead())));
 		return this;
 	}
 
@@ -28,8 +33,12 @@ public class Snake implements SnakeDrawable {
 		Direction tailDirection = tail.getNormDirection();
 		Vector2 point = tail.getPosition().cpy();
 		Vector2 newPoint = point.sub(tail.getDirection());
-		Piece newTail = new Piece(newPoint, tailDirection, tail.getSprite().getTexture());
-		pieces.push(newTail);
+		Piece newTail = new Tail(newPoint, tailDirection, tail.getSprite().getTexture());
+		Piece newPiece = new Piece(tail.getPosition(), tailDirection, pieceTexture);
+
+		pieces.remove(getTailIndex());
+		pieces.add(newPiece);
+		pieces.add(newTail);
 		return this;
 	}
 
@@ -67,7 +76,18 @@ public class Snake implements SnakeDrawable {
 	}
 
 	public Snake removeTail() {
-		pieces.pop();
+		int size = pieces.size();
+		if (size == 1) {//only head
+			pieces.remove(0);
+		} else if (size == 2) {// head and tail
+			pieces.remove(getTailIndex());
+		} else {
+			// FIXME: if < 2....
+			Piece piece = pieces.get(getTailIndex() - 1);
+			getTail().move(piece.getPosition());
+			getTail().turn(piece.getNormDirection());
+			pieces.remove(piece);
+		}
 		return this;
 	}
 

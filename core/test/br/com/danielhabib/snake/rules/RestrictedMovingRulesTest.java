@@ -24,6 +24,6 @@ public class RestrictedMovingRulesTest extends BaseTest {
 		pieces.push(newPiece(new Vector2(4, 1), Direction.UP));
 		pieces.push(newPiece(new Vector2(5, 1), Direction.LEFT));
 		pieces.push(newPiece(new Vector2(6, 1), Direction.LEFT));
-		return new Snake(pieces);
+		return new Snake(pieces, texture);
 	}
 }

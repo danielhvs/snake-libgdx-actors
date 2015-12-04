@@ -125,7 +125,7 @@ public class SnakeScreen implements Screen {
 			pieces.push(new Piece(new Vector2(x - i, y), direction, pieceTexture));
 		}
 		pieces.push(new Tail(new Vector2(x - i, y), direction, tailTexture));
-		Snake snake = new Snake(pieces);
+		Snake snake = new Snake(pieces, pieceTexture);
 		return snake;
 	}
 

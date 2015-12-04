@@ -107,9 +107,9 @@ public class SnakeTest extends BaseTest {
 		expectedPieces.push(newPiece(new Vector2(1, 0), Direction.LEFT));
 		expectedPieces.push(newPiece(new Vector2(2, 0), Direction.LEFT));
 
-		Snake snake = new Snake(pieces).revert();
+		Snake snake = new Snake(pieces, texture).revert();
 
-		assertSnake(new Snake(expectedPieces), snake);
+		assertSnake(new Snake(expectedPieces, texture), snake);
 	}
 
 	@Test

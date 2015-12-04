@@ -141,7 +141,7 @@ public class Splash implements Screen {
 	private Snake newSnakeAtXY(int x, int y, Direction direction) {
 		Stack<Piece> pieces = new Stack<Piece>();
 		pieces.push(new Piece(new Vector2(x, y), direction, boxTexture));
-		Snake snake = new Snake(pieces);
+		Snake snake = new Snake(pieces, boxTexture);
 		int size = 10;
 		for (int i = 0; i < size; i++) {
 			snake = snake.addTail();
