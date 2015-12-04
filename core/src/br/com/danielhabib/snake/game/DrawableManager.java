@@ -38,4 +38,9 @@ public class DrawableManager {
 		}
 	}
 
+	public void remove(SnakeDrawable drawable) {
+		drawables.removeValue(drawable, true);
+		drawable.dispose();
+	}
+
 }

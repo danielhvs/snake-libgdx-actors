@@ -7,11 +7,14 @@ import java.util.Stack;
 
 import org.junit.Before;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+
+import br.com.danielhabib.snake.game.DrawableManager;
 
 public class BaseTest {
 
@@ -20,6 +23,12 @@ public class BaseTest {
 
 	@Mock
 	SpriteBatch batch;
+
+	@Mock
+	Entity apple;
+
+	@Mock
+	DrawableManager drawingManager;
 
 	@Before
 	public void superSetup() {
@@ -72,5 +81,10 @@ public class BaseTest {
 	protected void assertPiece(Piece expectedPiece, Piece actualPieces) {
 		assertPoints(expectedPiece.getPosition(), actualPieces.getPosition());
 		assertEquals(expectedPiece.getNormDirection(), actualPieces.getNormDirection());
+	}
+
+	protected FruitRule newFruitRule(Vector2 position) {
+		Mockito.when(apple.getPosition()).thenReturn(position);
+		return new FruitRule(apple, drawingManager);
 	}
 }

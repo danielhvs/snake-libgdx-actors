@@ -21,7 +21,7 @@ public class FruitRuleTest extends BaseTest {
 
 	@Test
 	public void update_ThereIsAFruit_ConsumesIt() throws Exception {
-		FruitRule rule = new FruitRule(new Vector2(0, 0));
+		FruitRule rule = newFruitRule(new Vector2(0, 0));
 
 		Snake snakeAte = rule.update(newSnake(0, 0));
 		Snake snakeDidntAte = rule.update(newSnake(0, 0));

@@ -51,11 +51,14 @@ public class SnakeScreen implements Screen {
 
 	@Override
 	public void show() {
+		drawingManager = new DrawableManager();
+		rulesManager = new RulesManager();
+
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(true);
 
-		Texture headTexture = new Texture(Gdx.files.internal("head.jpg"));
+		Texture headTexture = new Texture(Gdx.files.internal("head.png"));
 		Texture tailTexture = new Texture(Gdx.files.internal("tail.png"));
 		Texture pieceTexture = new Texture(Gdx.files.internal("circle.png"));
 		Texture wallTexture = new Texture(Gdx.files.internal("box.png"));
@@ -83,8 +86,8 @@ public class SnakeScreen implements Screen {
 
 		// Rules
 		snake = newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
-		FruitRule fruitRule = new FruitRule(apple.getPosition());
-		PoisonedFruitRule poisonRule = new PoisonedFruitRule(poisonedApple.getPosition());
+		FruitRule fruitRule = new FruitRule(apple, drawingManager);
+		PoisonedFruitRule poisonRule = new PoisonedFruitRule(poisonedApple, drawingManager);
 
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
 		// AMovingRules realMovingRules = new RestrictedMovingRules();
@@ -96,7 +99,6 @@ public class SnakeScreen implements Screen {
 		movingRules = realMovingRules;
 
 		// The ordering matters
-		drawingManager = new DrawableManager();
 		drawingManager.addDrawables(map);
 		drawingManager.addDrawable(apple);
 		drawingManager.addDrawable(poisonedApple);
@@ -105,7 +107,6 @@ public class SnakeScreen implements Screen {
 		drawingManager.addDrawable(initialHole);
 
 		// The ordering matters
-		rulesManager = new RulesManager();
 		rulesManager.addRule(movingRules);
 		rulesManager.addRule(fruitRule);
 		rulesManager.addRule(poisonRule);
@@ -115,7 +116,7 @@ public class SnakeScreen implements Screen {
 	private Snake newSnakeAtXY(int x, int y, Direction direction, Texture headTexture, Texture pieceTexture, Texture tailTexture) {
 		Stack<Piece> pieces = new Stack<Piece>();
 		pieces.push(new Head(new Vector2(x, y), direction, headTexture));
-		int size = 2;
+		int size = 4;
 		int i = 1;
 		for (i = 1; i < size - 1; i++) {
 			pieces.push(new Piece(new Vector2(x - i, y), direction, pieceTexture));
