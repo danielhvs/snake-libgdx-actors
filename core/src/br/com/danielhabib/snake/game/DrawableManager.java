@@ -31,4 +31,11 @@ public class DrawableManager {
 			addDrawable(drawable);
 		}
 	}
+
+	public void dispose() {
+		for (SnakeDrawable drawable : drawables) {
+			drawable.dispose();
+		}
+	}
+
 }

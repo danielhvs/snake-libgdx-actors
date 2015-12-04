@@ -15,6 +15,7 @@ public class BoingMovingRules extends AMovingRules {
 		this.lastY = lastY;
 	}
 
+	// FIXME: Generalize to use a map (list of walls).
 	@Override
 	public Snake update(Snake snake) {
 		Vector2 nextPosition = snake.getNextPosition();

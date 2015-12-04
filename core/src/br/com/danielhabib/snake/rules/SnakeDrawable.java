@@ -6,4 +6,6 @@ public interface SnakeDrawable {
 	void update();
 
 	void render(SpriteBatch batch);
+
+	void dispose();
 }

@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 
 public class RestrictedMovingRules extends AMovingRules {
 
-	// FIXME: Broke
 	@Override
 	public Snake update(Snake snake) {
 		Stack<Vector2> nextPositions = snake.getNextPositions();

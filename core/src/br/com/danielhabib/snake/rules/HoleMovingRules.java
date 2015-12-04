@@ -2,9 +2,9 @@ package br.com.danielhabib.snake.rules;
 
 public class HoleMovingRules extends AMovingRules {
 
-	private Hole hole;
+	private WormHole hole;
 
-	public HoleMovingRules(Hole hole) {
+	public HoleMovingRules(WormHole hole) {
 		this.hole = hole;
 	}
 
@@ -44,7 +44,7 @@ public class HoleMovingRules extends AMovingRules {
 				: snake.move();
 	}
 
-	public Hole getHole() {
+	public WormHole getHole() {
 		return hole;
 	}
 

@@ -16,25 +16,24 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import br.com.danielhabib.snake.rules.AMovingRules;
-import br.com.danielhabib.snake.rules.BoingMovingRules;
 import br.com.danielhabib.snake.rules.Direction;
 import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.FruitRule;
 import br.com.danielhabib.snake.rules.Hole;
+import br.com.danielhabib.snake.rules.HoleMovingRules;
 import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.PoisonedFruitRule;
-import br.com.danielhabib.snake.rules.RestrictedMovingRules;
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.rules.SnakeController;
 import br.com.danielhabib.snake.rules.SnakeDrawable;
 import br.com.danielhabib.snake.rules.Wall;
+import br.com.danielhabib.snake.rules.WormHole;
 
 public class SnakeScreen implements Screen {
 
 	private Sprite boxSprite;
 	private Sprite appleSprite;
 	private Sprite poisonedSprite;
-	private Sprite holeSprite;
 	private static final int SIZE = Entity.SIZE;
 	private Game game;
 	private OrthographicCamera camera;
@@ -45,7 +44,7 @@ public class SnakeScreen implements Screen {
 	private float time;
 	private SnakeController controller;
 	private AMovingRules movingRules;
-	private Hole hole;
+	private WormHole hole;
 	private List<SnakeDrawable> map;
 	private Texture pieceTexture;
 	private Texture headTexture;
@@ -91,25 +90,30 @@ public class SnakeScreen implements Screen {
 		setSizeAndFlip(poisonedSprite);
 
 		// Hole
-		holeSprite = new Sprite(new Texture(Gdx.files.internal("hole.jpg")));
-		setSizeAndFlip(holeSprite);
+		Texture holeTexture = new Texture(Gdx.files.internal("hole.jpg"));
 
 		// Map
 		snake = newSnakeAtXY(5, 1, Direction.RIGHT);
 		fruitRule = new FruitRule(new Vector2(3, 4));
 		poisonRule = new PoisonedFruitRule(new Vector2(8, 17));
-		hole = new Hole(new Vector2(3, 8), new Vector2(19, 9));
-		// AMovingRules realMovingRules = new HoleMovingRules(hole);
-		AMovingRules realMovingRules = new RestrictedMovingRules();
+		Hole initialHole = new Hole(holeTexture, new Vector2(3, 8));
+		Wall lastHole = new Wall(holeTexture, new Vector2(13, 12));
+		hole = new WormHole(initialHole.getPosition(), lastHole.getPosition());
+
+		AMovingRules realMovingRules = new HoleMovingRules(hole);
+		// AMovingRules realMovingRules = new RestrictedMovingRules();
 		controller = new SnakeController(realMovingRules);
 		// movingRules = new MapMovingRules(realMovingRules, map);
 		// movingRules = new MirrorMapMovingRules(holeMovingRules, lastX,
 		// lastY);
-		movingRules = new BoingMovingRules(1, 1, lastX - 1, lastY - 1);
+		// movingRules = new BoingMovingRules(1, 1, lastX - 1, lastY - 1);
+		movingRules = realMovingRules;
 
 		manager = new DrawableManager();
 		manager.addDrawables(map);
+		manager.addDrawable(lastHole);
 		manager.addDrawable(snake);
+		manager.addDrawable(initialHole);
 	}
 
 	// FIXME: DRY
@@ -176,14 +180,6 @@ public class SnakeScreen implements Screen {
 		// Fruits
 		appleSprite.setPosition(fruitRule.getFruitPosition().x * SIZE, fruitRule.getFruitPosition().y * SIZE);
 		poisonedSprite.setPosition(poisonRule.getFruitPosition().x * SIZE, poisonRule.getFruitPosition().y * SIZE);
-
-		// Hole
-		Vector2 point = hole.getInitialPoint();
-		holeSprite.setPosition(point.x * SIZE, point.y * SIZE);
-		holeSprite.draw(batch);
-		point = hole.getFinalPoint();
-		holeSprite.setPosition(point.x * SIZE, point.y * SIZE);
-		holeSprite.draw(batch);
 
 		manager.render(batch);
 
@@ -253,7 +249,9 @@ public class SnakeScreen implements Screen {
 		dispose(boxSprite);
 		dispose(appleSprite);
 		dispose(poisonedSprite);
-		dispose(holeSprite);
+		// FIXME: Test this to see if there is no problem to call dispose many
+		// times for the same texture
+		manager.dispose();
 		batch.dispose();
 	}
 

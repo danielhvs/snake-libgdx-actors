@@ -192,4 +192,11 @@ public class Snake implements SnakeDrawable {
 			piece.render(batch);
 		}
 	}
+
+	@Override
+	public void dispose() {
+		for (Piece piece : pieces) {
+			piece.dispose();
+		}
+	}
 }

@@ -30,6 +30,11 @@ public abstract class Entity implements SnakeDrawable {
 		sprite.draw(batch);
 	}
 
+	@Override
+	public void dispose() {
+		getSprite().getTexture().dispose();
+	}
+
 	public Vector2 getPosition() {
 		return pos.cpy();
 	}
