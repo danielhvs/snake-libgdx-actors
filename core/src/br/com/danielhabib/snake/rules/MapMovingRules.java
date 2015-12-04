@@ -1,29 +1,46 @@
 package br.com.danielhabib.snake.rules;
 
 import java.util.List;
+import java.util.Stack;
 
 import com.badlogic.gdx.math.Vector2;
 
 public class MapMovingRules extends AMovingRules {
 
-	private AMovingRules movingRules;
-	private List<Vector2> map;
+	private IRule rule;
+	private List<Entity> map;
 
-	public MapMovingRules(AMovingRules movingRules, List<Vector2> map) {
-		this.movingRules = movingRules;
+	public MapMovingRules(IRule rule, List<Entity> map) {
+		this.rule = rule;
 		this.map = map;
 	}
 
-	// FIXME: Texture is needed...
 	@Override
 	public Snake update(Snake snake) {
+		return snakeWouldEatItSelf(snake) ? snake 
+				: snakeWouldColide(snake) ? rule.update(snake) 
+										  : snake.move();
+	}
+
+	private boolean snakeWouldColide(Snake snake) {
 		Vector2 nextPositionSnake = snake.getNextPosition();
-		for (Vector2 tile : map) {
-			if (tile.epsilonEquals(nextPositionSnake, 0.01f)) {
-				return snake;
+		for (Entity entity : map) {
+			if (entity.getPosition().epsilonEquals(nextPositionSnake, 0.01f)) {
+				return true;
 			}
 		}
-		return snake.move();
+		return false;
+	}
+
+	private boolean snakeWouldEatItSelf(Snake snake) {
+		Stack<Vector2> nextPositions = snake.getNextPositions();
+		Vector2 headPosition = nextPositions.pop();
+		for (Vector2 piecePosition : nextPositions) {
+			if (headPosition.epsilonEquals(piecePosition, 0.1f)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

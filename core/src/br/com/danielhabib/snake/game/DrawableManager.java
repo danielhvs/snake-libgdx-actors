@@ -26,7 +26,7 @@ public class DrawableManager {
 		}
 	}
 
-	public void addDrawables(List<SnakeDrawable> items) {
+	public void addDrawables(List<? extends SnakeDrawable> items) {
 		for (SnakeDrawable drawable : items) {
 			addDrawable(drawable);
 		}

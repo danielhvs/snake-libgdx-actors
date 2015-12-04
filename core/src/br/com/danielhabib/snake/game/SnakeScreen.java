@@ -17,17 +17,18 @@ import com.badlogic.gdx.math.Vector2;
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
 import br.com.danielhabib.snake.rules.BoingFruitRule;
+import br.com.danielhabib.snake.rules.BoingMovingRules;
 import br.com.danielhabib.snake.rules.Direction;
 import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.FruitRule;
 import br.com.danielhabib.snake.rules.Hole;
 import br.com.danielhabib.snake.rules.HoleMovingRules;
+import br.com.danielhabib.snake.rules.MapMovingRules;
 import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.PoisonedFruitRule;
 import br.com.danielhabib.snake.rules.RulesManager;
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.rules.SnakeController;
-import br.com.danielhabib.snake.rules.SnakeDrawable;
 import br.com.danielhabib.snake.rules.WormHole;
 
 public class SnakeScreen implements Screen {
@@ -40,7 +41,7 @@ public class SnakeScreen implements Screen {
 	private float time;
 	private SnakeController controller;
 	private AMovingRules movingRules;
-	private List<SnakeDrawable> map;
+	private List<Entity> map;
 	private float fps = 8;
 	private float threshold = 0.125f;
 	private DrawableManager drawingManager;
@@ -69,7 +70,7 @@ public class SnakeScreen implements Screen {
 		Texture boingTexture = new Texture(Gdx.files.internal("circle.png"));
 
 		// Drawables
-		map = new ArrayList<SnakeDrawable>();
+		map = new ArrayList<Entity>();
 		int lastX = -1 + Gdx.graphics.getWidth() / SIZE;
 		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
 		for (int x = 0; x < lastX; x++) {
@@ -96,11 +97,9 @@ public class SnakeScreen implements Screen {
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
 		// AMovingRules realMovingRules = new RestrictedMovingRules();
 		controller = new SnakeController(realMovingRules);
-		// movingRules = new MapMovingRules(realMovingRules, map);
+		movingRules = new MapMovingRules(new BoingMovingRules(), map);
 		// movingRules = new MirrorMapMovingRules(holeMovingRules, lastX,
 		// lastY);
-		// movingRules = new BoingMovingRules(1, 1, lastX - 1, lastY - 1);
-		movingRules = realMovingRules;
 
 		// The ordering matters
 		drawingManager.addDrawables(map);
