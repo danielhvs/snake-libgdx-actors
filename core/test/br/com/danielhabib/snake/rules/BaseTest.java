@@ -83,8 +83,8 @@ public class BaseTest {
 		assertEquals(expectedPiece.getNormDirection(), actualPieces.getNormDirection());
 	}
 
-	protected FruitRule newFruitRule(Vector2 position) {
+	protected AFruitRule newFruitRule(Vector2 position, IRule rule) {
 		Mockito.when(apple.getPosition()).thenReturn(position);
-		return new FruitRule(apple, drawingManager);
+		return new AFruitRule(apple, drawingManager, rule);
 	}
 }

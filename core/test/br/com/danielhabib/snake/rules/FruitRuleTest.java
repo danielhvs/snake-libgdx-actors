@@ -11,7 +11,7 @@ public class FruitRuleTest extends BaseTest {
 
 	@Test
 	public void update_ThereIsNoFruit_ReturnsSameSnake() throws Exception {
-		FruitRule rule = new FruitRule(new Vector2(1, 0));
+		AFruitRule rule = newFruitRule(new Vector2(1, 0), new FruitRule());
 
 		Snake newSnake = newSnake(0, 0);
 		Snake updatedSnake = rule.update(newSnake);
@@ -21,7 +21,7 @@ public class FruitRuleTest extends BaseTest {
 
 	@Test
 	public void update_ThereIsAFruit_ConsumesIt() throws Exception {
-		FruitRule rule = newFruitRule(new Vector2(0, 0));
+		AFruitRule rule = newFruitRule(new Vector2(0, 0), new FruitRule());
 
 		Snake snakeAte = rule.update(newSnake(0, 0));
 		Snake snakeDidntAte = rule.update(newSnake(0, 0));

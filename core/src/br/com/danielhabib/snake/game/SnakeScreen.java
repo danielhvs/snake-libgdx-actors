@@ -14,7 +14,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
+import br.com.danielhabib.snake.rules.BoingFruitRule;
 import br.com.danielhabib.snake.rules.Direction;
 import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.FruitRule;
@@ -65,6 +67,7 @@ public class SnakeScreen implements Screen {
 		Texture appleTexture = new Texture(Gdx.files.internal("apple.png"));
 		Texture poisonTexture = new Texture(Gdx.files.internal("poison.png"));
 		Texture holeTexture = new Texture(Gdx.files.internal("hole.jpg"));
+		Texture boingTexture = new Texture(Gdx.files.internal("circle.png"));
 
 		// Drawables
 		map = new ArrayList<SnakeDrawable>();
@@ -81,13 +84,15 @@ public class SnakeScreen implements Screen {
 
 		StaticEntity apple = new StaticEntity(appleTexture, new Vector2(3, 4));
 		StaticEntity poisonedApple = new StaticEntity(poisonTexture, new Vector2(8, 17));
+		StaticEntity boingApple = new StaticEntity(boingTexture, new Vector2(15, 12));
 		StaticEntity lastHole = new StaticEntity(holeTexture, new Vector2(13, 12));
 		Hole initialHole = new Hole(holeTexture, new Vector2(3, 8));
 
 		// Rules
 		snake = newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
-		FruitRule fruitRule = new FruitRule(apple, drawingManager);
-		PoisonedFruitRule poisonRule = new PoisonedFruitRule(poisonedApple, drawingManager);
+		AFruitRule fruitRule = new AFruitRule(apple, drawingManager, new FruitRule());
+		AFruitRule poisonRule = new AFruitRule(poisonedApple, drawingManager, new PoisonedFruitRule());
+		AFruitRule boingRule = new AFruitRule(boingApple, drawingManager, new BoingFruitRule());
 
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
 		// AMovingRules realMovingRules = new RestrictedMovingRules();
@@ -101,6 +106,7 @@ public class SnakeScreen implements Screen {
 		// The ordering matters
 		drawingManager.addDrawables(map);
 		drawingManager.addDrawable(apple);
+		drawingManager.addDrawable(boingApple);
 		drawingManager.addDrawable(poisonedApple);
 		drawingManager.addDrawable(lastHole);
 		drawingManager.addDrawable(snake);
@@ -110,6 +116,7 @@ public class SnakeScreen implements Screen {
 		rulesManager.addRule(movingRules);
 		rulesManager.addRule(fruitRule);
 		rulesManager.addRule(poisonRule);
+		rulesManager.addRule(boingRule);
 	}
 
 	// FIXME: DRY. Create a snake factory.
