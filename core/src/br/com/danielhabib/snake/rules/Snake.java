@@ -118,13 +118,10 @@ public class Snake implements SnakeDrawable {
 	}
 
 	public Snake revert() {
-		// FIXME: memory leak here: change algorithm to only change internal
-		// state.
 		Stack<Piece> newPieces = new Stack<Piece>();
 		Stack<Piece> piecesCopy = copyPieces();
 		Piece newHead = piecesCopy.pop();
-		Piece newHeadPiece = new Head(newHead.getPosition(), newHead.getNormDirection().invert(),
-				getTextureOf(getHead()));
+		Piece newHeadPiece = new Head(newHead.getPosition(), newHead.getNormDirection().invert(), getTextureOf(getHead()));
 		newPieces.push(newHeadPiece);
 		Texture tailTexture = getTextureOf(getTail());
 		while (piecesCopy.size() > 1) {
