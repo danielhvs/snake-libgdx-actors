@@ -1,35 +1,36 @@
 package br.com.danielhabib.snake.rules;
 
-import com.badlogic.gdx.utils.Array;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import br.com.danielhabib.snake.game.DrawableManager;
 
 public class AFruitRule implements IRule {
 
-	private Array<Entity> entities;
+	private Map<Entity, IRule> map;
 	private DrawableManager drawingManager;
-	private IRule rule;
 
-	public AFruitRule(Entity entity, DrawableManager drawingManager, IRule rule) {
-		this.entities = Array.with(entity);
+	public AFruitRule(Map<Entity, IRule> map, DrawableManager drawingManager) {
+		this.map = map;
 		this.drawingManager = drawingManager;
-		this.rule = rule;
 	}
 
 	@Override
 	public Snake update(Snake snake) {
-		for (Entity entity : entities) {
+		Iterator<Entry<Entity, IRule>> iter = map.entrySet().iterator();
+		while (iter.hasNext()) {
+			Entry<Entity, IRule> entry = iter.next();
+			Entity entity = entry.getKey();
 			if (snake.getPosition().equals(entity.getPosition())) {
-				consumesFruit(snake, entity);
+				Snake updated = entry.getValue().update(snake);
+				drawingManager.remove(entity);
+				iter.remove();
+				return updated;
 			}
 		}
-		return snake;
-	}
 
-	private Snake consumesFruit(Snake snake, Entity entity) {
-		entities.removeValue(entity, true);
-		drawingManager.remove(entity);
-		return rule.update(snake);
+		return snake;
 	}
 
 }

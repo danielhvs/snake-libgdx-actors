@@ -11,18 +11,20 @@ public class DestroyEntityRule implements IRule {
 	private Entity entity;
 	private Map<Entity, IRule> map;
 	private DrawableManager drawingManager;
+	private IRule ruleAfterDestroy;
 
-	public DestroyEntityRule(Entity entity, Map<Entity, IRule> map, DrawableManager drawingManager) {
+	public DestroyEntityRule(Entity entity, Map<Entity, IRule> map, DrawableManager drawingManager, IRule ruleAfterDestroy) {
 		this.entity = entity;
 		this.map = map;
 		this.drawingManager = drawingManager;
+		this.ruleAfterDestroy = ruleAfterDestroy;
 	}
 
 	@Override
 	public Snake update(Snake snake) {
 		map.remove(entity);
 		drawingManager.remove(entity);
-		return snake.revert();
+		return ruleAfterDestroy.update(snake);
 	}
 
 }

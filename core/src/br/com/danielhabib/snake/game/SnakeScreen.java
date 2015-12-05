@@ -23,8 +23,8 @@ import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.FruitRule;
 import br.com.danielhabib.snake.rules.HoleMovingRules;
 import br.com.danielhabib.snake.rules.IRule;
+import br.com.danielhabib.snake.rules.IdentityRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
-import br.com.danielhabib.snake.rules.MovingRules;
 import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.PoisonedFruitRule;
 import br.com.danielhabib.snake.rules.RotatingEntity;
@@ -44,7 +44,6 @@ public class SnakeScreen implements Screen {
 	private float time;
 	private SnakeController controller;
 	private AMovingRules movingRules;
-	private Map<Entity, IRule> map;
 	private float fps = 8;
 	private float threshold = 0.125f;
 	private DrawableManager drawingManager;
@@ -74,53 +73,55 @@ public class SnakeScreen implements Screen {
 
 		IRule boingMovingRules = new BoingMovingRules();
 		IRule snakeDeathRule = new SnakeDeathRule(game);
+		IRule regularFruitRule = new FruitRule();
+		IRule poisonedFruitRule = new PoisonedFruitRule();
+		IRule boingFruitRule = new BoingFruitRule();
+		IRule identityRule = new IdentityRule();
 
 		// Drawables
-		map = new HashMap<Entity, IRule>();
+		Map<Entity, IRule> map = new HashMap<Entity, IRule>();
 
 		int lastX = -1 + Gdx.graphics.getWidth() / SIZE;
 		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
 		for (int x = 1; x < lastX; x++) {
 			Entity entity = new RotatingEntity(wallTexture, new Vector2(x, 0), 2);
-			map.put(entity, new DestroyEntityRule(entity, map, drawingManager));
+			map.put(entity, new DestroyEntityRule(entity, map, drawingManager, boingMovingRules));
 			map.put(new Entity(wallTexture, new Vector2(x, lastY)), boingMovingRules);
 		}
 		for (int y = 0; y <= lastY; y++) {
-			map.put(new Entity(wallTexture, new Vector2(0, y)), new MovingRules());
-			map.put(new Entity(wallTexture, new Vector2(lastX, y)), boingMovingRules);
+			// map.put(new Entity(wallTexture, new Vector2(0, y)), new
+			// MovingRules());
+			map.put(new Entity(wallTexture, new Vector2(lastX, y)), boingFruitRule);
 		}
 
-
-		Entity apple = new Entity(appleTexture, new Vector2(3, 4));
-		Entity poisonedApple = new Entity(poisonTexture, new Vector2(8, 17));
-		Entity boingApple = new Entity(boingTexture, new Vector2(15, 12));
 		Entity lastHole = new Entity(holeTexture, new Vector2(13, 12));
 		Entity initialHole = new RotatingEntity(holeTexture, new Vector2(3, 8), 100);
+		Entity apple = new Entity(appleTexture, new Vector2(3, 4));
+		Entity poison = new Entity(poisonTexture, new Vector2(8, 17));
+		Entity boing = new Entity(boingTexture, new Vector2(15, 12));
+		Map<Entity, IRule> fruits = new HashMap<Entity, IRule>();
+		fruits.put(apple, regularFruitRule);
+		fruits.put(poison, poisonedFruitRule);
+		fruits.put(boing, boingFruitRule);
 
 		// Rules
 		snake = newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
-		AFruitRule fruitRule = new AFruitRule(apple, drawingManager, new FruitRule());
-		AFruitRule poisonRule = new AFruitRule(poisonedApple, drawingManager, new PoisonedFruitRule());
-		AFruitRule boingRule = new AFruitRule(boingApple, drawingManager, new BoingFruitRule());
+		AFruitRule fruitsRule = new AFruitRule(fruits, drawingManager);
 
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
 		controller = new SnakeController(realMovingRules);
-		movingRules = new MapMovingRules(realMovingRules, snakeDeathRule, map);
+		movingRules = new MapMovingRules(realMovingRules, identityRule, map);
 
 		// The ordering matters
 		drawingManager.addDrawables(map.keySet());
-		drawingManager.addDrawable(apple);
-		drawingManager.addDrawable(boingApple);
-		drawingManager.addDrawable(poisonedApple);
+		drawingManager.addDrawables(fruits.keySet());
 		drawingManager.addDrawable(lastHole);
 		drawingManager.addDrawable(snake);
 		drawingManager.addDrawable(initialHole);
 
 		// The ordering matters
 		rulesManager.addRule(movingRules);
-		rulesManager.addRule(fruitRule);
-		rulesManager.addRule(poisonRule);
-		rulesManager.addRule(boingRule);
+		rulesManager.addRule(fruitsRule);
 	}
 
 	// FIXME: DRY. Create a snake factory.
