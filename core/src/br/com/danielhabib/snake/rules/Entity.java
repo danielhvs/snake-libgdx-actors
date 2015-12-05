@@ -8,9 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Entity implements SnakeDrawable {
 
+	public static final Entity NOEntity = new NOPEntity();
 	public static int SIZE = 32;
 	protected Vector2 pos;
 	protected Sprite sprite;
+
+	protected Entity() {
+	}
 
 	public Entity(Texture texture, Vector2 pos) {
 		this.pos = pos;

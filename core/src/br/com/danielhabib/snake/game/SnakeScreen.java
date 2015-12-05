@@ -1,7 +1,7 @@
 package br.com.danielhabib.snake.game;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 import com.badlogic.gdx.Game;
@@ -25,6 +25,7 @@ import br.com.danielhabib.snake.rules.Hole;
 import br.com.danielhabib.snake.rules.HoleMovingRules;
 import br.com.danielhabib.snake.rules.IRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
+import br.com.danielhabib.snake.rules.MovingRules;
 import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.PoisonedFruitRule;
 import br.com.danielhabib.snake.rules.RulesManager;
@@ -43,7 +44,7 @@ public class SnakeScreen implements Screen {
 	private float time;
 	private SnakeController controller;
 	private AMovingRules movingRules;
-	private List<Entity> map;
+	private Map<Entity, IRule> map;
 	private float fps = 8;
 	private float threshold = 0.125f;
 	private DrawableManager drawingManager;
@@ -71,22 +72,23 @@ public class SnakeScreen implements Screen {
 		Texture holeTexture = new Texture(Gdx.files.internal("hole.jpg"));
 		Texture boingTexture = new Texture(Gdx.files.internal("circle.png"));
 
+		IRule boingMovingRules = new BoingMovingRules();
+		IRule snakeDeathRule = new SnakeDeathRule(game);
+
 		// Drawables
-		map = new ArrayList<Entity>();
+		map = new HashMap<Entity, IRule>();
+
 		int lastX = -1 + Gdx.graphics.getWidth() / SIZE;
 		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
 		for (int x = 0; x < lastX; x++) {
-			map.add(new Entity(wallTexture, new Vector2(x, 0)));
-			map.add(new Entity(wallTexture, new Vector2(x, lastY)));
+			map.put(new Entity(wallTexture, new Vector2(x, 0)), boingMovingRules);
+			map.put(new Entity(wallTexture, new Vector2(x, lastY)), boingMovingRules);
 		}
 		for (int y = 0; y <= lastY; y++) {
-			map.add(new Entity(wallTexture, new Vector2(0, y)));
-			map.add(new Entity(wallTexture, new Vector2(lastX, y)));
+			map.put(new Entity(wallTexture, new Vector2(0, y)), new MovingRules());
+			map.put(new Entity(wallTexture, new Vector2(lastX, y)), boingMovingRules);
 		}
-		map.remove(0);
-		map.remove(1);
-		map.remove(2);
-		map.remove(3);
+
 
 		Entity apple = new Entity(appleTexture, new Vector2(3, 4));
 		Entity poisonedApple = new Entity(poisonTexture, new Vector2(8, 17));
@@ -102,11 +104,10 @@ public class SnakeScreen implements Screen {
 
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
 		controller = new SnakeController(realMovingRules);
-		IRule snakeDeathRule = new SnakeDeathRule(game);
-		movingRules = new MapMovingRules(new BoingMovingRules(), realMovingRules, snakeDeathRule, map);
+		movingRules = new MapMovingRules(realMovingRules, snakeDeathRule, map);
 
 		// The ordering matters
-		drawingManager.addDrawables(map);
+		drawingManager.addDrawables(map.keySet());
 		drawingManager.addDrawable(apple);
 		drawingManager.addDrawable(boingApple);
 		drawingManager.addDrawable(poisonedApple);
