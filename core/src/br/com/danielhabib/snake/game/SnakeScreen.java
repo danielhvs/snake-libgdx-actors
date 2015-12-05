@@ -81,7 +81,8 @@ public class SnakeScreen implements Screen {
 		int lastX = -1 + Gdx.graphics.getWidth() / SIZE;
 		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
 		for (int x = 0; x < lastX; x++) {
-			map.put(new Entity(wallTexture, new Vector2(x, 0)), boingMovingRules);
+			Entity entity = new Entity(wallTexture, new Vector2(x, 0));
+			map.put(entity, new DestroyEntityRule(entity, map, drawingManager));
 			map.put(new Entity(wallTexture, new Vector2(x, lastY)), boingMovingRules);
 		}
 		for (int y = 0; y <= lastY; y++) {

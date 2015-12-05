@@ -2,9 +2,9 @@ package br.com.danielhabib.snake.rules;
 
 import static org.mockito.Mockito.verify;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class MapMovingRulesTest extends BaseTest {
 
 	@Test
 	public void move_ThereIsAWall_ApplyMovingRule() throws Exception {
-		List<Entity> map = wallNextToSnake();
+		Map<Entity, IRule> map = wallNextToSnake();
 		AMovingRules rules = new MapMovingRules(new MovingRules(), movingRuleWhenCollidedWithItself,
 				map);
 
@@ -38,7 +38,7 @@ public class MapMovingRulesTest extends BaseTest {
 
 	@Test
 	public void move_ThereIsNotAWall_Moves() throws Exception {
-		List<Entity> map = wallAwayFromSnake();
+		Map<Entity, IRule> map = wallAwayFromSnake();
 		AMovingRules rules = new MapMovingRules(new MovingRules(), movingRuleWhenCollidedWithItself,
 				map);
 
@@ -50,7 +50,7 @@ public class MapMovingRulesTest extends BaseTest {
 	@Test
 	public void move_ThereIsTailInTheWay_DoesntMove() throws Exception {
 		AMovingRules rules = new MapMovingRules(movingRuleWhenFree, movingRuleWhenCollidedWithItself,
-				Collections.<Entity> emptyList());
+				Collections.<Entity, IRule> emptyMap());
 
 		Snake snake = rules.update(snakeSize5());
 
@@ -67,11 +67,15 @@ public class MapMovingRulesTest extends BaseTest {
 		return new Snake(pieces, texture);
 	}
 
-	private List<Entity> wallAwayFromSnake() {
-		return Arrays.asList(new Entity(texture, new Vector2(10, 10)));
+	private Map<Entity, IRule> wallAwayFromSnake() {
+		HashMap<Entity, IRule> map = new HashMap<Entity, IRule>();
+		map.put(new Entity(texture, new Vector2(10, 10)), movingRuleWhenCollided);
+		return map;
 	}
 
-	private List<Entity> wallNextToSnake() {
-		return Arrays.asList(new Entity(texture, new Vector2(1, 0)));
+	private Map<Entity, IRule> wallNextToSnake() {
+		HashMap<Entity, IRule> map = new HashMap<Entity, IRule>();
+		map.put(new Entity(texture, new Vector2(1, 0)), movingRuleWhenCollided);
+		return map;
 	}
 }
