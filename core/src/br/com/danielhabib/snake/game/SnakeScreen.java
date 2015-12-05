@@ -78,15 +78,19 @@ public class SnakeScreen implements Screen {
 		IRule boingFruitRule = new BoingFruitRule();
 		IRule identityRule = new IdentityRule();
 
-		// Drawables
-		Map<Entity, IRule> map = new HashMap<Entity, IRule>();
+		Entity lastHole = new Entity(holeTexture, new Vector2(13, 12));
+		Entity initialHole = new RotatingEntity(holeTexture, new Vector2(3, 8), 100);
+		Entity apple = new Entity(appleTexture, new Vector2(3, 4));
+		Entity poison = new Entity(poisonTexture, new Vector2(8, 17));
+		Entity boing = new Entity(boingTexture, new Vector2(15, 12));
 
+		Map<Entity, IRule> map = new HashMap<Entity, IRule>();
 		int lastX = -1 + Gdx.graphics.getWidth() / SIZE;
 		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
 		for (int x = 1; x < lastX; x++) {
 			Entity entity = new RotatingEntity(wallTexture, new Vector2(x, 0), 2);
 			map.put(entity, new DestroyEntityRule(entity, map, drawingManager, boingMovingRules));
-			map.put(new Entity(wallTexture, new Vector2(x, lastY)), boingMovingRules);
+			map.put(new Entity(wallTexture, new Vector2(x, lastY)), identityRule);
 		}
 		for (int y = 0; y <= lastY; y++) {
 			// map.put(new Entity(wallTexture, new Vector2(0, y)), new
@@ -94,20 +98,17 @@ public class SnakeScreen implements Screen {
 			map.put(new Entity(wallTexture, new Vector2(lastX, y)), boingFruitRule);
 		}
 
-		Entity lastHole = new Entity(holeTexture, new Vector2(13, 12));
-		Entity initialHole = new RotatingEntity(holeTexture, new Vector2(3, 8), 100);
-		Entity apple = new Entity(appleTexture, new Vector2(3, 4));
-		Entity poison = new Entity(poisonTexture, new Vector2(8, 17));
-		Entity boing = new Entity(boingTexture, new Vector2(15, 12));
 		Map<Entity, IRule> fruits = new HashMap<Entity, IRule>();
 		fruits.put(apple, regularFruitRule);
 		fruits.put(poison, poisonedFruitRule);
 		fruits.put(boing, boingFruitRule);
+		for (int i = 0; i < 12; i++) {
+			fruits.put(new Entity(appleTexture, new Vector2(8, i + 1)), regularFruitRule);
+		}
 
 		// Rules
 		snake = newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
 		AFruitRule fruitsRule = new AFruitRule(fruits, drawingManager);
-
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
 		controller = new SnakeController(realMovingRules);
 		movingRules = new MapMovingRules(realMovingRules, identityRule, map);
