@@ -17,6 +17,7 @@ public class MirrorMapMovingRules extends AMovingRules {
 	// FIXME: Requires texture
 	@Override
 	public Snake update(Snake snake) {
+
 		Snake nextSnake = movingRules.update(snake);
 		Vector2 nextPosition = nextSnake.getPosition();
 		if (nextPosition.x > lastX) {

@@ -17,11 +17,13 @@ import com.badlogic.gdx.math.Vector2;
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
 import br.com.danielhabib.snake.rules.BoingFruitRule;
+import br.com.danielhabib.snake.rules.BoingMovingRules;
 import br.com.danielhabib.snake.rules.Direction;
 import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.FruitRule;
 import br.com.danielhabib.snake.rules.Hole;
 import br.com.danielhabib.snake.rules.HoleMovingRules;
+import br.com.danielhabib.snake.rules.IRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
 import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.PoisonedFruitRule;
@@ -81,6 +83,10 @@ public class SnakeScreen implements Screen {
 			map.add(new Entity(wallTexture, new Vector2(0, y)));
 			map.add(new Entity(wallTexture, new Vector2(lastX, y)));
 		}
+		map.remove(0);
+		map.remove(1);
+		map.remove(2);
+		map.remove(3);
 
 		Entity apple = new Entity(appleTexture, new Vector2(3, 4));
 		Entity poisonedApple = new Entity(poisonTexture, new Vector2(8, 17));
@@ -96,9 +102,8 @@ public class SnakeScreen implements Screen {
 
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
 		controller = new SnakeController(realMovingRules);
-		movingRules = new MapMovingRules(new SnakeDeathRule(game), realMovingRules, map);
-		// movingRules = new MirrorMapMovingRules(holeMovingRules, lastX,
-		// lastY);
+		IRule snakeDeathRule = new SnakeDeathRule(game);
+		movingRules = new MapMovingRules(new BoingMovingRules(), realMovingRules, snakeDeathRule, map);
 
 		// The ordering matters
 		drawingManager.addDrawables(map);
