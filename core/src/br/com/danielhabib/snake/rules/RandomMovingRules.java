@@ -1,6 +1,10 @@
 package br.com.danielhabib.snake.rules;
 
-public class RandomMovingRules extends AMovingRules {
+public class RandomMovingRules extends MapMovingRules {
+
+	public RandomMovingRules(IRule ruleWhenFree, IRule ruleWhenCollidedWithItSelf) {
+		super(ruleWhenFree, ruleWhenCollidedWithItSelf);
+	}
 
 	@Override
 	public Snake turnLeft(Snake snake) {
@@ -19,8 +23,4 @@ public class RandomMovingRules extends AMovingRules {
 		}
 	}
 
-	@Override
-	public Snake update(Snake snake) {
-		return snake.move();
-	}
 }

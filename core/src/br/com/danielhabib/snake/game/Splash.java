@@ -1,5 +1,7 @@
 package br.com.danielhabib.snake.game;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 import com.badlogic.gdx.Game;
@@ -25,10 +27,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 import br.com.danielhabib.snake.rules.AMovingRules;
+import br.com.danielhabib.snake.rules.BoingMovingRules;
 import br.com.danielhabib.snake.rules.Direction;
-import br.com.danielhabib.snake.rules.MirrorMapMovingRules;
+import br.com.danielhabib.snake.rules.IRule;
+import br.com.danielhabib.snake.rules.MovingRules;
 import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.RandomMovingRules;
+import br.com.danielhabib.snake.rules.RulesManager;
 import br.com.danielhabib.snake.rules.Snake;
 
 public class Splash implements Screen {
@@ -37,13 +42,17 @@ public class Splash implements Screen {
 	private Game game;
 	private Stage stage;
 	private Stack<Snake> snakes;
-	private Stack<Snake> updatedSnakes;
 	private static final int SIZE = 16;
 	private AMovingRules movingRules;
 	private float time;
 	private Sprite boxSprite;
 	private OrthographicCamera camera;
 	private Texture boxTexture;
+	private Texture headTexture;
+	private Texture tailTexture;
+	private Texture pieceTexture;
+	private DrawableManager drawingManager;
+	private RulesManager rulesManager;
 
 	public Splash(Game game) {
 		this.game = game;
@@ -55,12 +64,13 @@ public class Splash implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(true);
 		stage = new Stage();
+		drawingManager = new DrawableManager();
 
-		int lastX = -1 + Gdx.graphics.getWidth() / SIZE;
-		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
+		headTexture = new Texture(Gdx.files.internal("head.png"));
+		tailTexture = new Texture(Gdx.files.internal("tail.png"));
+		pieceTexture = new Texture(Gdx.files.internal("circle.png"));
 
 		snakes = new Stack<Snake>();
-		updatedSnakes = new Stack<Snake>();
 
 		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
 		LabelStyle labelStyle = new LabelStyle(font, Color.ORANGE);
@@ -106,9 +116,48 @@ public class Splash implements Screen {
 		boxSprite = new Sprite(boxTexture);
 		setSizeAndFlip(boxSprite);
 		boxSprite.setColor(Color.YELLOW);
+		rulesManager = new RulesManager();
 
 		snakes = newRandomSnakes();
-		movingRules = new MirrorMapMovingRules(new RandomMovingRules(), lastX, lastY);
+		movingRules = new RandomMovingRules(new MovingRules(), new BoingMovingRules());
+
+		rulesManager.addRule(new IRule() {
+
+			private Snake turnLeft(Snake snake) {
+				Map<Direction, Direction> leftTurningOffsetMap = new HashMap<Direction, Direction>();
+				leftTurningOffsetMap.put(Direction.UP, Direction.LEFT);
+				leftTurningOffsetMap.put(Direction.LEFT, Direction.DOWN);
+				leftTurningOffsetMap.put(Direction.DOWN, Direction.RIGHT);
+				leftTurningOffsetMap.put(Direction.RIGHT, Direction.UP);
+
+				return snake.turn(leftTurningOffsetMap.get(snake.getDirection()));
+			}
+
+			private Snake turnRight(Snake snake) {
+				Map<Direction, Direction> rightTurningOffsetMap = new HashMap<Direction, Direction>();
+				rightTurningOffsetMap.put(Direction.UP, Direction.RIGHT);
+				rightTurningOffsetMap.put(Direction.RIGHT, Direction.DOWN);
+				rightTurningOffsetMap.put(Direction.DOWN, Direction.LEFT);
+				rightTurningOffsetMap.put(Direction.LEFT, Direction.UP);
+
+				return snake.turn(rightTurningOffsetMap.get(snake.getDirection()));
+			}
+
+			@Override
+			public Snake update(Snake snake) {
+				double random = Math.random();
+				if (random < 0.3) {
+					return turnLeft(snake);
+				} else if (random > 0.8) {
+					return turnRight(snake);
+				} else {
+					return snake;
+				}
+			}
+		});
+		rulesManager.addRule(movingRules);
+		drawingManager.addDrawables(snakes);
+
 	}
 
 	private TextButton newButton(String text, TextButtonStyle buttonStyle) {
@@ -127,25 +176,32 @@ public class Splash implements Screen {
 
 	private Stack<Snake> newRandomSnakes() {
 		Stack<Snake> stack = new Stack<Snake>();
-		stack.push(newSnakeAtXY(10, 1, Direction.RIGHT));
-		stack.push(newSnakeAtXY(Gdx.graphics.getWidth() / SIZE - 10, 1, Direction.LEFT));
-		stack.push(newSnakeAtXY(10, Gdx.graphics.getHeight() / SIZE - 1, Direction.RIGHT));
+		stack.push(newSnakeAtXY(10, 1, Direction.RIGHT, headTexture, boxTexture, tailTexture));
+		stack.push(newSnakeAtXY(Gdx.graphics.getWidth() / SIZE - 10, 1, Direction.LEFT, tailTexture, headTexture,
+				tailTexture));
+		stack.push(newSnakeAtXY(10, Gdx.graphics.getHeight() / SIZE - 1, Direction.RIGHT, headTexture, headTexture,
+				tailTexture));
 		stack.push(
-				newSnakeAtXY(Gdx.graphics.getWidth() / SIZE - 10, Gdx.graphics.getHeight() / SIZE - 1, Direction.LEFT));
+newSnakeAtXY(Gdx.graphics.getWidth() / SIZE - 10, Gdx.graphics.getHeight() / SIZE - 1,
+				Direction.LEFT, headTexture, pieceTexture, tailTexture));
 		stack.push(
-				newSnakeAtXY(Gdx.graphics.getWidth() / SIZE / 2, Gdx.graphics.getHeight() / SIZE / 2, Direction.RIGHT));
+newSnakeAtXY(Gdx.graphics.getWidth() / SIZE / 2, Gdx.graphics.getHeight() / SIZE / 2,
+				Direction.RIGHT, headTexture, boxTexture, tailTexture));
 		return stack;
 	}
 
 	// FIXME: DRY
-	private Snake newSnakeAtXY(int x, int y, Direction direction) {
+	private Snake newSnakeAtXY(int x, int y, Direction direction, Texture headTexture, Texture pieceTexture,
+			Texture tailTexture) {
 		Stack<Piece> pieces = new Stack<Piece>();
-		pieces.push(new Piece(new Vector2(x, y), direction, boxTexture));
-		Snake snake = new Snake(pieces, boxTexture);
-		int size = 10;
-		for (int i = 0; i < size; i++) {
-			snake = snake.addTail();
+		pieces.push(new Head(new Vector2(x, y), direction, headTexture));
+		int size = 7;
+		int i = 1;
+		for (i = 1; i < size - 1; i++) {
+			pieces.push(new Piece(new Vector2(x - i, y), direction, pieceTexture));
 		}
+		pieces.push(new Tail(new Vector2(x - i, y), direction, tailTexture));
+		Snake snake = new Snake(pieces, pieceTexture);
 		return snake;
 	}
 
@@ -161,29 +217,21 @@ public class Splash implements Screen {
 
 		// Managing FPS
 		time += delta;
-		if (time > 0.08) {
-			while (!snakes.isEmpty()) {
-				Snake update = movingRules.update(movingRules.turnLeft(snakes.pop()));
-				updatedSnakes.push(update);
-			}
-			while (!updatedSnakes.isEmpty()) {
-				snakes.push(updatedSnakes.pop());
+		if (time > 0.125) {
+			for (Snake snake : snakes) {
+				rulesManager.applyRules(snake);
 			}
 			time = 0;
 		}
 
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
+		drawingManager.update();
 
 		batch.begin();
-		// Snake
-		for (Snake snake : snakes) {
-			for (Piece piece : snake.copyPieces()) {
-				Vector2 position = piece.getPosition();
-				boxSprite.setPosition(position.x * SIZE, position.y * SIZE);
-				boxSprite.draw(batch);
-			}
-		}
+
+		drawingManager.render(batch);
+
 		batch.end();
 
 		stage.act();

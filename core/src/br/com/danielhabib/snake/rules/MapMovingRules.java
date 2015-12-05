@@ -1,5 +1,6 @@
 package br.com.danielhabib.snake.rules;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
@@ -11,6 +12,10 @@ public class MapMovingRules extends AMovingRules {
 	private Map<Entity, IRule> map;
 	private IRule ruleWhenFree;
 	private IRule ruleWhenCollidedWithItSelf;
+
+	public MapMovingRules(IRule ruleWhenFree, IRule ruleWhenCollidedWithItSelf) {
+		this(ruleWhenFree, ruleWhenCollidedWithItSelf, new HashMap<Entity, IRule>());
+	}
 
 	public MapMovingRules(IRule ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Map<Entity, IRule> map) {
 		this.ruleWhenFree = ruleWhenFree;
