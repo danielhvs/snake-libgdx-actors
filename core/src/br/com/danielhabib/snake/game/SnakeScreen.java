@@ -21,13 +21,13 @@ import br.com.danielhabib.snake.rules.BoingMovingRules;
 import br.com.danielhabib.snake.rules.Direction;
 import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.FruitRule;
-import br.com.danielhabib.snake.rules.Hole;
 import br.com.danielhabib.snake.rules.HoleMovingRules;
 import br.com.danielhabib.snake.rules.IRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
 import br.com.danielhabib.snake.rules.MovingRules;
 import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.PoisonedFruitRule;
+import br.com.danielhabib.snake.rules.RotatingEntity;
 import br.com.danielhabib.snake.rules.RulesManager;
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.rules.SnakeController;
@@ -80,8 +80,8 @@ public class SnakeScreen implements Screen {
 
 		int lastX = -1 + Gdx.graphics.getWidth() / SIZE;
 		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
-		for (int x = 0; x < lastX; x++) {
-			Entity entity = new Entity(wallTexture, new Vector2(x, 0));
+		for (int x = 1; x < lastX; x++) {
+			Entity entity = new RotatingEntity(wallTexture, new Vector2(x, 0), 2);
 			map.put(entity, new DestroyEntityRule(entity, map, drawingManager));
 			map.put(new Entity(wallTexture, new Vector2(x, lastY)), boingMovingRules);
 		}
@@ -95,7 +95,7 @@ public class SnakeScreen implements Screen {
 		Entity poisonedApple = new Entity(poisonTexture, new Vector2(8, 17));
 		Entity boingApple = new Entity(boingTexture, new Vector2(15, 12));
 		Entity lastHole = new Entity(holeTexture, new Vector2(13, 12));
-		Entity initialHole = new Hole(holeTexture, new Vector2(3, 8));
+		Entity initialHole = new RotatingEntity(holeTexture, new Vector2(3, 8), 100);
 
 		// Rules
 		snake = newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
