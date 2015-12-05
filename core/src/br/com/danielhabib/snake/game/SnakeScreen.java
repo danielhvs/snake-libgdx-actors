@@ -17,7 +17,6 @@ import com.badlogic.gdx.math.Vector2;
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
 import br.com.danielhabib.snake.rules.BoingFruitRule;
-import br.com.danielhabib.snake.rules.BoingMovingRules;
 import br.com.danielhabib.snake.rules.Direction;
 import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.FruitRule;
@@ -29,6 +28,7 @@ import br.com.danielhabib.snake.rules.PoisonedFruitRule;
 import br.com.danielhabib.snake.rules.RulesManager;
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.rules.SnakeController;
+import br.com.danielhabib.snake.rules.SnakeDeathRule;
 import br.com.danielhabib.snake.rules.WormHole;
 
 public class SnakeScreen implements Screen {
@@ -96,7 +96,7 @@ public class SnakeScreen implements Screen {
 
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
 		controller = new SnakeController(realMovingRules);
-		movingRules = new MapMovingRules(new BoingMovingRules(), realMovingRules, map);
+		movingRules = new MapMovingRules(new SnakeDeathRule(game), realMovingRules, map);
 		// movingRules = new MirrorMapMovingRules(holeMovingRules, lastX,
 		// lastY);
 
