@@ -20,7 +20,6 @@ public class Entity implements SnakeDrawable {
 		this.pos = pos;
 		this.sprite = new Sprite(texture);
 		sprite.setSize(SIZE, SIZE);
-		sprite.flip(false, true);
 		sprite.setOriginCenter();
 	}
 

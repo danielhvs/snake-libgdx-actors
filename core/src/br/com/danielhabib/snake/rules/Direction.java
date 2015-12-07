@@ -6,7 +6,7 @@ import java.util.Map;
 import com.badlogic.gdx.math.Vector2;
 
 public enum Direction {
-	UP(new Vector2(0, -1), 270.0f), DOWN(new Vector2(0, 1), 90.0f), LEFT(new Vector2(-1, 0),
+	UP(new Vector2(0, 1), 90.0f), DOWN(new Vector2(0, -1), 270.0f), LEFT(new Vector2(-1, 0),
 			180.0f), RIGHT(new Vector2(1, 0), 0.0f);
 	private Vector2 direction;
 	private float rotation;
