@@ -1,11 +1,17 @@
 package br.com.danielhabib.snake.rules;
 
-public class SnakeController {
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
+public class SnakeController extends Actor {
 
 	private AMovingRules movingRules;
+	private Snake snake;
 
-	public SnakeController(AMovingRules movingRules) {
+	public SnakeController(AMovingRules movingRules, Snake snake) {
 		this.movingRules = movingRules;
+		this.snake = snake;
 	}
 
 	public Snake up(Snake snake) {
@@ -45,6 +51,19 @@ public class SnakeController {
 			return movingRules.turnLeft(snake);
 		} else {
 			return snake;
+		}
+	}
+
+	@Override
+	public void act(float delta) {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+			left(snake);
+		} else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+			right(snake);
+		} else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+			up(snake);
+		} else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+			down(snake);
 		}
 	}
 

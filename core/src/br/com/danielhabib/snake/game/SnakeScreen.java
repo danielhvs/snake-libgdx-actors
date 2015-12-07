@@ -13,6 +13,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
@@ -48,6 +50,7 @@ public class SnakeScreen implements Screen {
 	private float threshold = 0.125f;
 	private DrawableManager drawingManager;
 	private RulesManager rulesManager;
+	private Stage stage;
 
 	public SnakeScreen(Game game) {
 		this.game = game;
@@ -61,6 +64,7 @@ public class SnakeScreen implements Screen {
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(true);
+		stage = new Stage(new ScreenViewport(camera), batch);
 
 		Texture headTexture = new Texture(Gdx.files.internal("head.png"));
 		Texture tailTexture = new Texture(Gdx.files.internal("tail.png"));
@@ -110,7 +114,7 @@ public class SnakeScreen implements Screen {
 		snake = newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
 		AFruitRule fruitsRule = new AFruitRule(fruits, drawingManager);
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
-		controller = new SnakeController(realMovingRules);
+		controller = new SnakeController(realMovingRules, snake);
 		movingRules = new MapMovingRules(realMovingRules, identityRule, map);
 
 		// The ordering matters
@@ -123,6 +127,8 @@ public class SnakeScreen implements Screen {
 		// The ordering matters
 		rulesManager.addRule(movingRules);
 		rulesManager.addRule(fruitsRule);
+
+		stage.addActor(controller);
 	}
 
 	// FIXME: DRY. Create a snake factory.
@@ -146,6 +152,7 @@ public class SnakeScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		specialControls();
+		stage.act();
 		controlSnake();
 
 		// Managing FPS
@@ -166,6 +173,8 @@ public class SnakeScreen implements Screen {
 		drawingManager.render(batch);
 
 		batch.end();
+
+		stage.draw();
 	}
 
 	private void specialControls() {
@@ -204,15 +213,6 @@ public class SnakeScreen implements Screen {
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
 			snake = movingRules.turnRight(snake);
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-			snake = controller.left(snake);
-		} else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-			snake = controller.right(snake);
-		} else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-			snake = controller.up(snake);
-		} else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-			snake = controller.down(snake);
 		}
 	}
 
