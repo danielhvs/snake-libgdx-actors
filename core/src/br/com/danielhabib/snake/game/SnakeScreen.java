@@ -113,9 +113,9 @@ public class SnakeScreen implements Screen {
 		// Rules
 		snake = newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
 		AFruitRule fruitsRule = new AFruitRule(fruits, snake);
-		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
-		controller = new SnakeController(realMovingRules, snake);
+		IRule realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
 		movingRules = new MapMovingRules(realMovingRules, identityRule, map);
+		controller = new SnakeController(movingRules, snake);
 
 		// The ordering matters
 		drawingManager.addDrawables(map.keySet());

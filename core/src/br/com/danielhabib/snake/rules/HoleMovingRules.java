@@ -1,6 +1,6 @@
 package br.com.danielhabib.snake.rules;
 
-public class HoleMovingRules extends AMovingRules {
+public class HoleMovingRules implements IRule {
 
 	private WormHole hole;
 
