@@ -85,6 +85,6 @@ public class BaseTest {
 
 	protected AFruitRule newFruitRule(Vector2 position, IRule rule) {
 		Mockito.when(apple.getPosition()).thenReturn(position);
-		return new AFruitRule(null, drawingManager);
+		return null;// new AFruitRule(null, drawingManager, snake);
 	}
 }

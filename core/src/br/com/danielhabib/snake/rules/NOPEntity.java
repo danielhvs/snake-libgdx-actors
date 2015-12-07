@@ -1,6 +1,6 @@
 package br.com.danielhabib.snake.rules;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class NOPEntity extends Entity {
 
@@ -9,7 +9,7 @@ public class NOPEntity extends Entity {
 	}
 
 	@Override
-	public void render(SpriteBatch batch) {
+	public void render(Batch batch) {
 	}
 
 	@Override

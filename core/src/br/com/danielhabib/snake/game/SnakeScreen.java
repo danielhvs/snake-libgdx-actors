@@ -112,23 +112,22 @@ public class SnakeScreen implements Screen {
 
 		// Rules
 		snake = newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
-		AFruitRule fruitsRule = new AFruitRule(fruits, drawingManager);
+		AFruitRule fruitsRule = new AFruitRule(fruits, snake);
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
 		controller = new SnakeController(realMovingRules, snake);
 		movingRules = new MapMovingRules(realMovingRules, identityRule, map);
 
 		// The ordering matters
 		drawingManager.addDrawables(map.keySet());
-		drawingManager.addDrawables(fruits.keySet());
 		drawingManager.addDrawable(lastHole);
 		drawingManager.addDrawable(snake);
 		drawingManager.addDrawable(initialHole);
 
 		// The ordering matters
 		rulesManager.addRule(movingRules);
-		rulesManager.addRule(fruitsRule);
 
 		stage.addActor(controller);
+		stage.addActor(fruitsRule);
 	}
 
 	// FIXME: DRY. Create a snake factory.

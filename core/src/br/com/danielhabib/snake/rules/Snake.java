@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Stack;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 
 import br.com.danielhabib.snake.game.Head;
@@ -186,7 +186,7 @@ public class Snake implements SnakeDrawable {
 	}
 
 	@Override
-	public void render(SpriteBatch batch) {
+	public void render(Batch batch) {
 		for (Piece piece : pieces) {
 			piece.render(batch);
 		}

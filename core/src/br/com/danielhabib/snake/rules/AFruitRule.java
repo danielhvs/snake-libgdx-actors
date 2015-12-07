@@ -4,33 +4,40 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import br.com.danielhabib.snake.game.DrawableManager;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class AFruitRule implements IRule {
+public class AFruitRule extends Actor {
 
 	private Map<Entity, IRule> map;
-	private DrawableManager drawingManager;
+	private Snake snake;
 
-	public AFruitRule(Map<Entity, IRule> map, DrawableManager drawingManager) {
+	public AFruitRule(Map<Entity, IRule> map, Snake snake) {
 		this.map = map;
-		this.drawingManager = drawingManager;
+		this.snake = snake;
 	}
 
 	@Override
-	public Snake update(Snake snake) {
+	public void act(float delta) {
 		Iterator<Entry<Entity, IRule>> iter = map.entrySet().iterator();
 		while (iter.hasNext()) {
 			Entry<Entity, IRule> entry = iter.next();
 			Entity entity = entry.getKey();
+			entity.update();
 			if (snake.getPosition().equals(entity.getPosition())) {
-				Snake updated = entry.getValue().update(snake);
-				drawingManager.remove(entity);
+				entry.getValue().update(snake);
 				iter.remove();
-				return updated;
 			}
 		}
-
-		return snake;
 	}
 
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
+		Iterator<Entry<Entity, IRule>> iter = map.entrySet().iterator();
+		while (iter.hasNext()) {
+			Entry<Entity, IRule> entry = iter.next();
+			Entity entity = entry.getKey();
+			entity.render(batch);
+		}
+	}
 }

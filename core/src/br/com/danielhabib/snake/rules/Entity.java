@@ -1,8 +1,8 @@
 package br.com.danielhabib.snake.rules;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -30,7 +30,7 @@ public class Entity implements SnakeDrawable {
 	}
 
 	@Override
-	public void render(SpriteBatch batch) {
+	public void render(Batch batch) {
 		sprite.draw(batch);
 	}
 
