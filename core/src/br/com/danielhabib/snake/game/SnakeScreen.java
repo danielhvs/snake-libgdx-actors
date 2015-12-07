@@ -6,14 +6,8 @@ import java.util.Map;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
@@ -34,18 +28,15 @@ import br.com.danielhabib.snake.rules.SnakeDeathRule;
 import br.com.danielhabib.snake.rules.SnakeFactory;
 import br.com.danielhabib.snake.rules.WormHole;
 
-public class SnakeScreen implements Screen {
+public class SnakeScreen extends AbstractScreen {
 
 	private static final int SIZE = Entity.SIZE;
 	private Game game;
-	private OrthographicCamera camera;
-	private SpriteBatch batch;
 	private Snake snake;
 	private SnakeController controller;
 	private AMovingRules movingRules;
 	private float fps = 8;
 	private float threshold = 0.125f;
-	private Stage stage;
 
 	public SnakeScreen(Game game) {
 		this.game = game;
@@ -53,11 +44,6 @@ public class SnakeScreen implements Screen {
 
 	@Override
 	public void show() {
-		batch = new SpriteBatch();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(true);
-		stage = new Stage(new ScreenViewport(camera), batch);
-
 		Texture headTexture = new Texture(Gdx.files.internal("head.png"));
 		Texture tailTexture = new Texture(Gdx.files.internal("tail.png"));
 		Texture pieceTexture = new Texture(Gdx.files.internal("circle.png"));
@@ -114,21 +100,6 @@ public class SnakeScreen implements Screen {
 		stage.addActor(movingRules);
 	}
 
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		specialControls();
-		stage.act();
-
-		// Drawing
-		camera.update();
-		batch.setProjectionMatrix(camera.combined);
-
-		stage.draw();
-	}
-
 	private void specialControls() {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			game.setScreen(new Splash(game));
@@ -154,12 +125,6 @@ public class SnakeScreen implements Screen {
 	}
 
 	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
 
@@ -177,8 +142,14 @@ public class SnakeScreen implements Screen {
 	}
 
 	@Override
+	public void buildStage() {
+		show();
+	}
+
+	@Override
 	public void dispose() {
-		batch.dispose();
+		// TODO Auto-generated method stub
+
 	}
 
 }
