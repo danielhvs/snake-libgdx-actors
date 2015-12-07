@@ -1,23 +1,25 @@
 package br.com.danielhabib.snake.rules;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class WormHole {
+public class WormHole extends Actor {
 
-	private Vector2 initialPoint;
-	private Vector2 finalPoint;
+	private Entity initialPoint;
+	private Entity finalPoint;
 
-	public WormHole(Vector2 initialPoint, Vector2 finalPoint) {
+	public WormHole(Entity initialPoint, Entity finalPoint) {
 		this.initialPoint = initialPoint;
 		this.finalPoint = finalPoint;
 	}
 
 	public Vector2 getInitialPoint() {
-		return initialPoint;
+		return initialPoint.getPosition();
 	}
 
 	public Vector2 getFinalPoint() {
-		return finalPoint;
+		return finalPoint.getPosition();
 	}
 
 	@Override
@@ -63,5 +65,16 @@ public class WormHole {
 		return true;
 	}
 
+	@Override
+	public void act(float delta) {
+		initialPoint.update();
+		finalPoint.update();
+	}
+
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
+		initialPoint.render(batch);
+		finalPoint.render(batch);
+	}
 
 }

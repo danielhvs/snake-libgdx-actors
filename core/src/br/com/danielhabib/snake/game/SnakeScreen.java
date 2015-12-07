@@ -2,7 +2,6 @@ package br.com.danielhabib.snake.game;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -27,12 +26,12 @@ import br.com.danielhabib.snake.rules.HoleMovingRules;
 import br.com.danielhabib.snake.rules.IRule;
 import br.com.danielhabib.snake.rules.IdentityRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
-import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.PoisonedFruitRule;
 import br.com.danielhabib.snake.rules.RotatingEntity;
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.rules.SnakeController;
 import br.com.danielhabib.snake.rules.SnakeDeathRule;
+import br.com.danielhabib.snake.rules.SnakeFactory;
 import br.com.danielhabib.snake.rules.WormHole;
 
 public class SnakeScreen implements Screen {
@@ -46,7 +45,6 @@ public class SnakeScreen implements Screen {
 	private AMovingRules movingRules;
 	private float fps = 8;
 	private float threshold = 0.125f;
-	private DrawableManager drawingManager;
 	private Stage stage;
 
 	public SnakeScreen(Game game) {
@@ -55,8 +53,6 @@ public class SnakeScreen implements Screen {
 
 	@Override
 	public void show() {
-		drawingManager = new DrawableManager();
-
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(true);
@@ -89,7 +85,7 @@ public class SnakeScreen implements Screen {
 		int lastY = -1 + Gdx.graphics.getHeight() / SIZE;
 		for (int x = 1; x < lastX; x++) {
 			Entity entity = new RotatingEntity(wallTexture, new Vector2(x, 0), 2);
-			map.put(entity, new DestroyEntityRule(entity, map, drawingManager, boingMovingRules));
+			map.put(entity, new DestroyEntityRule(entity, map, boingMovingRules));
 			map.put(new Entity(wallTexture, new Vector2(x, lastY)), identityRule);
 		}
 		for (int y = 0; y <= lastY; y++) {
@@ -107,35 +103,16 @@ public class SnakeScreen implements Screen {
 		}
 
 		// Rules
-		snake = newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
+		snake = SnakeFactory.newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
 		AFruitRule fruitsRule = new AFruitRule(fruits, snake);
-		IRule realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
+		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole, lastHole), snake);
 		movingRules = new MapMovingRules(realMovingRules, identityRule, map, snake);
 		controller = new SnakeController(movingRules, snake);
-
-		// The ordering matters
-		drawingManager.addDrawable(lastHole);
-		drawingManager.addDrawable(initialHole);
 
 		stage.addActor(controller);
 		stage.addActor(fruitsRule);
 		stage.addActor(movingRules);
 	}
-
-	// FIXME: DRY. Create a snake factory.
-	private Snake newSnakeAtXY(int x, int y, Direction direction, Texture headTexture, Texture pieceTexture, Texture tailTexture) {
-		Stack<Piece> pieces = new Stack<Piece>();
-		pieces.push(new Head(new Vector2(x, y), direction, headTexture));
-		int size = 4;
-		int i = 1;
-		for (i = 1; i < size - 1; i++) {
-			pieces.push(new Piece(new Vector2(x - i, y), direction, pieceTexture));
-		}
-		pieces.push(new Tail(new Vector2(x - i, y), direction, tailTexture));
-		Snake snake = new Snake(pieces, pieceTexture);
-		return snake;
-	}
-
 
 	@Override
 	public void render(float delta) {
@@ -145,16 +122,9 @@ public class SnakeScreen implements Screen {
 		specialControls();
 		stage.act();
 
-		drawingManager.update();
-
 		// Drawing
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-
-		drawingManager.render(batch);
-
-		batch.end();
 
 		stage.draw();
 	}
@@ -208,7 +178,6 @@ public class SnakeScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		drawingManager.dispose();
 		batch.dispose();
 	}
 

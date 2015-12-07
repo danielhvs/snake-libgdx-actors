@@ -11,19 +11,21 @@ import com.badlogic.gdx.math.Vector2;
 public class MapMovingRules extends AMovingRules {
 
 	private Map<Entity, IRule> map;
-	private IRule ruleWhenFree;
+	private AMovingRules ruleWhenFree;
 	private IRule ruleWhenCollidedWithItSelf;
 
-	public MapMovingRules(IRule ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Snake snake) {
+	public MapMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Snake snake) {
 		this(ruleWhenFree, ruleWhenCollidedWithItSelf, new HashMap<Entity, IRule>(), snake);
 	}
 
-	public MapMovingRules(IRule ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Map<Entity, IRule> map, Snake snake) {
+	public MapMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Map<Entity, IRule> map, Snake snake) {
 		super(snake);
 		this.ruleWhenFree = ruleWhenFree;
 		this.ruleWhenCollidedWithItSelf = ruleWhenCollidedWithItSelf;
 		this.map = map;
 	}
+
+	private static float time = 0;
 
 	@Override
 	public void act(float delta) {
@@ -31,43 +33,51 @@ public class MapMovingRules extends AMovingRules {
 		for (Entity entity : map.keySet()) {
 			entity.update();
 		}
-		update(snake);
 		snake.update();
+
+		time += delta;
+		if (time > 0.125) {
+			update(delta);
+			time = 0;
+		}
 	}
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
+		ruleWhenFree.draw(batch, parentAlpha);
 		snake.render(batch);
 		for (Entity entity : map.keySet()) {
 			entity.render(batch);
 		}
 	}
 
-	public Snake update(Snake snake) {
+	public void update(float delta) {
 		int lastX = -1 + Gdx.graphics.getWidth() / Entity.SIZE;
 		int lastY = -1 + Gdx.graphics.getHeight() / Entity.SIZE;
 		if (snakeWouldEatItSelf(snake)) {
-			return ruleWhenCollidedWithItSelf.update(snake);
+			ruleWhenCollidedWithItSelf.update(snake);
+			return;
 		} else {
 			Entity entity = snakeWouldColide(snake);
 			if (!Entity.NOEntity.equals(entity)) {
-				return map.get(entity).update(snake);
+				map.get(entity).update(snake);
+				return;
 			}
 		}
 		// Mirror
 		Vector2 nextPosition = snake.getNextPosition();
 		if (nextPosition.x > lastX) {
-			return snake.move(new Vector2(0, snake.getPosition().y));
+			snake.move(new Vector2(0, snake.getPosition().y));
 		} else if (nextPosition.x < 0) {
-			return snake.move(new Vector2(lastX, snake.getPosition().y));
+			snake.move(new Vector2(lastX, snake.getPosition().y));
 		} else if (nextPosition.y > lastY) {
-			return snake.move(new Vector2(snake.getPosition().x, 0));
+			snake.move(new Vector2(snake.getPosition().x, 0));
 		} else if (nextPosition.y < 0) {
-			return snake.move(new Vector2(snake.getPosition().x, lastY));
+			snake.move(new Vector2(snake.getPosition().x, lastY));
+		} else {
+			ruleWhenFree.act(delta);
 		}
-
-		return ruleWhenFree.update(snake);
 	}
 
 	private Entity snakeWouldColide(Snake snake) {

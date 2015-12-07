@@ -12,7 +12,7 @@ public class HoleMovingRulesTest extends BaseTest {
 
 		Snake snake = newSnake(0, 0);
 
-		IRule rules = new HoleMovingRules(new WormHole(new Vector2(1, 0), new Vector2(10, 0)));
+		IRule rules = new HoleMovingRules(new WormHole(new Vector2(1, 0), new Vector2(10, 0)), snake);
 
 		Snake finalPosition = rules.update(snake);
 		finalPosition = rules.update(finalPosition);

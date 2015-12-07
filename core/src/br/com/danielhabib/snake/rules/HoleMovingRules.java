@@ -1,11 +1,19 @@
 package br.com.danielhabib.snake.rules;
 
-public class HoleMovingRules implements IRule {
+import com.badlogic.gdx.graphics.g2d.Batch;
+
+public class HoleMovingRules extends AMovingRules {
 
 	private WormHole hole;
 
-	public HoleMovingRules(WormHole hole) {
+	public HoleMovingRules(WormHole hole, Snake snake) {
+		super(snake);
 		this.hole = hole;
+	}
+
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
+		hole.draw(batch, parentAlpha);
 	}
 
 	@Override
@@ -39,9 +47,13 @@ public class HoleMovingRules implements IRule {
 	}
 
 	@Override
-	public Snake update(Snake snake) {
-		return snake.getPosition().epsilonEquals(hole.getInitialPoint(), 0.01f) ? snake.move(hole.getFinalPoint())
-				: snake.move();
+	public void act(float delta) {
+		hole.act(delta);
+		if (snake.getPosition().epsilonEquals(hole.getInitialPoint(), 0.01f)) {
+			snake.move(hole.getFinalPoint());
+		} else {
+			snake.move();
+		}
 	}
 
 	public WormHole getHole() {

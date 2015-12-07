@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -29,9 +28,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import br.com.danielhabib.snake.rules.AMovingRules;
 import br.com.danielhabib.snake.rules.Direction;
 import br.com.danielhabib.snake.rules.IRule;
-import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.RulesManager;
 import br.com.danielhabib.snake.rules.Snake;
+import br.com.danielhabib.snake.rules.SnakeFactory;
 
 public class Splash implements Screen {
 
@@ -175,33 +174,18 @@ public class Splash implements Screen {
 
 	private Stack<Snake> newRandomSnakes() {
 		Stack<Snake> stack = new Stack<Snake>();
-		stack.push(newSnakeAtXY(10, 1, Direction.RIGHT, headTexture, boxTexture, tailTexture));
-		stack.push(newSnakeAtXY(Gdx.graphics.getWidth() / SIZE - 10, 1, Direction.LEFT, tailTexture, headTexture,
+		stack.push(SnakeFactory.newSnakeAtXY(10, 1, Direction.RIGHT, headTexture, boxTexture, tailTexture));
+		stack.push(SnakeFactory.newSnakeAtXY(Gdx.graphics.getWidth() / SIZE - 10, 1, Direction.LEFT, tailTexture, headTexture,
 				tailTexture));
-		stack.push(newSnakeAtXY(10, Gdx.graphics.getHeight() / SIZE - 1, Direction.RIGHT, headTexture, headTexture,
+		stack.push(SnakeFactory.newSnakeAtXY(10, Gdx.graphics.getHeight() / SIZE - 1, Direction.RIGHT, headTexture, headTexture,
 				tailTexture));
 		stack.push(
-				newSnakeAtXY(Gdx.graphics.getWidth() / SIZE - 10, Gdx.graphics.getHeight() / SIZE - 1,
+				SnakeFactory.newSnakeAtXY(Gdx.graphics.getWidth() / SIZE - 10, Gdx.graphics.getHeight() / SIZE - 1,
 						Direction.LEFT, headTexture, pieceTexture, tailTexture));
 		stack.push(
-				newSnakeAtXY(Gdx.graphics.getWidth() / SIZE / 2, Gdx.graphics.getHeight() / SIZE / 2,
+				SnakeFactory.newSnakeAtXY(Gdx.graphics.getWidth() / SIZE / 2, Gdx.graphics.getHeight() / SIZE / 2,
 						Direction.RIGHT, headTexture, boxTexture, tailTexture));
 		return stack;
-	}
-
-	// FIXME: DRY
-	private Snake newSnakeAtXY(int x, int y, Direction direction, Texture headTexture, Texture pieceTexture,
-			Texture tailTexture) {
-		Stack<Piece> pieces = new Stack<Piece>();
-		pieces.push(new Head(new Vector2(x, y), direction, headTexture));
-		int size = 7;
-		int i = 1;
-		for (i = 1; i < size - 1; i++) {
-			pieces.push(new Piece(new Vector2(x - i, y), direction, pieceTexture));
-		}
-		pieces.push(new Tail(new Vector2(x - i, y), direction, tailTexture));
-		Snake snake = new Snake(pieces, pieceTexture);
-		return snake;
 	}
 
 	private void setSizeAndFlip(Sprite sprite) {
