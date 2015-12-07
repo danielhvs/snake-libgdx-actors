@@ -1,23 +1,12 @@
 package br.com.danielhabib.snake.game;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -25,49 +14,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
-import br.com.danielhabib.snake.rules.AMovingRules;
-import br.com.danielhabib.snake.rules.Direction;
-import br.com.danielhabib.snake.rules.IRule;
-import br.com.danielhabib.snake.rules.RulesManager;
-import br.com.danielhabib.snake.rules.Snake;
-import br.com.danielhabib.snake.rules.SnakeFactory;
+public class Splash extends AbstractScreen {
 
-public class Splash implements Screen {
-
-	private SpriteBatch batch;
 	private Game game;
-	private Stage stage;
-	private Stack<Snake> snakes;
-	private static final int SIZE = 16;
-	private AMovingRules movingRules;
-	private float time;
-	private Sprite boxSprite;
-	private OrthographicCamera camera;
-	private Texture boxTexture;
-	private Texture headTexture;
-	private Texture tailTexture;
-	private Texture pieceTexture;
-	private DrawableManager drawingManager;
-	private RulesManager rulesManager;
 
 	public Splash(Game game) {
 		this.game = game;
 	}
 
 	@Override
-	public void show() {
-		batch = new SpriteBatch();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(true);
-		stage = new Stage();
-		drawingManager = new DrawableManager();
-
-		headTexture = new Texture(Gdx.files.internal("head.png"));
-		tailTexture = new Texture(Gdx.files.internal("tail.png"));
-		pieceTexture = new Texture(Gdx.files.internal("circle.png"));
-
-		snakes = new Stack<Snake>();
-
+	public void buildStage() {
 		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
 		LabelStyle labelStyle = new LabelStyle(font, Color.ORANGE);
 		Label title = new Label("OMG! Crazy Snakes!", labelStyle);
@@ -106,61 +62,11 @@ public class Splash implements Screen {
 		});
 
 		stage.addActor(table);
-		Gdx.input.setInputProcessor(stage);
-
-		boxTexture = new Texture(Gdx.files.internal("box.png"));
-		boxSprite = new Sprite(boxTexture);
-		setSizeAndFlip(boxSprite);
-		boxSprite.setColor(Color.YELLOW);
-		rulesManager = new RulesManager();
-
-		snakes = newRandomSnakes();
-		// movingRules = new RandomMovingRules(new MovingRules(), new
-		// BoingMovingRules());
-
-		rulesManager.addRule(new IRule() {
-
-			private Snake turnLeft(Snake snake) {
-				Map<Direction, Direction> leftTurningOffsetMap = new HashMap<Direction, Direction>();
-				leftTurningOffsetMap.put(Direction.UP, Direction.LEFT);
-				leftTurningOffsetMap.put(Direction.LEFT, Direction.DOWN);
-				leftTurningOffsetMap.put(Direction.DOWN, Direction.RIGHT);
-				leftTurningOffsetMap.put(Direction.RIGHT, Direction.UP);
-
-				return snake.turn(leftTurningOffsetMap.get(snake.getDirection()));
-			}
-
-			private Snake turnRight(Snake snake) {
-				Map<Direction, Direction> rightTurningOffsetMap = new HashMap<Direction, Direction>();
-				rightTurningOffsetMap.put(Direction.UP, Direction.RIGHT);
-				rightTurningOffsetMap.put(Direction.RIGHT, Direction.DOWN);
-				rightTurningOffsetMap.put(Direction.DOWN, Direction.LEFT);
-				rightTurningOffsetMap.put(Direction.LEFT, Direction.UP);
-
-				return snake.turn(rightTurningOffsetMap.get(snake.getDirection()));
-			}
-
-			@Override
-			public Snake update(Snake snake) {
-				double random = Math.random();
-				if (random < 0.3) {
-					return turnLeft(snake);
-				} else if (random > 0.8) {
-					return turnRight(snake);
-				} else {
-					return snake;
-				}
-			}
-		});
-
-		// rulesManager.addRule(movingRules);
-		drawingManager.addDrawables(snakes);
 
 	}
 
 	private TextButton newButton(String text, TextButtonStyle buttonStyle) {
-		TextButton button = new TextButton(text, buttonStyle);
-		return button;
+		return new TextButton(text, buttonStyle);
 	}
 
 	private TextButtonStyle newSnakeButtonStyle(Skin skin2) {
@@ -172,71 +78,14 @@ public class Splash implements Screen {
 		return buttonStyle;
 	}
 
-	private Stack<Snake> newRandomSnakes() {
-		Stack<Snake> stack = new Stack<Snake>();
-		stack.push(SnakeFactory.newSnakeAtXY(10, 1, Direction.RIGHT, headTexture, boxTexture, tailTexture));
-		stack.push(SnakeFactory.newSnakeAtXY(Gdx.graphics.getWidth() / SIZE - 10, 1, Direction.LEFT, tailTexture, headTexture,
-				tailTexture));
-		stack.push(SnakeFactory.newSnakeAtXY(10, Gdx.graphics.getHeight() / SIZE - 1, Direction.RIGHT, headTexture, headTexture,
-				tailTexture));
-		stack.push(
-				SnakeFactory.newSnakeAtXY(Gdx.graphics.getWidth() / SIZE - 10, Gdx.graphics.getHeight() / SIZE - 1,
-						Direction.LEFT, headTexture, pieceTexture, tailTexture));
-		stack.push(
-				SnakeFactory.newSnakeAtXY(Gdx.graphics.getWidth() / SIZE / 2, Gdx.graphics.getHeight() / SIZE / 2,
-						Direction.RIGHT, headTexture, boxTexture, tailTexture));
-		return stack;
-	}
-
-	private void setSizeAndFlip(Sprite sprite) {
-		sprite.setSize(SIZE, SIZE);
-		sprite.flip(false, true);
-	}
-
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		// Managing FPS
-		time += delta;
-		if (time > 0.125) {
-			for (Snake snake : snakes) {
-				rulesManager.applyRules(snake);
-			}
-			time = 0;
-		}
-
-		camera.update();
-		batch.setProjectionMatrix(camera.combined);
-		drawingManager.update();
-
-		batch.begin();
-
-		drawingManager.render(batch);
-
-		batch.end();
-
-		stage.act();
-		stage.draw();
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-
-	}
-
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -244,13 +93,10 @@ public class Splash implements Screen {
 		dispose();
 	}
 
+
 	@Override
 	public void dispose() {
-		dispose(boxSprite);
-		batch.dispose();
+		// TODO Auto-generated method stub
 	}
 
-	private void dispose(Sprite sprite) {
-		sprite.getTexture().dispose();
-	}
 }

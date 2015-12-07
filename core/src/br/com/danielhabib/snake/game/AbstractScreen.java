@@ -13,7 +13,6 @@ public abstract class AbstractScreen implements Screen {
 	protected Stage stage;
 	protected AbstractScreen() {
 		OrthographicCamera camera = new OrthographicCamera();
-		camera.setToOrtho(true);
 		stage = new Stage(new ScreenViewport(camera), new SpriteBatch());
 	}
 
@@ -37,6 +36,7 @@ public abstract class AbstractScreen implements Screen {
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(stage);
+		buildStage();
 	}
 
 	@Override

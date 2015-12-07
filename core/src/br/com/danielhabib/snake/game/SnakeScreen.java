@@ -43,7 +43,7 @@ public class SnakeScreen extends AbstractScreen {
 	}
 
 	@Override
-	public void show() {
+	public void buildStage() {
 		Texture headTexture = new Texture(Gdx.files.internal("head.png"));
 		Texture tailTexture = new Texture(Gdx.files.internal("tail.png"));
 		Texture pieceTexture = new Texture(Gdx.files.internal("circle.png"));
@@ -139,11 +139,6 @@ public class SnakeScreen extends AbstractScreen {
 	@Override
 	public void hide() {
 		dispose();
-	}
-
-	@Override
-	public void buildStage() {
-		show();
 	}
 
 	@Override
