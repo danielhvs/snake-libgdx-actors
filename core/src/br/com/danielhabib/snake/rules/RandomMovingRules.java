@@ -2,8 +2,8 @@ package br.com.danielhabib.snake.rules;
 
 public class RandomMovingRules extends MapMovingRules {
 
-	public RandomMovingRules(IRule ruleWhenFree, IRule ruleWhenCollidedWithItSelf) {
-		super(ruleWhenFree, ruleWhenCollidedWithItSelf);
+	public RandomMovingRules(IRule ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Snake snake) {
+		super(ruleWhenFree, ruleWhenCollidedWithItSelf, snake);
 	}
 
 	@Override

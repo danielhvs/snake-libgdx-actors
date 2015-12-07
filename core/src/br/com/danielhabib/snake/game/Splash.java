@@ -27,12 +27,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 import br.com.danielhabib.snake.rules.AMovingRules;
-import br.com.danielhabib.snake.rules.BoingMovingRules;
 import br.com.danielhabib.snake.rules.Direction;
 import br.com.danielhabib.snake.rules.IRule;
-import br.com.danielhabib.snake.rules.MovingRules;
 import br.com.danielhabib.snake.rules.Piece;
-import br.com.danielhabib.snake.rules.RandomMovingRules;
 import br.com.danielhabib.snake.rules.RulesManager;
 import br.com.danielhabib.snake.rules.Snake;
 
@@ -119,7 +116,8 @@ public class Splash implements Screen {
 		rulesManager = new RulesManager();
 
 		snakes = newRandomSnakes();
-		movingRules = new RandomMovingRules(new MovingRules(), new BoingMovingRules());
+		// movingRules = new RandomMovingRules(new MovingRules(), new
+		// BoingMovingRules());
 
 		rulesManager.addRule(new IRule() {
 
@@ -155,7 +153,8 @@ public class Splash implements Screen {
 				}
 			}
 		});
-		rulesManager.addRule(movingRules);
+
+		// rulesManager.addRule(movingRules);
 		drawingManager.addDrawables(snakes);
 
 	}
@@ -182,11 +181,11 @@ public class Splash implements Screen {
 		stack.push(newSnakeAtXY(10, Gdx.graphics.getHeight() / SIZE - 1, Direction.RIGHT, headTexture, headTexture,
 				tailTexture));
 		stack.push(
-newSnakeAtXY(Gdx.graphics.getWidth() / SIZE - 10, Gdx.graphics.getHeight() / SIZE - 1,
-				Direction.LEFT, headTexture, pieceTexture, tailTexture));
+				newSnakeAtXY(Gdx.graphics.getWidth() / SIZE - 10, Gdx.graphics.getHeight() / SIZE - 1,
+						Direction.LEFT, headTexture, pieceTexture, tailTexture));
 		stack.push(
-newSnakeAtXY(Gdx.graphics.getWidth() / SIZE / 2, Gdx.graphics.getHeight() / SIZE / 2,
-				Direction.RIGHT, headTexture, boxTexture, tailTexture));
+				newSnakeAtXY(Gdx.graphics.getWidth() / SIZE / 2, Gdx.graphics.getHeight() / SIZE / 2,
+						Direction.RIGHT, headTexture, boxTexture, tailTexture));
 		return stack;
 	}
 

@@ -3,10 +3,15 @@ package br.com.danielhabib.snake.rules;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AMovingRules implements IRule {
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-	@Override
-	public abstract Snake update(Snake snake);
+public abstract class AMovingRules extends Actor {
+
+	protected Snake snake;
+
+	public AMovingRules(Snake snake) {
+		this.snake = snake;
+	}
 
 	public Snake turnLeft(Snake snake) {
 		Map<Direction, Direction> leftTurningOffsetMap = new HashMap<Direction, Direction>();

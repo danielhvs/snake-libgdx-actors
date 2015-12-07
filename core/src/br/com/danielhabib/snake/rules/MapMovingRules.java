@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 
 public class MapMovingRules extends AMovingRules {
@@ -13,17 +14,36 @@ public class MapMovingRules extends AMovingRules {
 	private IRule ruleWhenFree;
 	private IRule ruleWhenCollidedWithItSelf;
 
-	public MapMovingRules(IRule ruleWhenFree, IRule ruleWhenCollidedWithItSelf) {
-		this(ruleWhenFree, ruleWhenCollidedWithItSelf, new HashMap<Entity, IRule>());
+	public MapMovingRules(IRule ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Snake snake) {
+		this(ruleWhenFree, ruleWhenCollidedWithItSelf, new HashMap<Entity, IRule>(), snake);
 	}
 
-	public MapMovingRules(IRule ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Map<Entity, IRule> map) {
+	public MapMovingRules(IRule ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Map<Entity, IRule> map, Snake snake) {
+		super(snake);
 		this.ruleWhenFree = ruleWhenFree;
 		this.ruleWhenCollidedWithItSelf = ruleWhenCollidedWithItSelf;
 		this.map = map;
 	}
 
 	@Override
+	public void act(float delta) {
+		super.act(delta);
+		for (Entity entity : map.keySet()) {
+			entity.update();
+		}
+		update(snake);
+		snake.update();
+	}
+
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+		snake.render(batch);
+		for (Entity entity : map.keySet()) {
+			entity.render(batch);
+		}
+	}
+
 	public Snake update(Snake snake) {
 		int lastX = -1 + Gdx.graphics.getWidth() / Entity.SIZE;
 		int lastY = -1 + Gdx.graphics.getHeight() / Entity.SIZE;

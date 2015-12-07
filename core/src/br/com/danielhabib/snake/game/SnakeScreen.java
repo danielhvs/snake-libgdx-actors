@@ -30,7 +30,6 @@ import br.com.danielhabib.snake.rules.MapMovingRules;
 import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.PoisonedFruitRule;
 import br.com.danielhabib.snake.rules.RotatingEntity;
-import br.com.danielhabib.snake.rules.RulesManager;
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.rules.SnakeController;
 import br.com.danielhabib.snake.rules.SnakeDeathRule;
@@ -43,13 +42,11 @@ public class SnakeScreen implements Screen {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private Snake snake;
-	private float time;
 	private SnakeController controller;
 	private AMovingRules movingRules;
 	private float fps = 8;
 	private float threshold = 0.125f;
 	private DrawableManager drawingManager;
-	private RulesManager rulesManager;
 	private Stage stage;
 
 	public SnakeScreen(Game game) {
@@ -59,7 +56,6 @@ public class SnakeScreen implements Screen {
 	@Override
 	public void show() {
 		drawingManager = new DrawableManager();
-		rulesManager = new RulesManager();
 
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
@@ -114,20 +110,16 @@ public class SnakeScreen implements Screen {
 		snake = newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
 		AFruitRule fruitsRule = new AFruitRule(fruits, snake);
 		IRule realMovingRules = new HoleMovingRules(new WormHole(initialHole.getPosition(), lastHole.getPosition()));
-		movingRules = new MapMovingRules(realMovingRules, identityRule, map);
+		movingRules = new MapMovingRules(realMovingRules, identityRule, map, snake);
 		controller = new SnakeController(movingRules, snake);
 
 		// The ordering matters
-		drawingManager.addDrawables(map.keySet());
 		drawingManager.addDrawable(lastHole);
-		drawingManager.addDrawable(snake);
 		drawingManager.addDrawable(initialHole);
-
-		// The ordering matters
-		rulesManager.addRule(movingRules);
 
 		stage.addActor(controller);
 		stage.addActor(fruitsRule);
+		stage.addActor(movingRules);
 	}
 
 	// FIXME: DRY. Create a snake factory.
@@ -152,15 +144,6 @@ public class SnakeScreen implements Screen {
 
 		specialControls();
 		stage.act();
-		controlSnake();
-
-		// Managing FPS
-		// This going to be the "speed".
-		time += delta;
-		if (time > threshold) {
-			rulesManager.applyRules(snake);
-			time = 0;
-		}
 
 		drawingManager.update();
 
@@ -198,21 +181,6 @@ public class SnakeScreen implements Screen {
 	private void setFPS(float fps) {
 		this.fps = fps;
 		this.threshold = 1 / fps;
-	}
-
-	private void controlSnake() {
-		if (Gdx.input.isKeyPressed(Input.Keys.M)) {
-			snake = movingRules.update(snake);
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-			snake = movingRules.update(snake);
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-			snake = movingRules.turnLeft(snake);
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-			snake = movingRules.turnRight(snake);
-		}
 	}
 
 	@Override
