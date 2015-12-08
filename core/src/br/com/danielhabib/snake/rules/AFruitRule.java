@@ -23,9 +23,9 @@ public class AFruitRule extends Actor {
 		while (iter.hasNext()) {
 			Entry<Entity, IRule> entry = iter.next();
 			Entity entity = entry.getKey();
-			entity.update();
+			entity.act(delta);
 			if (snake.getPosition().equals(entity.getPosition())) {
-				entry.getValue().update(snake);
+				entry.getValue().act(delta);
 				iter.remove();
 			}
 		}
@@ -37,7 +37,7 @@ public class AFruitRule extends Actor {
 		while (iter.hasNext()) {
 			Entry<Entity, IRule> entry = iter.next();
 			Entity entity = entry.getKey();
-			entity.render(batch);
+			entity.draw(batch, parentAlpha);
 		}
 	}
 }

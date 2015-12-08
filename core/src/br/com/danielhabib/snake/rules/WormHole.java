@@ -67,14 +67,14 @@ public class WormHole extends Actor {
 
 	@Override
 	public void act(float delta) {
-		initialPoint.update();
-		finalPoint.update();
+		initialPoint.act(delta);
+		finalPoint.act(delta);
 	}
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		initialPoint.render(batch);
-		finalPoint.render(batch);
+		initialPoint.draw(batch, parentAlpha);
+		finalPoint.draw(batch, parentAlpha);
 	}
 
 }

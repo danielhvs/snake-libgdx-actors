@@ -31,9 +31,9 @@ public class MapMovingRules extends AMovingRules {
 	public void act(float delta) {
 		super.act(delta);
 		for (Entity entity : map.keySet()) {
-			entity.update();
+			entity.act(delta);
 		}
-		snake.update();
+		snake.act(delta);
 
 		time += delta;
 		if (time > 0.125) {
@@ -46,9 +46,9 @@ public class MapMovingRules extends AMovingRules {
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		ruleWhenFree.draw(batch, parentAlpha);
-		snake.render(batch);
+		snake.draw(batch, parentAlpha);
 		for (Entity entity : map.keySet()) {
-			entity.render(batch);
+			entity.draw(batch, parentAlpha);
 		}
 	}
 
@@ -56,12 +56,12 @@ public class MapMovingRules extends AMovingRules {
 		int lastX = -1 + Gdx.graphics.getWidth() / Entity.SIZE;
 		int lastY = -1 + Gdx.graphics.getHeight() / Entity.SIZE;
 		if (snakeWouldEatItSelf(snake)) {
-			ruleWhenCollidedWithItSelf.update(snake);
+			ruleWhenCollidedWithItSelf.act(delta);
 			return;
 		} else {
 			Entity entity = snakeWouldColide(snake);
 			if (!Entity.NOEntity.equals(entity)) {
-				map.get(entity).update(snake);
+				map.get(entity).act(delta);
 				return;
 			}
 		}

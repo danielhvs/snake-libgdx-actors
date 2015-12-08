@@ -14,8 +14,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import br.com.danielhabib.snake.game.DrawableManager;
-
 public class BaseTest {
 
 	@Mock
@@ -26,9 +24,6 @@ public class BaseTest {
 
 	@Mock
 	Entity apple;
-
-	@Mock
-	DrawableManager drawingManager;
 
 	@Before
 	public void superSetup() {

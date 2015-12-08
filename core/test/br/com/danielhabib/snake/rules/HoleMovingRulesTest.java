@@ -14,8 +14,8 @@ public class HoleMovingRulesTest extends BaseTest {
 
 		IRule rules = new HoleMovingRules(new WormHole(new Vector2(1, 0), new Vector2(10, 0)), snake);
 
-		Snake finalPosition = rules.update(snake);
-		finalPosition = rules.update(finalPosition);
+		Snake finalPosition = rules.fireEvent();
+		finalPosition = rules.fireEvent();
 
 		assertPoints(finalSnakePosition.getPosition(), finalPosition.getPosition());
 	}

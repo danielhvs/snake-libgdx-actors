@@ -3,6 +3,7 @@ package br.com.danielhabib.snake.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,6 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
+import br.com.danielhabib.snake.rules.Direction;
+import br.com.danielhabib.snake.rules.Snake;
+import br.com.danielhabib.snake.rules.SnakeFactory;
+
 public class Splash extends AbstractScreen {
 
 	private Game game;
@@ -24,6 +29,9 @@ public class Splash extends AbstractScreen {
 
 	@Override
 	public void buildStage() {
+		Texture headTexture = new Texture(Gdx.files.internal("head.png"));
+		Texture tailTexture = new Texture(Gdx.files.internal("tail.png"));
+		Texture pieceTexture = new Texture(Gdx.files.internal("circle.png"));
 		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
 		LabelStyle labelStyle = new LabelStyle(font, Color.ORANGE);
 		Label title = new Label("OMG! Crazy Snakes!", labelStyle);
@@ -62,7 +70,7 @@ public class Splash extends AbstractScreen {
 		});
 
 		stage.addActor(table);
-
+		Snake snake = SnakeFactory.newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
 	}
 
 	private TextButton newButton(String text, TextButtonStyle buttonStyle) {

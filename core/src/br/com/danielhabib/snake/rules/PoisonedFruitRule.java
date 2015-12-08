@@ -1,10 +1,16 @@
 package br.com.danielhabib.snake.rules;
 
-public class PoisonedFruitRule implements IRule {
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
+public class PoisonedFruitRule extends IRule {
+	public PoisonedFruitRule(Actor actor) {
+		super(actor);
+	}
 
 	@Override
-	public Snake update(Snake snake) {
-		return snake.removeTail();
+	public boolean fireEvent(float delta) {
+		return getTarget().fire(new SnakeEvent(SnakeEvent.Type.removeTail));
 	}
+
 
 }

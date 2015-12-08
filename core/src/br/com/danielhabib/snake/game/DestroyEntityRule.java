@@ -4,9 +4,8 @@ import java.util.Map;
 
 import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.IRule;
-import br.com.danielhabib.snake.rules.Snake;
 
-public class DestroyEntityRule implements IRule {
+public class DestroyEntityRule extends IRule {
 
 	private Entity entity;
 	private Map<Entity, IRule> map;
@@ -19,9 +18,9 @@ public class DestroyEntityRule implements IRule {
 	}
 
 	@Override
-	public Snake update(Snake snake) {
+	public boolean fireEvent(float delta) {
 		map.remove(entity);
-		return ruleAfterDestroy.update(snake);
+		return ruleAfterDestroy.act(delta);
 	}
 
 }

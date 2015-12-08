@@ -6,11 +6,12 @@ import java.util.Stack;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import br.com.danielhabib.snake.game.Head;
 import br.com.danielhabib.snake.game.Tail;
 
-public class Snake implements SnakeDrawable {
+public class Snake extends Actor {
 
 	private List<Piece> pieces;
 	private Texture pieceTexture;
@@ -78,10 +79,8 @@ public class Snake implements SnakeDrawable {
 
 	public Snake removeTail() {
 		int size = pieces.size();
-		if (size == 1) {//only head
-			pieces.remove(0);
-		} else if (size == 2) {// head and tail
-			pieces.remove(getTailIndex());
+		if (size <= 2) {
+			return this;
 		} else {
 			Piece piece = pieces.get(getTailIndex() - 1);
 			getTail().move(piece.getPosition());
@@ -92,7 +91,7 @@ public class Snake implements SnakeDrawable {
 	}
 
 	public Piece getHead() {
-		return copyPieces().get(0);
+		return pieces.get(0);
 	}
 
 	private int getTailIndex() {
@@ -179,23 +178,17 @@ public class Snake implements SnakeDrawable {
 	}
 
 	@Override
-	public void update() {
+	public void act(float delta) {
 		for (Piece piece : pieces) {
-			piece.update();
+			piece.act(delta);
 		}
 	}
 
 	@Override
-	public void render(Batch batch) {
+	public void draw(Batch batch, float parentAlpha) {
 		for (Piece piece : pieces) {
-			piece.render(batch);
+			piece.draw(batch, parentAlpha);
 		}
 	}
 
-	@Override
-	public void dispose() {
-		for (Piece piece : pieces) {
-			piece.dispose();
-		}
-	}
 }

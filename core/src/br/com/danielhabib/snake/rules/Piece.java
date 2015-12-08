@@ -20,7 +20,9 @@ public class Piece extends Entity {
 	}
 
 	public Piece move() {
-		pos.add(direction.getVector2());
+		Vector2 newLocation = getPosition().add(direction.getVector2());
+		setX(newLocation.x);
+		setY(newLocation.y);
 		return this;
 	}
 
@@ -33,7 +35,7 @@ public class Piece extends Entity {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((direction == null) ? 0 : direction.hashCode());
-		result = prime * result + ((pos == null) ? 0 : pos.hashCode());
+		result = prime * result + ((getPosition() == null) ? 0 : getPosition().hashCode());
 		return result;
 	}
 
@@ -52,11 +54,11 @@ public class Piece extends Entity {
 		if (direction != other.direction) {
 			return false;
 		}
-		if (pos == null) {
-			if (other.pos != null) {
+		if (getPosition() == null) {
+			if (other.getPosition() != null) {
 				return false;
 			}
-		} else if (!pos.equals(other.pos)) {
+		} else if (!getPosition().equals(other.getPosition())) {
 			return false;
 		}
 		return true;
@@ -64,11 +66,12 @@ public class Piece extends Entity {
 
 	@Override
 	public String toString() {
-		return "Piece [" + pos + ":" + direction + "]";
+		return "Piece [" + getPosition() + ":" + direction + "]";
 	}
 
 	public Piece move(Vector2 finalPoint) {
-		this.pos = finalPoint;
+		setX(finalPoint.x);
+		setY(finalPoint.y);
 		return this;
 	}
 
@@ -79,7 +82,7 @@ public class Piece extends Entity {
 
 	@Override
 	public void update() {
-		sprite.setPosition(pos.x * Entity.SIZE, pos.y * Entity.SIZE);
+		sprite.setPosition(getPosition().x * Entity.SIZE, getPosition().y * Entity.SIZE);
 		sprite.rotate(10);
 	}
 

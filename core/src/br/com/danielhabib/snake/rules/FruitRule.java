@@ -1,10 +1,16 @@
 package br.com.danielhabib.snake.rules;
 
-public class FruitRule implements IRule {
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
+public class FruitRule extends IRule {
+	public FruitRule(Actor actor) {
+		super(actor);
+	}
 
 	@Override
-	public Snake update(Snake snake) {
-		return snake.addTail();
+	public boolean fireEvent(float delta) {
+		return getTarget().fire(new SnakeEvent(SnakeEvent.Type.addTail));
 	}
+
 
 }

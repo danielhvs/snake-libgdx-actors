@@ -31,9 +31,9 @@ public class MapMovingRulesTest extends BaseTest {
 				map);
 
 		Snake snake = newSnake(ORIGIN, Direction.RIGHT);
-		rules.update(snake);
+		rules.fireEvent();
 
-		verify(movingRuleWhenCollided).update(snake);
+		verify(movingRuleWhenCollided).fireEvent();
 	}
 
 	@Test
@@ -42,7 +42,7 @@ public class MapMovingRulesTest extends BaseTest {
 		AMovingRules rules = new MapMovingRules(new MovingRules(), movingRuleWhenCollidedWithItself,
 				map);
 
-		Snake snake = rules.update(newSnake(ORIGIN, Direction.RIGHT));
+		Snake snake = rules.fireEvent();
 
 		assertPoints(new Vector2(1, 0), snake.getPosition());
 	}
@@ -52,7 +52,7 @@ public class MapMovingRulesTest extends BaseTest {
 		AMovingRules rules = new MapMovingRules(movingRuleWhenFree, movingRuleWhenCollidedWithItself,
 				Collections.<Entity, IRule> emptyMap());
 
-		Snake snake = rules.update(snakeSize5());
+		Snake snake = rules.fireEvent();
 
 		assertPoints(new Vector2(5, 0), snake.getPosition());
 	}

@@ -13,6 +13,7 @@ public class HoleMovingRules extends AMovingRules {
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
+		hole.act(0);
 		hole.draw(batch, parentAlpha);
 	}
 

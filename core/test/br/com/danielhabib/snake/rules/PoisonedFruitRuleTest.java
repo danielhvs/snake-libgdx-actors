@@ -10,7 +10,7 @@ public class PoisonedFruitRuleTest extends BaseTest {
 		IRule rules = null;// newFruitRule(new Vector2(0, 0), new
 							// PoisonedFruitRule());
 
-		Snake snake = rules.update(newSnake(0, 0).addTail());
+		Snake snake = rules.fireEvent();
 
 		assertEquals(newSnake(0, 0), snake);
 

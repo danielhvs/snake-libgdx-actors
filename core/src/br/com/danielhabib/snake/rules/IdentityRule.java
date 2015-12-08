@@ -1,10 +1,11 @@
 package br.com.danielhabib.snake.rules;
 
-public class IdentityRule implements IRule {
+public class IdentityRule extends IRule {
 
 	@Override
-	public Snake update(Snake snake) {
-		return snake;
+	public boolean fireEvent(float delta) {
+		return false;
 	}
+
 
 }

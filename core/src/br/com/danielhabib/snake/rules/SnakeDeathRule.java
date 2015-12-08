@@ -4,17 +4,23 @@ import com.badlogic.gdx.Game;
 
 import br.com.danielhabib.snake.game.Splash;
 
-public class SnakeDeathRule implements IRule {
+public class SnakeDeathRule extends IRule {
 	private Game game;
 
 	public SnakeDeathRule(Game game) {
+		super();
 		this.game = game;
 	}
 
 	@Override
-	public Snake update(Snake snake) {
+	public void fireEvent() {
 		game.setScreen(new Splash(game));
-		return null;
+	}
+
+	@Override
+	public boolean act(float delta) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
