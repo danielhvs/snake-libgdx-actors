@@ -7,15 +7,24 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class TextFactory {
 
-	public static void addNotifyAnimation(Label title, Actor source, String string, Color color) {
-		title.setFontScale(0.75f);
+	public static void addNotifyAnimation(Label label, Actor source, String string, Color color) {
+		label.setFontScale(0.75f);
 		float x = source.getX() * Entity.SIZE;
-		title.addAction(Actions.moveTo(x, source.getY() * Entity.SIZE + Entity.SIZE, 0));
-		title.addAction(Actions.alpha(1.0f));
-		title.setText(string);
-		title.setColor(color);
-		title.addAction(Actions.moveTo(x, source.getY() * Entity.SIZE + 2.5f * Entity.SIZE, 1.0f));
-		title.addAction(Actions.fadeOut(1.5f));
+		label.addAction(Actions.moveTo(x, source.getY() * Entity.SIZE + Entity.SIZE, 0));
+		label.addAction(Actions.alpha(1.0f));
+		label.setText(string);
+		label.setColor(color);
+		label.addAction(Actions.moveTo(x, source.getY() * Entity.SIZE + 2.5f * Entity.SIZE, 1.0f));
+		label.addAction(Actions.fadeOut(1.5f));
+	}
+
+	public static void addCountingAnimation(Label label, String string, Color color, float x, float y) {
+		label.setFontScale(0.75f);
+		label.addAction(Actions.moveTo(x, y, 0));
+		label.addAction(Actions.alpha(0f));
+		label.setText(string);
+		label.setColor(color);
+		label.addAction(Actions.fadeIn(.75f));
 	}
 
 }

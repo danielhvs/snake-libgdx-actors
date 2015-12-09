@@ -17,13 +17,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
 import br.com.danielhabib.snake.rules.BoingMovingRules;
+import br.com.danielhabib.snake.rules.CounterSnakeListener;
 import br.com.danielhabib.snake.rules.Direction;
 import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.FruitRule;
 import br.com.danielhabib.snake.rules.HoleMovingRules;
 import br.com.danielhabib.snake.rules.IRule;
-import br.com.danielhabib.snake.rules.NOPRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
+import br.com.danielhabib.snake.rules.NOPRule;
 import br.com.danielhabib.snake.rules.PoisonedFruitRule;
 import br.com.danielhabib.snake.rules.RotatingEntity;
 import br.com.danielhabib.snake.rules.Snake;
@@ -48,6 +49,9 @@ public class SnakeScreen extends AbstractScreen {
 		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
 		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
 		final Label title = new Label("", labelStyle);
+		final Label counter1 = new Label("", labelStyle);
+		final Label counter2 = new Label("", labelStyle);
+		final Label counter3 = new Label("", labelStyle);
 
 		Texture headTexture = new Texture(Gdx.files.internal("head.png"));
 		Texture tailTexture = new Texture(Gdx.files.internal("tail.png"));
@@ -77,6 +81,36 @@ public class SnakeScreen extends AbstractScreen {
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole, lastHole), snake);
 		AMovingRules movingRules = new MapMovingRules(realMovingRules, identityRule, map, snake);
 		Actor controller = new SnakeController(movingRules, snake);
+
+		counter1.addListener(new CounterSnakeListener(0) {
+			@Override
+			public boolean addTail(Actor source, Event event) {
+				incrementCounter();
+				TextFactory.addCountingAnimation(counter1, String.valueOf(getCounter()), Color.WHITE, 0, Entity.SIZE);
+				return false;
+			}
+		});
+		counter2.addListener(new CounterSnakeListener(0) {
+			@Override
+			public boolean removeTail(Actor source, Event event) {
+				incrementCounter();
+				TextFactory.addCountingAnimation(counter2, String.valueOf(getCounter()), Color.RED, Entity.SIZE,
+						Entity.SIZE);
+				return false;
+			}
+		});
+		counter3.addListener(new CounterSnakeListener(0) {
+			@Override
+			public boolean revert(Actor source, Event event) {
+				incrementCounter();
+				TextFactory.addCountingAnimation(counter3, String.valueOf(getCounter()), Color.ORANGE, 2 * Entity.SIZE,
+						Entity.SIZE);
+				return false;
+			}
+		});
+		
+		
+
 		title.addListener(new SnakeListener() {
 			@Override
 			public boolean addTail(Actor source, Event event) {
@@ -121,6 +155,9 @@ public class SnakeScreen extends AbstractScreen {
 		stage.addActor(fruitsRule);
 		stage.addActor(snake);
 		stage.addActor(title);
+		stage.addActor(counter1);
+		stage.addActor(counter2);
+		stage.addActor(counter3);
 	}
 
 	private Map<Entity, IRule> createFruits(Texture appleTexture, Texture poisonTexture, Texture boingTexture,
