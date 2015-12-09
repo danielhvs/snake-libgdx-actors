@@ -1,6 +1,7 @@
 package br.com.danielhabib.snake.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -36,7 +37,10 @@ public abstract class AbstractScreen implements Screen {
 	@Override
 	public void show() {
 		buildStage();
-		Gdx.input.setInputProcessor(stage);
+		InputMultiplexer multiplexer = new InputMultiplexer();
+		multiplexer.addProcessor(stage);
+		multiplexer.addProcessor(new SnakeUIInputProcessor(stage));
+		Gdx.input.setInputProcessor(multiplexer);
 	}
 
 	@Override

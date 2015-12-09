@@ -5,23 +5,16 @@ import java.util.Map;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
@@ -49,7 +42,6 @@ public class SnakeScreen extends AbstractScreen {
 
 	private static final int SIZE = Entity.SIZE;
 	private Game game;
-	private static boolean showingExitDialog;
 
 	public SnakeScreen(Game game) {
 		this.game = game;
@@ -63,15 +55,6 @@ public class SnakeScreen extends AbstractScreen {
 		final Label counter1 = new Label("", labelStyle);
 		final Label counter2 = new Label("", labelStyle);
 		final Label counter3 = new Label("", labelStyle);
-
-		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dialog.atlas"));
-		Skin skin = new Skin();
-		skin.addRegions(atlas);
-
-		Window.WindowStyle windowStyle = new Window.WindowStyle();
-		windowStyle.titleFont = font;
-		NinePatch background = skin.getPatch("background");
-		windowStyle.background = new NinePatchDrawable(background);
 
 		Texture headTexture = new Texture(Gdx.files.internal("head.png"));
 		Texture tailTexture = new Texture(Gdx.files.internal("tail.png"));
@@ -129,7 +112,7 @@ public class SnakeScreen extends AbstractScreen {
 				return false;
 			}
 		});
-		
+
 		title.addListener(new SnakeListener() {
 			@Override
 			public boolean addTail(Actor source, Event event) {
@@ -142,7 +125,7 @@ public class SnakeScreen extends AbstractScreen {
 				TextFactory.addNotifyAnimation(title, source, "ick!", Color.RED);
 				return false;
 			}
-			
+
 			@Override
 			public boolean revert(Actor source, Event event) {
 				TextFactory.addNotifyAnimation(title, source, "OMG!", Color.YELLOW);
@@ -179,45 +162,6 @@ public class SnakeScreen extends AbstractScreen {
 		stage.addActor(counter2);
 		stage.addActor(counter3);
 
-		Label label = new Label("Do you really want to leave?", labelStyle);
-		label.setAlignment(Align.center);
-		final Dialog dialog = new Dialog("", windowStyle) {
-			@Override
-			protected void result(Object object) {
-				boolean exit = (Boolean) object;
-				if (exit) {
-					Gdx.app.exit();
-				} else {
-					remove();
-				}
-				showingExitDialog = false;
-			}
-
-			@Override
-			public Dialog show(Stage stage) {
-				showingExitDialog = true;
-				return super.show(stage);
-			}
-
-			@Override
-			public void cancel() {
-				showingExitDialog = false;
-				super.cancel();
-			}
-
-			@Override
-			public float getPrefHeight() {
-				return 500f;
-			}
-		};
-		dialog.button("Yes", true, ButtonFactory.getStyle());
-		dialog.button("No", false, ButtonFactory.getStyle());
-		dialog.key(Input.Keys.ENTER, true);
-		dialog.key(Input.Keys.ESCAPE, false);
-		dialog.getContentTable().add(label);
-		if (!showingExitDialog) {
-			dialog.show(stage);
-		}
 	}
 
 	private Map<Entity, IRule> createFruits(Texture appleTexture, Texture poisonTexture, Texture boingTexture,
