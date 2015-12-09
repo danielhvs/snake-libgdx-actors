@@ -9,9 +9,9 @@ public class FruitRule extends IRule {
 	}
 
 	@Override
-	public void fireEvent(float delta) {
+	public void fireEvent(Actor source) {
 		for (Actor actor : stage.getActors()) {
-			actor.fire(new SnakeEvent(SnakeEvent.Type.addTail));
+			actor.fire(new SnakeEvent(source, SnakeEvent.Type.addTail));
 		}
 	}
 

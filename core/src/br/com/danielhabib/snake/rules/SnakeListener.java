@@ -1,5 +1,6 @@
 package br.com.danielhabib.snake.rules;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
@@ -14,25 +15,25 @@ public class SnakeListener implements EventListener {
 
 		switch (snakeEvent.getType()) {
 		case revert:
-			return revert(event);
+			return revert(snakeEvent.getSource(), event);
 		case addTail:
-			return addTail(event);
+			return addTail(snakeEvent.getSource(), event);
 		case removeTail:
-			return removeTail(event);
+			return removeTail(snakeEvent.getSource(), event);
 		}
 
 		return false;
 	}
 
-	public boolean revert(Event event) {
+	public boolean revert(Actor actor, Event event) {
 		return false;
 	}
 
-	public boolean addTail(Event event) {
+	public boolean addTail(Actor actor, Event event) {
 		return false;
 	}
 
-	public boolean removeTail(Event event) {
+	public boolean removeTail(Actor actor, Event event) {
 		return false;
 	}
 

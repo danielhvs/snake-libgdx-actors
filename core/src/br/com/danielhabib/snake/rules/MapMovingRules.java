@@ -54,12 +54,12 @@ public class MapMovingRules extends AMovingRules {
 		int lastX = -1 + Gdx.graphics.getWidth() / Entity.SIZE;
 		int lastY = -1 + Gdx.graphics.getHeight() / Entity.SIZE;
 		if (snakeWouldEatItSelf(snake)) {
-			ruleWhenCollidedWithItSelf.act(delta);
+			ruleWhenCollidedWithItSelf.fireEvent(snake);
 			return;
 		} else {
 			Entity entity = snakeWouldColide(snake);
 			if (!Entity.NOEntity.equals(entity)) {
-				map.get(entity).act(delta);
+				map.get(entity).fireEvent(entity);
 				return;
 			}
 		}

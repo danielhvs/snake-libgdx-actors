@@ -2,6 +2,8 @@ package br.com.danielhabib.snake.game;
 
 import java.util.Map;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
 import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.IRule;
 
@@ -17,10 +19,9 @@ public class DestroyEntityRule extends IRule {
 		this.ruleAfterDestroy = ruleAfterDestroy;
 	}
 
-	// FIXME: Fire some event and add listeners.
 	@Override
-	public void fireEvent(float delta) {
-		ruleAfterDestroy.act(delta);
+	public void fireEvent(Actor source) {
+		ruleAfterDestroy.fireEvent(source);
 		map.remove(entity);
 	}
 

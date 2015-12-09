@@ -5,10 +5,14 @@ import java.util.Map;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
@@ -18,7 +22,7 @@ import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.FruitRule;
 import br.com.danielhabib.snake.rules.HoleMovingRules;
 import br.com.danielhabib.snake.rules.IRule;
-import br.com.danielhabib.snake.rules.IdentityRule;
+import br.com.danielhabib.snake.rules.NOPRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
 import br.com.danielhabib.snake.rules.PoisonedFruitRule;
 import br.com.danielhabib.snake.rules.RotatingEntity;
@@ -28,20 +32,23 @@ import br.com.danielhabib.snake.rules.SnakeDeathRule;
 import br.com.danielhabib.snake.rules.SnakeFactory;
 import br.com.danielhabib.snake.rules.SnakeListener;
 import br.com.danielhabib.snake.rules.StaticEntity;
+import br.com.danielhabib.snake.rules.TextFactory;
 import br.com.danielhabib.snake.rules.WormHole;
 
 public class SnakeScreen extends AbstractScreen {
 
 	private static final int SIZE = Entity.SIZE;
 	private Game game;
-	private SnakeController controller;
-
 	public SnakeScreen(Game game) {
 		this.game = game;
 	}
 
 	@Override
 	public void buildStage() {
+		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
+		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
+		final Label title = new Label("", labelStyle);
+
 		Texture headTexture = new Texture(Gdx.files.internal("head.png"));
 		Texture tailTexture = new Texture(Gdx.files.internal("tail.png"));
 		Texture pieceTexture = new Texture(Gdx.files.internal("circle.png"));
@@ -57,7 +64,7 @@ public class SnakeScreen extends AbstractScreen {
 		IRule regularFruitRule = new FruitRule(stage);
 		IRule poisonedFruitRule = new PoisonedFruitRule(stage);
 		IRule boingFruitRule = new BoingMovingRules(stage);
-		IRule identityRule = new IdentityRule();
+		IRule identityRule = new NOPRule();
 
 		Entity lastHole = new StaticEntity(holeTexture, new Vector2(13, 12));
 		Entity initialHole = new RotatingEntity(holeTexture, new Vector2(3, 8), 100);
@@ -70,22 +77,41 @@ public class SnakeScreen extends AbstractScreen {
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole, lastHole), snake);
 		AMovingRules movingRules = new MapMovingRules(realMovingRules, identityRule, map, snake);
 		Actor controller = new SnakeController(movingRules, snake);
+		title.addListener(new SnakeListener() {
+			@Override
+			public boolean addTail(Actor source, Event event) {
+				TextFactory.addNotifyAnimation(title, source, "glup", Color.WHITE);
+				return false;
+			}
+
+			@Override
+			public boolean removeTail(Actor source, Event event) {
+				TextFactory.addNotifyAnimation(title, source, "ick!", Color.RED);
+				return false;
+			}
+			
+			@Override
+			public boolean revert(Actor source, Event event) {
+				TextFactory.addNotifyAnimation(title, source, "OMG!", Color.YELLOW);
+				return false;
+			}
+		});
 
 		snake.addListener(new SnakeListener() {
 			@Override
-			public boolean revert(Event event) {
+			public boolean revert(Actor source, Event event) {
 				snake.revert();
 				return false;
 			}
 
 			@Override
-			public boolean addTail(Event event) {
+			public boolean addTail(Actor source, Event event) {
 				snake.addTail();
 				return false;
 			}
 
 			@Override
-			public boolean removeTail(Event event) {
+			public boolean removeTail(Actor source, Event event) {
 				snake.removeTail();
 				return false;
 			}
@@ -94,6 +120,7 @@ public class SnakeScreen extends AbstractScreen {
 		stage.addActor(controller);
 		stage.addActor(fruitsRule);
 		stage.addActor(snake);
+		stage.addActor(title);
 	}
 
 	private Map<Entity, IRule> createFruits(Texture appleTexture, Texture poisonTexture, Texture boingTexture,

@@ -25,7 +25,7 @@ public class AFruitRule extends Actor {
 			Entity entity = entry.getKey();
 			entity.act(delta);
 			if (snake.getPosition().equals(entity.getPosition())) {
-				entry.getValue().act(delta);
+				entry.getValue().fireEvent(entity);
 				iter.remove();
 			}
 		}
