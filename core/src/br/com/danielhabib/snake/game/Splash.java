@@ -5,12 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
@@ -35,10 +33,10 @@ public class Splash extends AbstractScreen {
 		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
 		LabelStyle labelStyle = new LabelStyle(font, Color.ORANGE);
 		Label title = new Label("OMG! Crazy Snakes!", labelStyle);
-		Skin skin = new Skin(new TextureAtlas("buttons.pack"));
-		TextButtonStyle buttonStyle = newSnakeButtonStyle(skin);
-		TextButton playButton = newButton("Go go go!", buttonStyle);
-		TextButton quitButton = newButton("I'm out!", buttonStyle);
+
+		TextButton playButton = ButtonFactory.newButton("Go go go!");
+		TextButton quitButton = ButtonFactory.newButton("I'm out!");
+
 		Table table = new Table();
 
 		title.setFontScale(1);
@@ -75,15 +73,6 @@ public class Splash extends AbstractScreen {
 
 	private TextButton newButton(String text, TextButtonStyle buttonStyle) {
 		return new TextButton(text, buttonStyle);
-	}
-
-	private TextButtonStyle newSnakeButtonStyle(Skin skin2) {
-		TextButtonStyle buttonStyle = new TextButtonStyle();
-		buttonStyle.up = skin2.getDrawable("button");
-		buttonStyle.over = skin2.getDrawable("buttonpressed");
-		buttonStyle.down = skin2.getDrawable("buttonpressed");
-		buttonStyle.font = new BitmapFont(Gdx.files.internal("font.fnt"));
-		return buttonStyle;
 	}
 
 	@Override

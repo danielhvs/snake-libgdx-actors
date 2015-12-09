@@ -35,8 +35,8 @@ public abstract class AbstractScreen implements Screen {
 
 	@Override
 	public void show() {
-		Gdx.input.setInputProcessor(stage);
 		buildStage();
+		Gdx.input.setInputProcessor(stage);
 	}
 
 	@Override
