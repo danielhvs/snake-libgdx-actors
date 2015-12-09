@@ -12,15 +12,11 @@ public class SnakeDeathRule extends IRule {
 		this.game = game;
 	}
 
+	// FIXME: Fire some event...
 	@Override
-	public void fireEvent() {
+	protected void fireEvent(float delta) {
 		game.setScreen(new Splash(game));
 	}
 
-	@Override
-	public boolean act(float delta) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 }

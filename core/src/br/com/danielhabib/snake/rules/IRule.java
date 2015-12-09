@@ -1,21 +1,24 @@
 package br.com.danielhabib.snake.rules;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public abstract class IRule extends Action {
+
+	protected Stage stage;
 
 	public IRule() {
 	}
 
-	public IRule(Actor actor) {
-		setTarget(actor);
+	public IRule(Stage stage) {
+		this.stage = stage;
 	}
 
 	@Override
 	public boolean act(float delta) {
-		return fireEvent(delta);
+		fireEvent(delta);
+		return true;
 	}
 
-	protected abstract boolean fireEvent(float delta);
+	protected abstract void fireEvent(float delta);
 }

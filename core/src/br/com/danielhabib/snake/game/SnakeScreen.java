@@ -52,11 +52,11 @@ public class SnakeScreen extends AbstractScreen {
 
 		final Snake snake = SnakeFactory.newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
 
-		IRule boingMovingRules = new BoingMovingRules(snake);
+		IRule boingMovingRules = new BoingMovingRules(stage);
 		IRule snakeDeathRule = new SnakeDeathRule(game);
-		IRule regularFruitRule = new FruitRule(snake);
-		IRule poisonedFruitRule = new PoisonedFruitRule(snake);
-		IRule boingFruitRule = new BoingMovingRules(snake);
+		IRule regularFruitRule = new FruitRule(stage);
+		IRule poisonedFruitRule = new PoisonedFruitRule(stage);
+		IRule boingFruitRule = new BoingMovingRules(stage);
 		IRule identityRule = new IdentityRule();
 
 		Entity lastHole = new StaticEntity(holeTexture, new Vector2(13, 12));

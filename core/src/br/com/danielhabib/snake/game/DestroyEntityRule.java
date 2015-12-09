@@ -17,10 +17,11 @@ public class DestroyEntityRule extends IRule {
 		this.ruleAfterDestroy = ruleAfterDestroy;
 	}
 
+	// FIXME: Fire some event and add listeners.
 	@Override
-	public boolean fireEvent(float delta) {
+	public void fireEvent(float delta) {
 		map.remove(entity);
-		return ruleAfterDestroy.act(delta);
+		ruleAfterDestroy.act(delta);
 	}
 
 }
