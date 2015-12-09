@@ -7,6 +7,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 
 import br.com.danielhabib.snake.rules.AFruitRule;
@@ -34,7 +35,6 @@ public class SnakeScreen extends AbstractScreen {
 	private static final int SIZE = Entity.SIZE;
 	private Game game;
 	private SnakeController controller;
-	private AMovingRules movingRules;
 
 	public SnakeScreen(Game game) {
 		this.game = game;
@@ -68,8 +68,8 @@ public class SnakeScreen extends AbstractScreen {
 
 		AFruitRule fruitsRule = new AFruitRule(fruits, snake);
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole, lastHole), snake);
-		movingRules = new MapMovingRules(realMovingRules, identityRule, map, snake);
-		controller = new SnakeController(movingRules, snake);
+		AMovingRules movingRules = new MapMovingRules(realMovingRules, identityRule, map, snake);
+		Actor controller = new SnakeController(movingRules, snake);
 
 		snake.addListener(new SnakeListener() {
 			@Override
@@ -90,10 +90,9 @@ public class SnakeScreen extends AbstractScreen {
 				return false;
 			}
 		});
-		
+		stage.addActor(movingRules);
 		stage.addActor(controller);
 		stage.addActor(fruitsRule);
-		stage.addActor(movingRules);
 		stage.addActor(snake);
 	}
 
@@ -123,8 +122,6 @@ public class SnakeScreen extends AbstractScreen {
 			map.put(new StaticEntity(wallTexture, new Vector2(x, lastY)), identityRule);
 		}
 		for (int y = 0; y <= lastY; y++) {
-			// map.put(new StaticEntity(wallTexture, new Vector2(0, y)), new
-			// MovingRules());
 			map.put(new StaticEntity(wallTexture, new Vector2(lastX, y)), boingMovingRules);
 		}
 		return map;

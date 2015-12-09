@@ -33,7 +33,6 @@ public class MapMovingRules extends AMovingRules {
 		for (Entity entity : map.keySet()) {
 			entity.act(delta);
 		}
-		snake.act(delta);
 
 		time += delta;
 		if (time > 0.125) {
@@ -46,7 +45,6 @@ public class MapMovingRules extends AMovingRules {
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		ruleWhenFree.draw(batch, parentAlpha);
-		snake.draw(batch, parentAlpha);
 		for (Entity entity : map.keySet()) {
 			entity.draw(batch, parentAlpha);
 		}

@@ -82,7 +82,6 @@ public class Piece extends Entity {
 
 	@Override
 	public void update() {
-		sprite.setPosition(getPosition().x * Entity.SIZE, getPosition().y * Entity.SIZE);
 		sprite.rotate(10);
 	}
 
