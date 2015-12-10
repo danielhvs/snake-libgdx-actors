@@ -9,12 +9,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public abstract class AbstractScreen implements Screen {
+public abstract class AbstractScreen extends Stage implements Screen {
 
-	protected Stage stage;
+	private boolean paused;
 	protected AbstractScreen() {
-		OrthographicCamera camera = new OrthographicCamera();
-		stage = new Stage(new ScreenViewport(camera), new SpriteBatch());
+		super(new ScreenViewport(new OrthographicCamera()), new SpriteBatch());
 	}
 
 	public abstract void buildStage();
@@ -24,12 +23,14 @@ public abstract class AbstractScreen implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		stage.act(delta);
+		if (!paused) {
+			act(delta);
+		}
 
-		stage.getCamera().update();
-		stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
+		getCamera().update();
+		getBatch().setProjectionMatrix(getCamera().combined);
 
-		stage.draw();
+		draw();
 	}
 
 	// FIXME: Dispose.
@@ -38,14 +39,14 @@ public abstract class AbstractScreen implements Screen {
 	public void show() {
 		buildStage();
 		InputMultiplexer multiplexer = new InputMultiplexer();
-		multiplexer.addProcessor(stage);
-		multiplexer.addProcessor(new SnakeUIInputProcessor(stage));
+		multiplexer.addProcessor(this);
+		multiplexer.addProcessor(new SnakeUIInputProcessor(this));
 		Gdx.input.setInputProcessor(multiplexer);
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height);
+		getViewport().update(width, height);
 	}
 
 	@Override
@@ -58,5 +59,13 @@ public abstract class AbstractScreen implements Screen {
 
 	@Override
 	public void resume() {
+	}
+
+	public void pauseGame() {
+		paused = true;
+	}
+
+	public void unpauseGame() {
+		paused = false;
 	}
 }

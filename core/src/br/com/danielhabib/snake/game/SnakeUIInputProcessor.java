@@ -4,25 +4,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.kotcrab.vis.ui.widget.VisDialog;
+import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class SnakeUIInputProcessor extends InputAdapter {
 
-	private Stage stage;
+	private AbstractScreen screen;
+	private VisDialog dialog;
 
-	public SnakeUIInputProcessor(Stage stage) {
-		this.stage = stage;
+	public SnakeUIInputProcessor(AbstractScreen screen) {
+		this.screen = screen;
+		this.dialog = buildDialog();
 	}
 
 	@Override
@@ -37,55 +32,51 @@ public class SnakeUIInputProcessor extends InputAdapter {
 
 	private static boolean showingExitDialog;
 
-	// FIXME: Performance
 	private void showDialog() {
-		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dialog.atlas"));
-		Skin skin = new Skin();
-		skin.addRegions(atlas);
-		Window.WindowStyle windowStyle = new Window.WindowStyle();
-		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
-		windowStyle.titleFont = font;
-		NinePatch background = skin.getPatch("background");
-		windowStyle.background = new NinePatchDrawable(background);
-		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
-		Label label = new Label("Do you really want to leave?", labelStyle);
+		if (!showingExitDialog) {
+			dialog.show(screen);
+			screen.pauseGame();
+		}
+	}
+
+	private VisDialog buildDialog() {
+		Label label = new VisLabel("Do you really want to leave?");
 		label.setAlignment(Align.center);
-		Dialog dialog = new Dialog("", windowStyle) {
+		VisDialog dialog = new VisDialog("") {
 			@Override
 			protected void result(Object object) {
 				boolean exit = (Boolean) object;
 				if (exit) {
 					Gdx.app.exit();
+					screen.dispose();
 				} else {
 					remove();
+					screen.unpauseGame();
 				}
 				showingExitDialog = false;
 			}
 
 			@Override
-			public Dialog show(Stage stage) {
+			public VisDialog show(Stage stage) {
 				showingExitDialog = true;
+				screen.pauseGame();
 				return super.show(stage);
 			}
 
 			@Override
 			public void cancel() {
 				showingExitDialog = false;
+				screen.unpauseGame();
 				super.cancel();
 			}
 
-			@Override
-			public float getPrefHeight() {
-				return 500f;
-			}
 		};
-		dialog.button("Yes", true, ButtonFactory.getStyle());
-		dialog.button("No", false, ButtonFactory.getStyle());
+
+		dialog.getContentTable().add(label);
+		dialog.button("Yes", true);
+		dialog.button("No", false);
 		dialog.key(Input.Keys.ENTER, true);
 		dialog.key(Input.Keys.ESCAPE, false);
-		dialog.getContentTable().add(label);
-		if (!showingExitDialog) {
-			dialog.show(stage);
-		}
+		return dialog;
 	}
 }

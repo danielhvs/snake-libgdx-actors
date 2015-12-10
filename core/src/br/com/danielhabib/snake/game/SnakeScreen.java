@@ -11,10 +11,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
@@ -66,11 +64,11 @@ public class SnakeScreen extends AbstractScreen {
 
 		final Snake snake = SnakeFactory.newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
 
-		IRule boingMovingRules = new BoingMovingRules(stage);
+		IRule boingMovingRules = new BoingMovingRules(this);
 		IRule snakeDeathRule = new SnakeDeathRule(game);
-		IRule regularFruitRule = new FruitRule(stage);
-		IRule poisonedFruitRule = new PoisonedFruitRule(stage);
-		IRule boingFruitRule = new BoingMovingRules(stage);
+		IRule regularFruitRule = new FruitRule(this);
+		IRule poisonedFruitRule = new PoisonedFruitRule(this);
+		IRule boingFruitRule = new BoingMovingRules(this);
 		IRule identityRule = new NOPRule();
 
 		Entity lastHole = new StaticEntity(holeTexture, new Vector2(13, 12));
@@ -153,15 +151,14 @@ public class SnakeScreen extends AbstractScreen {
 			}
 		});
 
-		stage.addActor(movingRules);
-		stage.addActor(controller);
-		stage.addActor(fruitsRule);
-		stage.addActor(snake);
-		stage.addActor(title);
-		stage.addActor(counter1);
-		stage.addActor(counter2);
-		stage.addActor(counter3);
-
+		addActor(movingRules);
+		addActor(controller);
+		addActor(fruitsRule);
+		addActor(snake);
+		addActor(title);
+		addActor(counter1);
+		addActor(counter2);
+		addActor(counter3);
 	}
 
 	private Map<Entity, IRule> createFruits(Texture appleTexture, Texture poisonTexture, Texture boingTexture,
