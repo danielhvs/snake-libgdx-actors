@@ -2,17 +2,16 @@ package br.com.danielhabib.snake.rules;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+public class PoisonedFruitRuleTest extends IRuleTest {
 
-public class PoisonedFruitRuleTest extends BaseTest {
-	@Test
-	public void update_ThereIsAPoisonedFruit_RemovesSnakeTail() throws Exception {
-		IRule rules = null;// newFruitRule(new Vector2(0, 0), new
-							// PoisonedFruitRule());
+	@Override
+	IRule newInstanceOfIRule() {
+		return new PoisonedFruitRule(stage);
+	}
 
-		Snake snake = rules.fireEvent();
-
-		assertEquals(newSnake(0, 0), snake);
-
+	@Override
+	void assertEvent(SnakeEvent capture) throws Exception {
+		assertEquals(SnakeEvent.Type.removeTail, capture.getType());
+		assertEquals(actor, capture.getSource());
 	}
 }

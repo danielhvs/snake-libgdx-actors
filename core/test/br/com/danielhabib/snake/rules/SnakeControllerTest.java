@@ -48,22 +48,22 @@ public class SnakeControllerTest extends BaseTest {
 	}
 
 	private Snake controllerUp(Snake snake) {
-		SnakeController controller = new SnakeController(new MovingRules(), snake);
+		SnakeController controller = new SnakeController(new MovingRules(snake), snake);
 		return controller.up(snake);
 	}
 
 	private Snake controllerDown(Snake snake) {
-		SnakeController controller = new SnakeController(new MovingRules(), snake);
+		SnakeController controller = new SnakeController(new MovingRules(snake), snake);
 		return controller.down(snake);
 	}
 
 	private Snake controllerRight(Snake snake) {
-		SnakeController controller = new SnakeController(new MovingRules(), snake);
+		SnakeController controller = new SnakeController(new MovingRules(snake), snake);
 		return controller.right(snake);
 	}
 
 	private Snake controllerLeft(Snake snake) {
-		SnakeController controller = new SnakeController(new MovingRules(), snake);
+		SnakeController controller = new SnakeController(new MovingRules(snake), snake);
 		return controller.left(snake);
 	}
 

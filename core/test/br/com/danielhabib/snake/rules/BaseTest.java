@@ -6,6 +6,8 @@ import static org.mockito.Mockito.when;
 import java.util.Stack;
 
 import org.junit.Before;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -13,6 +15,8 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class BaseTest {
 
@@ -24,6 +28,15 @@ public class BaseTest {
 
 	@Mock
 	Entity apple;
+
+	@Mock
+	Stage stage;
+
+	@Mock
+	Actor actor;
+
+	@Captor
+	ArgumentCaptor<SnakeEvent> eventCaptor;
 
 	@Before
 	public void superSetup() {
