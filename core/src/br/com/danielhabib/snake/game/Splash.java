@@ -1,6 +1,5 @@
 package br.com.danielhabib.snake.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -11,19 +10,15 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 
 public class Splash extends AbstractScreen {
 
-	private Game game;
-
-	public Splash(Game game) {
-		this.game = game;
-	}
-
 	@Override
 	public void buildStage() {
 		Label title = new VisLabel("OMG! Crazy Snakes!");
 
 		VisTextButton playButton = ButtonFactory.newButton("Go go go!");
+		VisTextButton levelButton = ButtonFactory.newButton("Let's see...");
 		VisTextButton quitButton = ButtonFactory.newButton("I'm out!");
 
+		// Use Vistable?
 		Table table = new Table();
 
 		title.setFontScale(1);
@@ -31,20 +26,20 @@ public class Splash extends AbstractScreen {
 		table.add(title);
 		table.getCell(title).spaceBottom(100);
 		table.row();
-		table.add(playButton).width(Gdx.graphics.getWidth() / 4).height(Gdx.graphics.getHeight() / 10);
+		int width = Gdx.graphics.getWidth() / 4;
+		int height = Gdx.graphics.getHeight() / 10;
+		table.add(playButton).width(width).height(height);
 		table.getCell(playButton).spaceBottom(10);
 		table.row();
-		table.add(quitButton).width(Gdx.graphics.getWidth() / 4).height(Gdx.graphics.getHeight() / 10);
+		table.add(levelButton).width(width).height(height);
+		table.getCell(levelButton).spaceBottom(10);
+		table.row();
+		table.add(quitButton).width(width).height(height);
 		table.getCell(quitButton).spaceBottom(10);
 
-		playButton.addListener(new InputListener() {
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				game.setScreen(new SnakeScreen(game));
-				clear();
-				return true;
-			}
-		});
+
+		playButton.addListener(UIFactory.createListener(ScreenEnum.GAME));
+		levelButton.addListener(UIFactory.createListener(ScreenEnum.LEVEL_SELECT));
 		quitButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

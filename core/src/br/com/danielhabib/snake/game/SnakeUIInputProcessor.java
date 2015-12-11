@@ -1,6 +1,5 @@
 package br.com.danielhabib.snake.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
@@ -47,8 +46,7 @@ public class SnakeUIInputProcessor extends InputAdapter {
 			protected void result(Object object) {
 				boolean exit = (Boolean) object;
 				if (exit) {
-					Gdx.app.exit();
-					screen.dispose();
+					ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 				} else {
 					remove();
 					screen.unpauseGame();

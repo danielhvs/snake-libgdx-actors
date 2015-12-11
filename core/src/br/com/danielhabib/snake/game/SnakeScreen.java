@@ -3,7 +3,6 @@ package br.com.danielhabib.snake.game;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -39,11 +38,6 @@ import br.com.danielhabib.snake.rules.WormHole;
 public class SnakeScreen extends AbstractScreen {
 
 	private static final int SIZE = Entity.SIZE;
-	private Game game;
-
-	public SnakeScreen(Game game) {
-		this.game = game;
-	}
 
 	@Override
 	public void buildStage() {
@@ -65,7 +59,7 @@ public class SnakeScreen extends AbstractScreen {
 		final Snake snake = SnakeFactory.newSnakeAtXY(5, 1, Direction.RIGHT, headTexture, pieceTexture, tailTexture);
 
 		IRule boingMovingRules = new BoingMovingRules(this);
-		IRule snakeDeathRule = new SnakeDeathRule(game);
+		IRule snakeDeathRule = new SnakeDeathRule();
 		IRule regularFruitRule = new FruitRule(this);
 		IRule poisonedFruitRule = new PoisonedFruitRule(this);
 		IRule boingFruitRule = new BoingMovingRules(this);
@@ -212,7 +206,6 @@ public class SnakeScreen extends AbstractScreen {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-
 	}
 
 }

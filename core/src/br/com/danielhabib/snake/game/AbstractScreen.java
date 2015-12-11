@@ -37,7 +37,6 @@ public abstract class AbstractScreen extends Stage implements Screen {
 
 	@Override
 	public void show() {
-		buildStage();
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(this);
 		multiplexer.addProcessor(new SnakeUIInputProcessor(this));
