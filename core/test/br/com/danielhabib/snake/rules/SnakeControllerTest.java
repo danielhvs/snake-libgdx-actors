@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 public class SnakeControllerTest extends BaseTest {
-	private SnakeController controller;
-
 	@Test
 	public void up() throws Exception {
 		assertEquals(Direction.UP, directionOf(controllerUp(whenSnakeIs(Direction.UP))));
