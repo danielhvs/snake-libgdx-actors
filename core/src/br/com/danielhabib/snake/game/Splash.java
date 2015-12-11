@@ -21,24 +21,17 @@ public class Splash extends AbstractScreen {
 		// Use Vistable?
 		Table table = new Table();
 
+
 		title.setFontScale(1);
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		table.add(title);
 		table.getCell(title).spaceBottom(100);
-		table.row();
-		int width = Gdx.graphics.getWidth() / 4;
-		int height = Gdx.graphics.getHeight() / 10;
-		table.add(playButton).width(width).height(height);
-		table.getCell(playButton).spaceBottom(10);
-		table.row();
-		table.add(levelButton).width(width).height(height);
-		table.getCell(levelButton).spaceBottom(10);
-		table.row();
-		table.add(quitButton).width(width).height(height);
-		table.getCell(quitButton).spaceBottom(10);
 
+		UIFactory.addButtonToTable(playButton, table);
+		UIFactory.addButtonToTable(levelButton, table);
+		UIFactory.addButtonToTable(quitButton, table);
 
-		playButton.addListener(UIFactory.createListener(ScreenEnum.GAME));
+		playButton.addListener(UIFactory.createListener(ScreenEnum.GAME, 1));
 		levelButton.addListener(UIFactory.createListener(ScreenEnum.LEVEL_SELECT));
 		quitButton.addListener(new InputListener() {
 			@Override
@@ -50,6 +43,7 @@ public class Splash extends AbstractScreen {
 
 		addActor(table);
 	}
+
 
 	@Override
 	public void pause() {

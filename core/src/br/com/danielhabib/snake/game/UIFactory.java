@@ -1,11 +1,14 @@
 package br.com.danielhabib.snake.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 
 public class UIFactory {
 	
@@ -26,5 +29,13 @@ public class UIFactory {
 						return false;
 					}
 				};
+	}
+
+	public static void addButtonToTable(VisTextButton playButton, Table table) {
+		int width = Gdx.graphics.getWidth() / 4;
+		int height = Gdx.graphics.getHeight() / 10;
+		table.row();
+		table.add(playButton).width(width).height(height);
+		table.getCell(playButton).spaceBottom(10);
 	}
 }

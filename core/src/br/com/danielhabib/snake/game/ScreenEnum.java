@@ -20,7 +20,7 @@ public enum ScreenEnum {
 		@Override
 		public AbstractScreen getScreen(Object... params) {
 			// TODO: add level.
-			return new SnakeScreen();
+			return new SnakeScreen(params);
 		}
 	};
 

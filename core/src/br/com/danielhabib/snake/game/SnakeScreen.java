@@ -1,12 +1,22 @@
 package br.com.danielhabib.snake.game;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -38,9 +48,57 @@ import br.com.danielhabib.snake.rules.WormHole;
 public class SnakeScreen extends AbstractScreen {
 
 	private static final int SIZE = Entity.SIZE;
+	private int level;
+	private OrthogonalTiledMapRenderer renderer;
+
+	public SnakeScreen(Object... params) {
+		this.level = (Integer) params[0];
+	}
 
 	@Override
 	public void buildStage() {
+		if (level == 1) {
+			buildLevel1();
+		} else {
+			buildTiledLevel();
+		}
+	}
+
+	@Override
+	public void draw() {
+		if (level == 2) {
+			renderer.render();
+		}
+		super.draw();
+	}
+
+	private void buildTiledLevel() {
+		TiledMap map = new TmxMapLoader().load("map.tmx");
+		TiledMapTileSets tileSets = map.getTileSets();
+		RotatingEntity test = null;
+		for (TiledMapTileSet tile : tileSets) {
+			for (TiledMapTile tiledMapTile : tile) {
+				System.out.println("id: " + tiledMapTile.getId());
+				MapProperties properties = tiledMapTile.getProperties();
+				Iterator<String> keys = properties.getKeys();
+				while (keys.hasNext()) {
+					System.out.println(keys.next());
+				}
+				TextureRegion textureRegion = tiledMapTile.getTextureRegion();
+
+				test = new RotatingEntity(textureRegion.getTexture(), new Vector2(1, 2), 10);
+
+				System.out.println("prop: " + properties.get("rule"));
+			}
+		}
+
+		addActor(test);
+
+		renderer = new OrthogonalTiledMapRenderer(map);
+		renderer.setView((OrthographicCamera) getCamera());
+	}
+
+	private void buildLevel1() {
 		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
 		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
 		final Label title = new Label("", labelStyle);

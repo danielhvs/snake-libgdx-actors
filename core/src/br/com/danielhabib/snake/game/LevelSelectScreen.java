@@ -14,6 +14,7 @@ public class LevelSelectScreen extends AbstractScreen {
 		Label title = new VisLabel("OMG! Crazy Snakes!");
 
 		VisTextButton playButton = ButtonFactory.newButton("First level! GO!");
+		VisTextButton level2Button = ButtonFactory.newButton("Crazy level! GO!");
 		VisTextButton backButton = ButtonFactory.newButton("<-- Back");
 
 		Table table = new Table();
@@ -22,14 +23,13 @@ public class LevelSelectScreen extends AbstractScreen {
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		table.add(title);
 		table.getCell(title).spaceBottom(100);
-		table.row();
-		table.add(playButton).width(Gdx.graphics.getWidth() / 4).height(Gdx.graphics.getHeight() / 10);
-		table.getCell(playButton).spaceBottom(10);
-		table.row();
-		table.add(backButton).width(Gdx.graphics.getWidth() / 4).height(Gdx.graphics.getHeight() / 10);
-		table.getCell(backButton).spaceBottom(10);
 
-		playButton.addListener(UIFactory.createListener(ScreenEnum.GAME));
+		UIFactory.addButtonToTable(playButton, table);
+		UIFactory.addButtonToTable(level2Button, table);
+		UIFactory.addButtonToTable(backButton, table);
+
+		playButton.addListener(UIFactory.createListener(ScreenEnum.GAME, 1));
+		level2Button.addListener(UIFactory.createListener(ScreenEnum.GAME, 2));
 		backButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
 
 		addActor(table);
