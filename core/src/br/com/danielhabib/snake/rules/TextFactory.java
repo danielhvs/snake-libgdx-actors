@@ -9,7 +9,7 @@ public class TextFactory {
 
 	public static void addNotifyAnimation(Label label, Actor source, String string, Color color) {
 		label.setFontScale(0.75f);
-		float x = source.getX() * Entity.SIZE;
+		float x = source.getX() * Entity.SIZE - source.getWidth() / 2;
 		label.addAction(Actions.moveTo(x, source.getY() * Entity.SIZE + Entity.SIZE, 0));
 		label.addAction(Actions.alpha(1.0f));
 		label.setText(string);

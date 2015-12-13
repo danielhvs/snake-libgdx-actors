@@ -125,16 +125,17 @@ public class SnakeScreen extends AbstractScreen {
 
 		Snake snake = new Snake(pieces, pieceTexture);
 		AFruitRule fruitRule = new AFruitRule(fruits, snake);
-		AMovingRules movingRules = new MapMovingRules(new MovingRules(snake), identityRule, wallsMap, snake);
+		AMovingRules movingRules = new MapMovingRules(new MovingRules(snake), identityRule, wallsMap, snake,
+				layer.getWidth() - 1, layer.getHeight() - 1);
 		Actor controller = new SnakeController(movingRules, snake);
 
 		addListenerTo(snake);
 		addListenersTo(title);
 
-		addActor(fruitRule);
-		addActor(snake);
 		addActor(movingRules);
 		addActor(controller);
+		addActor(fruitRule);
+		addActor(snake);
 		addActor(title);
 
 		renderer = new OrthogonalTiledMapRenderer(map);
@@ -175,7 +176,7 @@ public class SnakeScreen extends AbstractScreen {
 
 		AFruitRule fruitsRule = new AFruitRule(fruits, snake);
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole, lastHole), snake);
-		AMovingRules movingRules = new MapMovingRules(realMovingRules, identityRule, map, snake);
+		AMovingRules movingRules = new MapMovingRules(realMovingRules, identityRule, map, snake, 0, 0);
 		Actor controller = new SnakeController(movingRules, snake);
 
 		counter1.addListener(new CounterSnakeListener(0) {

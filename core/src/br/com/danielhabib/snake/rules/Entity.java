@@ -20,8 +20,7 @@ public abstract class Entity extends Actor {
 		this.sprite = new Sprite(texture);
 		sprite.setSize(SIZE, SIZE);
 		sprite.setOriginCenter();
-		setX(pos.x);
-		setY(pos.y);
+		setBounds(pos.x, pos.y, SIZE, SIZE);
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -13,16 +12,20 @@ public class MapMovingRules extends AMovingRules {
 	private Map<Entity, IRule> map;
 	private AMovingRules ruleWhenFree;
 	private IRule ruleWhenCollidedWithItSelf;
+	private int lastX;
+	private int lastY;
 
 	public MapMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Snake snake) {
-		this(ruleWhenFree, ruleWhenCollidedWithItSelf, new HashMap<Entity, IRule>(), snake);
+		this(ruleWhenFree, ruleWhenCollidedWithItSelf, new HashMap<Entity, IRule>(), snake, 0, 0);
 	}
 
-	public MapMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Map<Entity, IRule> map, Snake snake) {
+	public MapMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Map<Entity, IRule> map, Snake snake, int lastX, int lastY) {
 		super(snake);
 		this.ruleWhenFree = ruleWhenFree;
 		this.ruleWhenCollidedWithItSelf = ruleWhenCollidedWithItSelf;
 		this.map = map;
+		this.lastX = lastX;
+		this.lastY = lastY;
 	}
 
 	private static float time = 0;
@@ -51,8 +54,6 @@ public class MapMovingRules extends AMovingRules {
 	}
 
 	public void update(float delta) {
-		int lastX = -1 + Gdx.graphics.getWidth() / Entity.SIZE;
-		int lastY = -1 + Gdx.graphics.getHeight() / Entity.SIZE;
 		if (snakeWouldEatItSelf(snake)) {
 			ruleWhenCollidedWithItSelf.fireEvent(snake);
 			return;
