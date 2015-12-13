@@ -1,20 +1,20 @@
 package br.com.danielhabib.snake.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -33,7 +33,9 @@ import br.com.danielhabib.snake.rules.FruitRule;
 import br.com.danielhabib.snake.rules.HoleMovingRules;
 import br.com.danielhabib.snake.rules.IRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
+import br.com.danielhabib.snake.rules.MovingRules;
 import br.com.danielhabib.snake.rules.NOPRule;
+import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.PoisonedFruitRule;
 import br.com.danielhabib.snake.rules.RotatingEntity;
 import br.com.danielhabib.snake.rules.Snake;
@@ -67,32 +69,73 @@ public class SnakeScreen extends AbstractScreen {
 	@Override
 	public void draw() {
 		if (level == 2) {
-			renderer.render();
+			// renderer.render();
 		}
 		super.draw();
 	}
 
 	private void buildTiledLevel() {
+		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
+		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
+		final Label title = new Label("", labelStyle);
 		TiledMap map = new TmxMapLoader().load("map.tmx");
-		TiledMapTileSets tileSets = map.getTileSets();
-		RotatingEntity test = null;
-		for (TiledMapTileSet tile : tileSets) {
-			for (TiledMapTile tiledMapTile : tile) {
-				System.out.println("id: " + tiledMapTile.getId());
-				MapProperties properties = tiledMapTile.getProperties();
-				Iterator<String> keys = properties.getKeys();
-				while (keys.hasNext()) {
-					System.out.println(keys.next());
+		Map<Entity, IRule> fruits = new HashMap<Entity, IRule>();
+		IRule identityRule = new NOPRule();
+		IRule boingRule = new BoingMovingRules(this);
+		Texture pieceTexture = null;
+		Map<Entity, IRule> wallsMap = new HashMap<Entity, IRule>();
+		IRule regularFruitRule = new FruitRule(this);
+		Texture texture = null;
+		Stack<Piece> pieces = new Stack<Piece>();
+		List<Piece> piecesList = new ArrayList<Piece>();
+		Head head = null;
+		Tail tail = null;
+		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
+		for (int x = 0; x < layer.getWidth(); x++) {
+			for (int y = 0; y < layer.getHeight(); y++) {
+				Cell cell = layer.getCell(x, y);
+				if (cell != null) {
+					TiledMapTile tile = cell.getTile();
+					Object rule = tile.getProperties().get("rule");
+					texture = tile.getTextureRegion().getTexture();
+					// FIXME: Polymorfism
+					if ("fruit".equals(rule.toString())) {
+						fruits.put(new StaticEntity(texture, new Vector2(x, y)), regularFruitRule);
+					} else if ("identityRule".equals(rule.toString())) {
+						wallsMap.put(new StaticEntity(texture, new Vector2(x, y)), identityRule);
+					} else if ("boingRule".equals(rule.toString())) {
+						wallsMap.put(new StaticEntity(texture, new Vector2(x, y)), boingRule);
+					} else if ("head".equals(rule.toString())) {
+						head = new Head(new Vector2(x, y), Direction.RIGHT, texture);
+					} else if ("piece".equals(rule.toString())) {
+						pieceTexture = texture;
+						piecesList.add(new Piece(new Vector2(x, y), Direction.RIGHT, texture));
+					} else if ("tail".equals(rule.toString())) {
+						tail = new Tail(new Vector2(x, y), Direction.RIGHT, texture);
+					}
 				}
-				TextureRegion textureRegion = tiledMapTile.getTextureRegion();
-
-				test = new RotatingEntity(textureRegion.getTexture(), new Vector2(1, 2), 10);
-
-				System.out.println("prop: " + properties.get("rule"));
 			}
 		}
 
-		addActor(test);
+		pieces.push(head);
+		// FIXME: Order pieces!? Indicate only head and tail in the map? Init
+		// with only one piece?
+		pieces.addAll(piecesList);
+		pieces.push(tail);
+
+		Snake snake = new Snake(pieces, pieceTexture);
+		AFruitRule fruitRule = new AFruitRule(fruits, snake);
+		AMovingRules movingRules = new MapMovingRules(new MovingRules(snake), identityRule, wallsMap, snake);
+		Actor controller = new SnakeController(movingRules, snake);
+
+		addListenerTo(snake);
+		addListenersTo(title);
+
+		addActor(fruitRule);
+		addActor(snake);
+		addActor(movingRules);
+		addActor(controller);
+		addActor(title);
 
 		renderer = new OrthogonalTiledMapRenderer(map);
 		renderer.setView((OrthographicCamera) getCamera());
@@ -163,10 +206,25 @@ public class SnakeScreen extends AbstractScreen {
 			}
 		});
 
+		addListenersTo(title);
+
+		addListenerTo(snake);
+
+		addActor(movingRules);
+		addActor(controller);
+		addActor(fruitsRule);
+		addActor(snake);
+		addActor(title);
+		addActor(counter1);
+		addActor(counter2);
+		addActor(counter3);
+	}
+
+	private void addListenersTo(final Label title) {
 		title.addListener(new SnakeListener() {
 			@Override
 			public boolean addTail(Actor source, Event event) {
-				TextFactory.addNotifyAnimation(title, source, "glup", Color.WHITE);
+				TextFactory.addNotifyAnimation(title, source, "yummi!", Color.WHITE);
 				return false;
 			}
 
@@ -178,11 +236,13 @@ public class SnakeScreen extends AbstractScreen {
 
 			@Override
 			public boolean revert(Actor source, Event event) {
-				TextFactory.addNotifyAnimation(title, source, "OMG!", Color.YELLOW);
+				TextFactory.addNotifyAnimation(title, source, "boing!", Color.YELLOW);
 				return false;
 			}
 		});
+	}
 
+	private void addListenerTo(final Snake snake) {
 		snake.addListener(new SnakeListener() {
 			@Override
 			public boolean revert(Actor source, Event event) {
@@ -202,15 +262,6 @@ public class SnakeScreen extends AbstractScreen {
 				return false;
 			}
 		});
-
-		addActor(movingRules);
-		addActor(controller);
-		addActor(fruitsRule);
-		addActor(snake);
-		addActor(title);
-		addActor(counter1);
-		addActor(counter2);
-		addActor(counter3);
 	}
 
 	private Map<Entity, IRule> createFruits(Texture appleTexture, Texture poisonTexture, Texture boingTexture,
