@@ -3,7 +3,6 @@ package br.com.danielhabib.snake.rules;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -26,7 +25,9 @@ public abstract class Entity extends Actor {
 	@Override
 	public void act(float delta) {
 		sprite.setPosition(getX() * SIZE, getY() * SIZE);
+		sprite.setRotation(getRotation());
 		update();
+		super.act(delta);
 	}
 
 	@Override
@@ -42,10 +43,6 @@ public abstract class Entity extends Actor {
 
 	public Vector2 getPosition() {
 		return new Vector2(getX(), getY());
-	}
-
-	public Rectangle getBounds() {
-		return new Rectangle(getX() * SIZE, getY() * SIZE, sprite.getWidth(), sprite.getHeight());
 	}
 
 	public Sprite getSprite() {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Stack;
 
 import com.badlogic.gdx.Gdx;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
@@ -94,14 +96,29 @@ public class SnakeScreen extends AbstractScreen {
 					Object rule = tile.getProperties().get("rule");
 					texture = tile.getTextureRegion().getTexture();
 					// FIXME: Polymorfism
+					final StaticEntity staticEntity = new StaticEntity(texture, new Vector2(x, y));
 					if ("fruit".equals(rule.toString())) {
-						fruits.put(new StaticEntity(texture, new Vector2(x, y)), regularFruitRule);
+						fruits.put(staticEntity, regularFruitRule);
 					} else if ("poison".equals(rule.toString())) {
-						fruits.put(new StaticEntity(texture, new Vector2(x, y)), poisonRule);
+						fruits.put(staticEntity, poisonRule);
 					} else if ("identityRule".equals(rule.toString())) {
-						wallsMap.put(new StaticEntity(texture, new Vector2(x, y)), identityRule);
+						wallsMap.put(staticEntity, identityRule);
 					} else if ("boingRule".equals(rule.toString())) {
-						wallsMap.put(new StaticEntity(texture, new Vector2(x, y)), boingRule);
+						wallsMap.put(staticEntity, boingRule);
+						staticEntity.addListener(new SnakeListener() {
+							@Override
+							public boolean revert(Actor actor, Event event) {
+								if (staticEntity == actor) {
+									staticEntity.addAction(
+											Actions.sequence(Actions.rotateBy(25f, 0.1f), Actions.rotateBy(-25f, 0.1f),
+													Actions.rotateBy(-25f, 0.1f), Actions.rotateBy(25f, 0.1f))
+									);
+								}
+								return super.revert(actor, event);
+
+							}
+						});
+
 					} else if ("head".equals(rule.toString())) {
 						head = new Head(new Vector2(x, y), Direction.RIGHT, texture);
 					} else if ("piece".equals(rule.toString())) {
@@ -133,6 +150,9 @@ public class SnakeScreen extends AbstractScreen {
 		addActor(controller);
 		addActor(fruitRule);
 		addActor(snake);
+		for (Entry<Entity, IRule> ent : wallsMap.entrySet()) {
+			addActor(ent.getKey());
+		}
 		addActor(title);
 
 		// FIXME: Use this renderer?

@@ -33,10 +33,6 @@ public class MapMovingRules extends AMovingRules {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		for (Entity entity : map.keySet()) {
-			entity.act(delta);
-		}
-
 		time += delta;
 		if (time > 0.125) {
 			update(delta);
@@ -48,9 +44,6 @@ public class MapMovingRules extends AMovingRules {
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		ruleWhenFree.draw(batch, parentAlpha);
-		for (Entity entity : map.keySet()) {
-			entity.draw(batch, parentAlpha);
-		}
 	}
 
 	public void update(float delta) {

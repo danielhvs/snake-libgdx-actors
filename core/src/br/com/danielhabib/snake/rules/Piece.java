@@ -80,9 +80,11 @@ public class Piece extends Entity {
 		return this;
 	}
 
+	private float degrees = 0f;
 	@Override
 	public void update() {
-		sprite.rotate(10);
+		degrees += 10f;
+		setRotation(degrees);
 	}
 
 }
