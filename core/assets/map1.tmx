@@ -48,9 +48,17 @@
    </properties>
   </tile>
  </tileset>
+ <tileset firstgid="7" name="poison" tilewidth="32" tileheight="32">
+  <image source="poison32.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="poison"/>
+   </properties>
+  </tile>
+ </tileset>
  <layer name="Tile Layer 1" width="25" height="20">
   <data encoding="base64" compression="zlib">
-   eJzFleEKwCAIhK1tvf8jb4MNQlKuS/LAP5p9mlRFREqgaY18np/RKmO0riUzmuHfxaid6XwrNsv447pGJLZ6VogsRqSYetG7hzDeGaK9WfPua8pkoGIZM2+f1291GJ5me9zBYMTmHY9dn53kHpmK/Get2d7JUQDj
+   eJzFlesKwCAIhWu33v+Nt2CBHLzX2AH/pO7TslVLKXWhUTVmbUhaz8jDaGBW/sXEYJ7G9sRxDM73B2MjhvmSL8oYfqzR45vdK48kxkpl6rXunme+h/oZ0t64GaexGoO7/zMMlMXwKsuI/Pu0edkUhqZoj5nZ0hhYY6QeKQ+/qe3D/tj52pFkW4wvtfKd5c6293UDx3MBaA==
   </data>
  </layer>
 </map>

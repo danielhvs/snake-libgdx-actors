@@ -8,7 +8,6 @@ import java.util.Stack;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -59,18 +58,13 @@ public class SnakeScreen extends AbstractScreen {
 
 	@Override
 	public void buildStage() {
-		if (level == 1) {
-			buildLevel1();
-		} else {
-			buildTiledLevel();
-		}
+		buildTiledLevel();
 	}
 
 	@Override
 	public void draw() {
-		if (level == 2) {
-			// renderer.render();
-		}
+		// FIXME: Use this renderer?
+		// renderer.render();
 		super.draw();
 	}
 
@@ -78,11 +72,12 @@ public class SnakeScreen extends AbstractScreen {
 		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
 		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
 		final Label title = new Label("", labelStyle);
-		TiledMap map = new TmxMapLoader().load("map.tmx");
+		TiledMap map = new TmxMapLoader().load("map" + level + ".tmx");
 		Map<Entity, IRule> fruits = new HashMap<Entity, IRule>();
 		IRule identityRule = new NOPRule();
 		IRule boingRule = new BoingMovingRules(this);
 		Texture pieceTexture = null;
+		PoisonedFruitRule poisonRule = new PoisonedFruitRule(this);
 		Map<Entity, IRule> wallsMap = new HashMap<Entity, IRule>();
 		IRule regularFruitRule = new FruitRule(this);
 		Texture texture = null;
@@ -101,6 +96,8 @@ public class SnakeScreen extends AbstractScreen {
 					// FIXME: Polymorfism
 					if ("fruit".equals(rule.toString())) {
 						fruits.put(new StaticEntity(texture, new Vector2(x, y)), regularFruitRule);
+					} else if ("poison".equals(rule.toString())) {
+						fruits.put(new StaticEntity(texture, new Vector2(x, y)), poisonRule);
 					} else if ("identityRule".equals(rule.toString())) {
 						wallsMap.put(new StaticEntity(texture, new Vector2(x, y)), identityRule);
 					} else if ("boingRule".equals(rule.toString())) {
@@ -138,8 +135,9 @@ public class SnakeScreen extends AbstractScreen {
 		addActor(snake);
 		addActor(title);
 
-		renderer = new OrthogonalTiledMapRenderer(map);
-		renderer.setView((OrthographicCamera) getCamera());
+		// FIXME: Use this renderer?
+		// renderer = new OrthogonalTiledMapRenderer(map);
+		// renderer.setView((OrthographicCamera) getCamera());
 	}
 
 	private void buildLevel1() {
