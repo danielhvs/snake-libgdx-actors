@@ -5,8 +5,10 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 
 public class TimingFruitGenerator extends Actor {
@@ -24,6 +26,7 @@ public class TimingFruitGenerator extends Actor {
 
 	@Override
 	public void act(float delta) {
+		// FIXME: generate only after animation...
 		if (timeout(delta)) {
 			boolean generated = false, full = false;
 			while (!generated && !full) {
@@ -50,6 +53,8 @@ public class TimingFruitGenerator extends Actor {
 		fruits.put(newFruit, new FruitRule(getStage()));
 		map.add(newFruit);
 		getStage().addActor(newFruit);
+		newFruit.addAction(Actions.moveTo(0, 0));
+		newFruit.addAction(Actions.moveTo(candidate.x, candidate.y, 1f, Interpolation.swing));
 	}
 
 	private boolean timeout(float delta) {
