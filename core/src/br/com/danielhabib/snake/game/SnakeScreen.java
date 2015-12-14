@@ -81,7 +81,11 @@ public class SnakeScreen extends AbstractScreen {
 		Texture pieceTexture = null;
 		PoisonedFruitRule poisonRule = new PoisonedFruitRule(this);
 		Map<Entity, IRule> wallsMap = new HashMap<Entity, IRule>();
+		List<Fruit> list = new ArrayList<Fruit>();
 		IRule regularFruitRule = new FruitRule(this);
+
+		List<Actor> wholeMap = new ArrayList<Actor>();
+
 		Texture texture = null;
 		Stack<Piece> pieces = new Stack<Piece>();
 		List<Piece> piecesList = new ArrayList<Piece>();
@@ -98,7 +102,8 @@ public class SnakeScreen extends AbstractScreen {
 					// FIXME: Polymorfism
 					final StaticEntity staticEntity = new StaticEntity(texture, new Vector2(x, y));
 					if ("fruit".equals(rule.toString())) {
-						fruits.put(staticEntity, regularFruitRule);
+						// fruits.put(staticEntity, regularFruitRule);
+						list.add(new Fruit(texture, new Vector2(x, y)));
 					} else if ("poison".equals(rule.toString())) {
 						fruits.put(staticEntity, poisonRule);
 					} else if ("identityRule".equals(rule.toString())) {
@@ -146,6 +151,8 @@ public class SnakeScreen extends AbstractScreen {
 		addListenerTo(snake);
 		addListenersTo(title);
 
+		wholeMap.addAll(list);
+
 		addActor(movingRules);
 		addActor(controller);
 		addActor(fruitRule);
@@ -154,6 +161,9 @@ public class SnakeScreen extends AbstractScreen {
 			addActor(ent.getKey());
 		}
 		addActor(title);
+		for (Entity fruit : list) {
+			addActor(fruit);
+		}
 
 		// FIXME: Use this renderer?
 		// renderer = new OrthogonalTiledMapRenderer(map);
