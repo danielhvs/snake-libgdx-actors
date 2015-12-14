@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -54,7 +53,9 @@ public class TimingFruitGenerator extends Actor {
 		map.add(newFruit);
 		getStage().addActor(newFruit);
 		newFruit.addAction(Actions.moveTo(0, 0));
-		newFruit.addAction(Actions.moveTo(candidate.x, candidate.y, 1f, Interpolation.swing));
+		newFruit.addAction(Actions.parallel(
+				Actions.moveTo(candidate.x, candidate.y, 0.5f),
+				Actions.rotateTo(360f, .75f)));
 	}
 
 	private boolean timeout(float delta) {
