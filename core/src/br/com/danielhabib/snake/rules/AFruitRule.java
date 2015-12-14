@@ -1,6 +1,7 @@
 package br.com.danielhabib.snake.rules;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -11,8 +12,10 @@ public class AFruitRule extends Actor {
 
 	private Map<Entity, IRule> map;
 	private Snake snake;
+	private List<Actor> mapEntities;
 
-	public AFruitRule(Map<Entity, IRule> map, Snake snake) {
+	public AFruitRule(List<Actor> mapEntities, Map<Entity, IRule> map, Snake snake) {
+		this.mapEntities = mapEntities;
 		this.map = map;
 		this.snake = snake;
 	}
@@ -29,10 +32,12 @@ public class AFruitRule extends Actor {
 				for (Actor actor : actors) {
 					if (actor.equals(entity)) {
 						actor.remove();
+						mapEntities.remove(entity);
 					}
 				}
 				iter.remove();
 			}
+			// FIXME: Performance. add break; here!?
 		}
 	}
 }

@@ -25,32 +25,31 @@ public class TimingFruitGenerator extends Actor {
 	@Override
 	public void act(float delta) {
 		if (timeout(delta)) {
-			boolean generated = false;
-			while (!generated) {
-				// FIXME: not 100% yet.
+			boolean generated = false, full = false;
+			while (!generated && !full) {
 				// FIXME: same x and y position for now...
 				int pos = (int) (Math.random() * 20);
 				Vector2 candidate = new Vector2(pos, pos);
-				Array<Vector2> actorPositions = new Array<Vector2>();
+				Array<Vector2> allActorPositions = new Array<Vector2>();
 				for (Actor actor : map) {
 					Vector2 position = new Vector2(actor.getX(), actor.getY());
-					actorPositions.add(position);
+					allActorPositions.add(position);
 				}
-				if (!actorPositions.contains(candidate, false)) {
-					generated = generate(candidate);
-					break;
+				if (!allActorPositions.contains(candidate, false)) {
+					generate(candidate);
+					generated = true;
+				} else {
+					full = true;
 				}
 			}
 		}
 	}
 
-	private boolean generate(Vector2 candidate) {
-		boolean generated;
+	private void generate(Vector2 candidate) {
 		StaticEntity newFruit = new StaticEntity(new Texture(Gdx.files.internal("apple.png")), candidate);
 		fruits.put(newFruit, new FruitRule(getStage()));
+		map.add(newFruit);
 		getStage().addActor(newFruit);
-		generated = true;
-		return generated;
 	}
 
 	private boolean timeout(float delta) {

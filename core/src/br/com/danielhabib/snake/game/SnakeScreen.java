@@ -86,6 +86,7 @@ public class SnakeScreen extends AbstractScreen {
 		IRule regularFruitRule = new FruitRule(this);
 
 		List<Actor> wholeMap = new ArrayList<Actor>();
+		List<Actor> mapEntities = new ArrayList<Actor>();
 
 		Texture texture = null;
 		Stack<Piece> pieces = new Stack<Piece>();
@@ -143,7 +144,7 @@ public class SnakeScreen extends AbstractScreen {
 		pieces.push(tail);
 
 		Snake snake = new Snake(pieces, pieceTexture);
-		AFruitRule fruitRule = new AFruitRule(fruits, snake);
+		AFruitRule fruitRule = new AFruitRule(mapEntities, fruits, snake);
 		AMovingRules movingRules = new MapMovingRules(new MovingRules(snake), identityRule, wallsMap, snake,
 				layer.getWidth() - 1, layer.getHeight() - 1);
 		Actor controller = new SnakeController(movingRules, snake);
@@ -156,7 +157,6 @@ public class SnakeScreen extends AbstractScreen {
 		addActor(fruitRule);
 		addActor(snake);
 
-		List<Actor> mapEntities = new ArrayList<Actor>();
 		mapEntities.add(snake);
 		for (Entry<Entity, IRule> ent : wallsMap.entrySet()) {
 			Entity actor = ent.getKey();
@@ -209,7 +209,7 @@ public class SnakeScreen extends AbstractScreen {
 		Map<Entity, IRule> fruits = createFruits(appleTexture, poisonTexture, wallTexture, regularFruitRule,
 				poisonedFruitRule, boingFruitRule);
 
-		AFruitRule fruitsRule = new AFruitRule(fruits, snake);
+		AFruitRule fruitsRule = null;// new AFruitRule(fruits, snake);
 		AMovingRules realMovingRules = new HoleMovingRules(new WormHole(initialHole, lastHole), snake);
 		AMovingRules movingRules = new MapMovingRules(realMovingRules, identityRule, map, snake, 0, 0);
 		Actor controller = new SnakeController(movingRules, snake);
