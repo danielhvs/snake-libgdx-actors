@@ -46,6 +46,7 @@ import br.com.danielhabib.snake.rules.SnakeFactory;
 import br.com.danielhabib.snake.rules.SnakeListener;
 import br.com.danielhabib.snake.rules.StaticEntity;
 import br.com.danielhabib.snake.rules.TextFactory;
+import br.com.danielhabib.snake.rules.TimingFruitGenerator;
 import br.com.danielhabib.snake.rules.WormHole;
 
 public class SnakeScreen extends AbstractScreen {
@@ -102,8 +103,7 @@ public class SnakeScreen extends AbstractScreen {
 					// FIXME: Polymorfism
 					final StaticEntity staticEntity = new StaticEntity(texture, new Vector2(x, y));
 					if ("fruit".equals(rule.toString())) {
-						// fruits.put(staticEntity, regularFruitRule);
-						list.add(new Fruit(texture, new Vector2(x, y)));
+						fruits.put(staticEntity, regularFruitRule);
 					} else if ("poison".equals(rule.toString())) {
 						fruits.put(staticEntity, poisonRule);
 					} else if ("identityRule".equals(rule.toString())) {
@@ -151,20 +151,27 @@ public class SnakeScreen extends AbstractScreen {
 		addListenerTo(snake);
 		addListenersTo(title);
 
-		wholeMap.addAll(list);
-
 		addActor(movingRules);
 		addActor(controller);
 		addActor(fruitRule);
 		addActor(snake);
+
+		List<Actor> mapEntities = new ArrayList<Actor>();
+		mapEntities.add(snake);
 		for (Entry<Entity, IRule> ent : wallsMap.entrySet()) {
-			addActor(ent.getKey());
+			Entity actor = ent.getKey();
+			addActor(actor);
+			mapEntities.add(actor);
+		}
+		for (Entry<Entity, IRule> fruit : fruits.entrySet()) {
+			Entity actor = fruit.getKey();
+			addActor(actor);
+			mapEntities.add(actor);
 		}
 		addActor(title);
-		for (Entity fruit : list) {
-			addActor(fruit);
-		}
 
+		TimingFruitGenerator generator = new TimingFruitGenerator(fruits, mapEntities, .1f);
+		addActor(generator);
 		// FIXME: Use this renderer?
 		// renderer = new OrthogonalTiledMapRenderer(map);
 		// renderer.setView((OrthographicCamera) getCamera());
