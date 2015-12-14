@@ -24,14 +24,15 @@ public abstract class Entity extends Actor {
 
 	@Override
 	public void act(float delta) {
+		super.act(delta);
+		update();
 		sprite.setPosition(getX() * SIZE, getY() * SIZE);
 		sprite.setRotation(getRotation());
-		update();
-		super.act(delta);
 	}
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
 		sprite.draw(batch);
 	}
 

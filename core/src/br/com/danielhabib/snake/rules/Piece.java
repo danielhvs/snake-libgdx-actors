@@ -81,6 +81,7 @@ public class Piece extends Entity {
 	}
 
 	private float degrees = 0f;
+
 	@Override
 	public void update() {
 		degrees += 10f;

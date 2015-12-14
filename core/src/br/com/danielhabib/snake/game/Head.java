@@ -14,7 +14,7 @@ public class Head extends Piece {
 
 	@Override
 	public void update() {
-		sprite.setRotation(direction.getRotation());
+		setRotation(direction.getRotation());
 	}
 
 }

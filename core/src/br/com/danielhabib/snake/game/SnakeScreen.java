@@ -112,7 +112,7 @@ public class SnakeScreen extends AbstractScreen {
 									staticEntity.addAction(
 											Actions.sequence(Actions.rotateBy(25f, 0.1f), Actions.rotateBy(-25f, 0.1f),
 													Actions.rotateBy(-25f, 0.1f), Actions.rotateBy(25f, 0.1f))
-									);
+											);
 								}
 								return super.revert(actor, event);
 

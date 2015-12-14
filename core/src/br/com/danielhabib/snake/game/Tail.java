@@ -8,7 +8,6 @@ import br.com.danielhabib.snake.rules.Piece;
 
 public class Tail extends Piece {
 
-
 	public Tail(Vector2 pos, Direction direction, Texture texture) {
 		super(pos, direction, texture);
 	}
@@ -16,9 +15,10 @@ public class Tail extends Piece {
 	private double x = 0.0f;
 	@Override
 	public void update() {
-		sprite.setRotation(direction.getRotation());
 		x += Math.PI / 40;
-		sprite.rotate((float) (15 * Math.sin(x)));
+		float initialRotation = direction.getRotation();
+		float degreesOffset = (float) (15 * Math.sin(x));
+		setRotation(initialRotation + degreesOffset);
 	}
 
 
