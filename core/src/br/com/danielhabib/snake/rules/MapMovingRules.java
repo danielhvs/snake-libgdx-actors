@@ -5,23 +5,27 @@ import java.util.Stack;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 import br.com.danielhabib.snake.game.EventFirerEntity;
 
-public class MapMovingRules extends AMovingRules {
+public class MapMovingRules extends AMovingRules implements WorldManager {
 
-	private List<EventFirerEntity> map;
+	private List<EventFirerEntity> wallsList;
 	private AMovingRules ruleWhenFree;
 	private IRule ruleWhenCollidedWithItSelf;
 	private int lastX;
 	private int lastY;
+	private List<Actor> worldMap;
 
-	public MapMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, List<EventFirerEntity> wallsList,
+	public MapMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, List<Actor> worldMap, List<EventFirerEntity> wallsList,
 			Snake snake, int lastX, int lastY) {
 		super(snake);
 		this.ruleWhenFree = ruleWhenFree;
 		this.ruleWhenCollidedWithItSelf = ruleWhenCollidedWithItSelf;
-		this.map = wallsList;
+		this.worldMap = worldMap;
+		this.wallsList = wallsList;
 		this.lastX = lastX;
 		this.lastY = lastY;
 	}
@@ -49,7 +53,7 @@ public class MapMovingRules extends AMovingRules {
 			ruleWhenCollidedWithItSelf.fireEvent(snake);
 			return;
 		} else {
-			EventFirerEntity entity = snakeWouldColide(snake);
+			EventFirerEntity entity = snakeWouldColideWithWall(snake);
 			if (!EventFirerEntity.NOP.equals(entity)) {
 				entity.fireEvent();
 				return;
@@ -70,9 +74,9 @@ public class MapMovingRules extends AMovingRules {
 		}
 	}
 
-	private EventFirerEntity snakeWouldColide(Snake snake) {
+	private EventFirerEntity snakeWouldColideWithWall(Snake snake) {
 		Vector2 nextPositionSnake = snake.getNextPosition();
-		for (EventFirerEntity entity : map) {
+		for (EventFirerEntity entity : wallsList) {
 			if (entity.getPosition().epsilonEquals(nextPositionSnake, 0.01f)) {
 				return entity;
 			}
@@ -89,6 +93,21 @@ public class MapMovingRules extends AMovingRules {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public List<Actor> getMap() {
+		return worldMap;
+	}
+
+	@Override
+	public void put(EventFirerEntity entity) {
+		wallsList.add(entity);
+		worldMap.add(entity);
+		getStage().addActor(entity);
+		Vector2 pos = entity.getPosition();
+		entity.addAction(Actions.alpha(0f));
+		entity.addAction(Actions.fadeIn(1f));
 	}
 
 }

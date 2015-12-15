@@ -37,12 +37,14 @@ import br.com.danielhabib.snake.rules.SnakeListener;
 import br.com.danielhabib.snake.rules.TextFactory;
 import br.com.danielhabib.snake.rules.TimingFruitGenerator;
 import br.com.danielhabib.snake.rules.Wall;
+import br.com.danielhabib.snake.rules.WorldManager;
 
 public class SnakeScreen extends AbstractScreen {
 
 	private static final int SIZE = Entity.SIZE;
 	private int level;
 	private OrthogonalTiledMapRenderer renderer;
+	private TextureManager manager;
 
 	public SnakeScreen(Object... params) {
 		this.level = (Integer) params[0];
@@ -69,11 +71,13 @@ public class SnakeScreen extends AbstractScreen {
 		List<EventFirerEntity> fruitsList = new ArrayList<EventFirerEntity>();
 		List<EventFirerEntity> wallsList = new ArrayList<EventFirerEntity>();
 		List<Actor> worldMap = new ArrayList<Actor>();
-
 		Texture texture = null;
 		Stack<Piece> pieces = new Stack<Piece>();
 		List<Piece> piecesList = new ArrayList<Piece>();
-
+		manager = new TextureManager();
+		FruitBuilder fruitBuilder = new FruitBuilder(manager);
+		PoisonBuilder poisonBuilder = new PoisonBuilder(manager);
+		WallBuilder wallBuilder = new WallBuilder(manager);
 		Head head = null;
 		Tail tail = null;
 		Texture pieceTexture = null;
@@ -86,6 +90,7 @@ public class SnakeScreen extends AbstractScreen {
 					TiledMapTile tile = cell.getTile();
 					Object rule = tile.getProperties().get("rule");
 					texture = tile.getTextureRegion().getTexture();
+					manager.put(rule.toString(), texture);
 					if ("fruit".equals(rule.toString())) {
 						fruitsList.add(new Fruit(texture, new Vector2(x, y)));
 					} else if ("poison".equals(rule.toString())) {
@@ -129,7 +134,7 @@ public class SnakeScreen extends AbstractScreen {
 
 		Snake snake = new Snake(pieces, pieceTexture);
 		AFruitRule fruitRule = new AFruitRule(worldMap, fruitsList, snake);
-		AMovingRules movingRules = new MapMovingRules(new MovingRules(snake), identityRule, wallsList, snake,
+		AMovingRules movingRules = new MapMovingRules(new MovingRules(snake), identityRule, worldMap, wallsList, snake,
 				layer.getWidth() - 1, layer.getHeight() - 1);
 		Actor controller = new SnakeController(movingRules, snake);
 
@@ -154,9 +159,16 @@ public class SnakeScreen extends AbstractScreen {
 
 		addActor(title);
 
-		TimingFruitGenerator generator = new TimingFruitGenerator(fruitRule, layer.getWidth() - 1,
-				layer.getHeight() - 1, 1f);
-		addActor(generator);
+		TimingFruitGenerator fruitGenerator = new TimingFruitGenerator(fruitBuilder, fruitRule, layer.getWidth() - 1,
+				layer.getHeight() - 1, 4f);
+		TimingFruitGenerator poisonGenerator = new TimingFruitGenerator(poisonBuilder, fruitRule, layer.getWidth() - 1,
+				layer.getHeight() - 1, 2f);
+		TimingFruitGenerator wallGenerator = new TimingFruitGenerator(wallBuilder, (WorldManager) movingRules,
+				layer.getWidth() - 1, layer.getHeight() - 1, 6f);
+
+		addActor(fruitGenerator);
+		addActor(poisonGenerator);
+		addActor(wallGenerator);
 
 		// FIXME: Use this renderer?
 		// renderer = new OrthogonalTiledMapRenderer(map);
@@ -242,7 +254,7 @@ public class SnakeScreen extends AbstractScreen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		manager.dispose();
 	}
 
 }

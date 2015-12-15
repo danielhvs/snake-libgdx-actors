@@ -1,5 +1,6 @@
 package br.com.danielhabib.snake.rules;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -27,8 +28,10 @@ public abstract class Entity extends Actor {
 	public void act(float delta) {
 		super.act(delta);
 		updateAct();
+		Color color = getColor();
 		sprite.setPosition(getX() * SIZE, getY() * SIZE);
 		sprite.setRotation(getRotation());
+		sprite.setColor(color.r, color.g, color.b, color.a);
 	}
 
 	@Override
