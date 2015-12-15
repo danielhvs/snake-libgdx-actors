@@ -1,9 +1,14 @@
 package br.com.danielhabib.snake.rules;
 
+import java.util.List;
+
+import br.com.danielhabib.snake.game.EventFirerEntity;
+
 public class RandomMovingRules extends MapMovingRules {
 
-	public RandomMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Snake snake) {
-		super(ruleWhenFree, ruleWhenCollidedWithItSelf, snake);
+	public RandomMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf,
+			List<EventFirerEntity> wallsList, Snake snake, int lastX, int lastY) {
+		super(ruleWhenFree, ruleWhenCollidedWithItSelf, wallsList, snake, lastX, lastY);
 	}
 
 	@Override

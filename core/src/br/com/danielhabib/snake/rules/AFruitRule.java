@@ -1,43 +1,52 @@
 package br.com.danielhabib.snake.rules;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Array;
+
+import br.com.danielhabib.snake.game.EventFirerEntity;
 
 public class AFruitRule extends Actor {
 
-	private Map<Entity, IRule> map;
+	private List<EventFirerEntity> fruits;
 	private Snake snake;
-	private List<Actor> mapEntities;
+	private List<Actor> worldMap;
 
-	public AFruitRule(List<Actor> mapEntities, Map<Entity, IRule> map, Snake snake) {
-		this.mapEntities = mapEntities;
-		this.map = map;
+	public AFruitRule(List<Actor> worldMap, List<EventFirerEntity> fruits, Snake snake) {
+		this.worldMap = worldMap;
+		this.fruits = fruits;
 		this.snake = snake;
 	}
 
 	@Override
 	public void act(float delta) {
-		Iterator<Entry<Entity, IRule>> iter = map.entrySet().iterator();
-		while (iter.hasNext()) {
-			Entry<Entity, IRule> entry = iter.next();
-			Entity entity = entry.getKey();
-			if (snake.getPosition().equals(entity.getPosition())) {
-				entry.getValue().fireEvent(entity);
-				Array<Actor> actors = getStage().getActors();
-				for (Actor actor : actors) {
-					if (actor.equals(entity)) {
-						actor.remove();
-						mapEntities.remove(entity);
-					}
-				}
-				iter.remove();
+		EventFirerEntity toRemove = null;
+		for (EventFirerEntity fruit : fruits) {
+			Vector2 position = new Vector2(fruit.getX(), fruit.getY());
+			if (snake.getPosition().equals(position)) {
+				toRemove = fruit;
+				fruit.fireEvent();
+				break;
 			}
-			// FIXME: Performance. add break; here!?
 		}
+		removeFromWorld(toRemove);
+	}
+
+	private void removeFromWorld(EventFirerEntity toRemove) {
+		if (toRemove != null) {
+			toRemove.remove();
+			fruits.remove(toRemove);
+			worldMap.remove(toRemove);
+		}
+	}
+
+	public List<Actor> getMap() {
+		return worldMap;
+	}
+
+	public void put(EventFirerEntity newFruit) {
+		fruits.add(newFruit);
+		worldMap.add(newFruit);
 	}
 }

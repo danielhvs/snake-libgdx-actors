@@ -4,10 +4,11 @@ import java.util.Map;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import br.com.danielhabib.snake.rules.ARule;
 import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.IRule;
 
-public class DestroyEntityRule extends IRule {
+public class DestroyEntityRule extends ARule {
 
 	private Entity entity;
 	private Map<Entity, IRule> map;

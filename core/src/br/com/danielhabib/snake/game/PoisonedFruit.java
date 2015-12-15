@@ -6,19 +6,19 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 
 import br.com.danielhabib.snake.rules.SnakeEvent;
 
-public class Fruit extends EventFirerEntity {
+public class PoisonedFruit extends EventFirerEntity {
 
-	public Fruit(Texture texture, Vector2 pos) {
+	public PoisonedFruit(Texture texture, Vector2 pos) {
 		super(texture, pos);
 	}
 
 	@Override
-	protected Event getEvent() {
-		return new SnakeEvent(this, SnakeEvent.Type.addTail);
+	protected void updateAct() {
 	}
 
 	@Override
-	protected void updateAct() {
+	protected Event getEvent() {
+		return new SnakeEvent(this, SnakeEvent.Type.removeTail);
 	}
 
 }

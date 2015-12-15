@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import br.com.danielhabib.snake.game.ScreenEnum;
 import br.com.danielhabib.snake.game.ScreenManager;
 
-public class SnakeDeathRule extends IRule {
+public class SnakeDeathRule extends ARule {
 	public SnakeDeathRule() {
 		super();
 	}

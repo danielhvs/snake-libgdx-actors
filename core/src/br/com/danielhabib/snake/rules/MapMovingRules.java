@@ -1,29 +1,27 @@
 package br.com.danielhabib.snake.rules;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Stack;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 
+import br.com.danielhabib.snake.game.EventFirerEntity;
+
 public class MapMovingRules extends AMovingRules {
 
-	private Map<Entity, IRule> map;
+	private List<EventFirerEntity> map;
 	private AMovingRules ruleWhenFree;
 	private IRule ruleWhenCollidedWithItSelf;
 	private int lastX;
 	private int lastY;
 
-	public MapMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Snake snake) {
-		this(ruleWhenFree, ruleWhenCollidedWithItSelf, new HashMap<Entity, IRule>(), snake, 0, 0);
-	}
-
-	public MapMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Map<Entity, IRule> map, Snake snake, int lastX, int lastY) {
+	public MapMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, List<EventFirerEntity> wallsList,
+			Snake snake, int lastX, int lastY) {
 		super(snake);
 		this.ruleWhenFree = ruleWhenFree;
 		this.ruleWhenCollidedWithItSelf = ruleWhenCollidedWithItSelf;
-		this.map = map;
+		this.map = wallsList;
 		this.lastX = lastX;
 		this.lastY = lastY;
 	}
@@ -51,9 +49,9 @@ public class MapMovingRules extends AMovingRules {
 			ruleWhenCollidedWithItSelf.fireEvent(snake);
 			return;
 		} else {
-			Entity entity = snakeWouldColide(snake);
-			if (!Entity.NOEntity.equals(entity)) {
-				map.get(entity).fireEvent(entity);
+			EventFirerEntity entity = snakeWouldColide(snake);
+			if (!EventFirerEntity.NOP.equals(entity)) {
+				entity.fireEvent();
 				return;
 			}
 		}
@@ -72,14 +70,14 @@ public class MapMovingRules extends AMovingRules {
 		}
 	}
 
-	private Entity snakeWouldColide(Snake snake) {
+	private EventFirerEntity snakeWouldColide(Snake snake) {
 		Vector2 nextPositionSnake = snake.getNextPosition();
-		for (Entity entity : map.keySet()) {
+		for (EventFirerEntity entity : map) {
 			if (entity.getPosition().epsilonEquals(nextPositionSnake, 0.01f)) {
 				return entity;
 			}
 		}
-		return Entity.NOEntity;
+		return EventFirerEntity.NOP;
 	}
 
 	private boolean snakeWouldEatItSelf(Snake snake) {

@@ -10,7 +10,7 @@ public class StaticEntity extends Entity {
 	}
 
 	@Override
-	public void update() {
+	public void updateAct() {
 	}
 
 }

@@ -1,8 +1,5 @@
 package br.com.danielhabib.snake.rules;
 
-import java.util.List;
-import java.util.Map;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -10,16 +7,17 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 
+import br.com.danielhabib.snake.game.EventFirerEntity;
+import br.com.danielhabib.snake.game.Fruit;
+
 public class TimingFruitGenerator extends Actor {
 
 	private float timeout;
 	private float time;
-	private List<Actor> map;
-	private Map<Entity, IRule> fruits;
+	private AFruitRule fruitRule;
 
-	public TimingFruitGenerator(Map<Entity, IRule> fruits, List<Actor> map, float timeout) {
-		this.fruits = fruits;
-		this.map = map;
+	public TimingFruitGenerator(AFruitRule fruitRule, float timeout) {
+		this.fruitRule = fruitRule;
 		this.timeout = timeout;
 	}
 
@@ -33,7 +31,7 @@ public class TimingFruitGenerator extends Actor {
 				int pos = (int) (Math.random() * 20);
 				Vector2 candidate = new Vector2(pos, pos);
 				Array<Vector2> allActorPositions = new Array<Vector2>();
-				for (Actor actor : map) {
+				for (Actor actor : fruitRule.getMap()) {
 					Vector2 position = new Vector2(actor.getX(), actor.getY());
 					allActorPositions.add(position);
 				}
@@ -48,9 +46,9 @@ public class TimingFruitGenerator extends Actor {
 	}
 
 	private void generate(Vector2 candidate) {
-		StaticEntity newFruit = new StaticEntity(new Texture(Gdx.files.internal("apple.png")), candidate);
-		fruits.put(newFruit, new FruitRule(getStage()));
-		map.add(newFruit);
+		// FIXME: configure.
+		EventFirerEntity newFruit = new Fruit(new Texture(Gdx.files.internal("apple.png")), candidate);
+		fruitRule.put(newFruit);
 		getStage().addActor(newFruit);
 		newFruit.addAction(Actions.moveTo(0, 0));
 		newFruit.addAction(Actions.parallel(

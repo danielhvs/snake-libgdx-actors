@@ -12,7 +12,8 @@ public abstract class Entity extends Actor {
 	public static int SIZE = 32;
 	protected Sprite sprite;
 
-	protected Entity() {
+	public Entity() {
+		// For NOP.
 	}
 
 	public Entity(Texture texture, Vector2 pos) {
@@ -25,7 +26,7 @@ public abstract class Entity extends Actor {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		update();
+		updateAct();
 		sprite.setPosition(getX() * SIZE, getY() * SIZE);
 		sprite.setRotation(getRotation());
 	}
@@ -36,7 +37,7 @@ public abstract class Entity extends Actor {
 		sprite.draw(batch);
 	}
 
-	public abstract void update();
+	protected abstract void updateAct();
 
 	public void dispose() {
 		getSprite().getTexture().dispose();

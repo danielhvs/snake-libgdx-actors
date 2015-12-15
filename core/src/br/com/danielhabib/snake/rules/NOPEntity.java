@@ -3,7 +3,7 @@ package br.com.danielhabib.snake.rules;
 public class NOPEntity extends Entity {
 
 	@Override
-	public void update() {
+	public void updateAct() {
 	}
 
 }

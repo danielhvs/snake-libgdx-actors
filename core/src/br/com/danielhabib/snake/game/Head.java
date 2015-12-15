@@ -13,7 +13,7 @@ public class Head extends Piece {
 	}
 
 	@Override
-	public void update() {
+	public void updateAct() {
 		setRotation(direction.getRotation());
 	}
 

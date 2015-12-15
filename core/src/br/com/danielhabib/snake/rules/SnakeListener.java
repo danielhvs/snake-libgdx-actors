@@ -20,8 +20,14 @@ public class SnakeListener implements EventListener {
 			return addTail(snakeEvent.getSource(), event);
 		case removeTail:
 			return removeTail(snakeEvent.getSource(), event);
+		case colided:
+			return colided(snakeEvent.getSource(), event);
 		}
 
+		return false;
+	}
+
+	public boolean colided(Actor source, Event event) {
 		return false;
 	}
 

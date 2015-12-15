@@ -14,7 +14,7 @@ public class Tail extends Piece {
 
 	private double x = 0.0f;
 	@Override
-	public void update() {
+	public void updateAct() {
 		x += Math.PI / 40;
 		float initialRotation = direction.getRotation();
 		float degreesOffset = (float) (15 * Math.sin(x));

@@ -13,7 +13,7 @@ public class RotatingEntity extends Entity {
 	}
 
 	@Override
-	public void update() {
+	public void updateAct() {
 		sprite.rotate(degreesPerUpdate);
 	}
 
