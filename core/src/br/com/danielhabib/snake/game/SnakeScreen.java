@@ -154,7 +154,8 @@ public class SnakeScreen extends AbstractScreen {
 
 		addActor(title);
 
-		TimingFruitGenerator generator = new TimingFruitGenerator(fruitRule, 2f);
+		TimingFruitGenerator generator = new TimingFruitGenerator(fruitRule, layer.getWidth() - 1,
+				layer.getHeight() - 1, 1f);
 		addActor(generator);
 
 		// FIXME: Use this renderer?
@@ -180,12 +181,6 @@ public class SnakeScreen extends AbstractScreen {
 
 	private void addListenersTo(final Label title) {
 		title.addListener(new SnakeListener() {
-			@Override
-			public boolean colided(Actor source, Event event) {
-				TextFactory.addNotifyAnimation(title, source, "OUCH!", Color.RED);
-				return false;
-			}
-
 			@Override
 			public boolean addTail(Actor source, Event event) {
 				TextFactory.addNotifyAnimation(title, source, "yummi!", Color.WHITE);

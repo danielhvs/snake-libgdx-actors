@@ -15,21 +15,25 @@ public class TimingFruitGenerator extends Actor {
 	private float timeout;
 	private float time;
 	private AFruitRule fruitRule;
+	private int lastX;
+	private int lastY;
 
-	public TimingFruitGenerator(AFruitRule fruitRule, float timeout) {
+	public TimingFruitGenerator(AFruitRule fruitRule, int lastX, int lastY, float timeout) {
 		this.fruitRule = fruitRule;
+		this.lastX = lastX;
+		this.lastY = lastY;
 		this.timeout = timeout;
 	}
 
 	@Override
 	public void act(float delta) {
-		// FIXME: generate only after animation...
+		// FIXME: generate only after animation. Depending on time for now...
 		if (timeout(delta)) {
 			boolean generated = false, full = false;
 			while (!generated && !full) {
-				// FIXME: same x and y position for now...
-				int pos = (int) (Math.random() * 20);
-				Vector2 candidate = new Vector2(pos, pos);
+				int posX = (int) (Math.random() * lastX);
+				int posY = (int) (Math.random() * lastY);
+				Vector2 candidate = new Vector2(posX, posY);
 				Array<Vector2> allActorPositions = new Array<Vector2>();
 				for (Actor actor : fruitRule.getMap()) {
 					Vector2 position = new Vector2(actor.getX(), actor.getY());
@@ -53,7 +57,7 @@ public class TimingFruitGenerator extends Actor {
 		newFruit.addAction(Actions.moveTo(0, 0));
 		newFruit.addAction(Actions.parallel(
 				Actions.moveTo(candidate.x, candidate.y, 0.5f),
-				Actions.rotateTo(360f, .75f)));
+				Actions.rotateTo(720f, 1.75f)));
 	}
 
 	private boolean timeout(float delta) {

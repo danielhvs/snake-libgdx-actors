@@ -34,6 +34,6 @@ public class TimingFruitGeneratorTest {
 	}
 
 	private TimingFruitGenerator newGenerator(List<Actor> list, float timeoutSeconds) {
-		return new TimingFruitGenerator(null, timeoutSeconds);
+		return new TimingFruitGenerator(null, 0, 0, timeoutSeconds);
 	}
 }
