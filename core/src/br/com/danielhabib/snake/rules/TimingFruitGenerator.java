@@ -1,5 +1,6 @@
 package br.com.danielhabib.snake.rules;
 
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
@@ -15,9 +16,11 @@ public class TimingFruitGenerator extends Actor {
 	private int lastX;
 	private int lastY;
 	private EntityBuilder builder;
+	private TiledMapTileLayer layer;
 
-	public TimingFruitGenerator(EntityBuilder builder, WorldManager worldManager, int lastX, int lastY,
+	public TimingFruitGenerator(TiledMapTileLayer layer, EntityBuilder builder, WorldManager worldManager, int lastX, int lastY,
 			float timeout) {
+		this.layer = layer;
 		this.builder = builder;
 		this.worldManager = worldManager;
 		this.lastX = lastX;
@@ -29,22 +32,22 @@ public class TimingFruitGenerator extends Actor {
 	public void act(float delta) {
 		// FIXME: generate only after animation. Depending on time for now...
 		if (timeout(delta)) {
-			boolean generated = false, full = false;
-			while (!generated && !full) {
-				int posX = (int) (Math.random() * lastX);
-				int posY = (int) (Math.random() * lastY);
-				Vector2 candidate = new Vector2(posX, posY);
-				Array<Vector2> allActorPositions = new Array<Vector2>();
-				for (Actor actor : worldManager.getMap()) {
-					Vector2 position = new Vector2(actor.getX(), actor.getY());
-					allActorPositions.add(position);
+			Array<Vector2> allMapPositions = new Array<Vector2>();
+			for (int x = 0; x < layer.getWidth(); x++) {
+				for (int y = 0; y < layer.getHeight(); y++) {
+					allMapPositions.add(new Vector2(x, y));
 				}
-				if (!allActorPositions.contains(candidate, false)) {
-					generate(candidate);
-					generated = true;
-				} else {
-					full = true;
-				}
+			}
+
+			for (Actor actor : worldManager.getMap()) {
+				Vector2 position = new Vector2(actor.getX(), actor.getY());
+				allMapPositions.removeValue(position, false);
+			}
+
+			if (allMapPositions.size != 0) {
+				int freeIndex = (int) (Math.random() * allMapPositions.size);
+				Vector2 candidate = allMapPositions.get(freeIndex);
+				generate(candidate);
 			}
 		}
 	}

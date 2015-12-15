@@ -159,11 +159,11 @@ public class SnakeScreen extends AbstractScreen {
 
 		addActor(title);
 
-		TimingFruitGenerator fruitGenerator = new TimingFruitGenerator(fruitBuilder, fruitRule, layer.getWidth() - 1,
+		TimingFruitGenerator fruitGenerator = new TimingFruitGenerator(layer, fruitBuilder, fruitRule, layer.getWidth() - 1,
 				layer.getHeight() - 1, 4f);
-		TimingFruitGenerator poisonGenerator = new TimingFruitGenerator(poisonBuilder, fruitRule, layer.getWidth() - 1,
+		TimingFruitGenerator poisonGenerator = new TimingFruitGenerator(layer, poisonBuilder, fruitRule, layer.getWidth() - 1,
 				layer.getHeight() - 1, 2f);
-		TimingFruitGenerator wallGenerator = new TimingFruitGenerator(wallBuilder, (WorldManager) movingRules,
+		TimingFruitGenerator wallGenerator = new TimingFruitGenerator(layer, wallBuilder, (WorldManager) movingRules,
 				layer.getWidth() - 1, layer.getHeight() - 1, 6f);
 
 		addActor(fruitGenerator);
