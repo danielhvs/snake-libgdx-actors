@@ -83,15 +83,15 @@ public class Snake extends Actor {
 	}
 
 	public Snake removeTail() {
-		// int size = pieces.size();
-		// if (size <= 2) {
-		// return this;
-		// } else {
-		// Piece piece = pieces.get(getTailIndex() - 1);
-		// getTail().move(piece.getPosition());
-		// getTail().turn(piece.getDirection());
-		// pieces.remove(piece);
-		// }
+		int size = pieces.size();
+		if (size <= 2) {
+			return this;
+		} else {
+			Piece piece = pieces.get(getTailIndex() - 1);
+			getTail().setPosition(piece.getPosition().x, piece.getPosition().y);
+			getTail().setRotation(piece.getRotation());
+			pieces.remove(piece);
+		}
 		return this;
 	}
 
@@ -222,5 +222,5 @@ public class Snake extends Actor {
 	public Rectangle getBounds() {
 		return getHead().getBounds();
 	}
-	
+
 }
