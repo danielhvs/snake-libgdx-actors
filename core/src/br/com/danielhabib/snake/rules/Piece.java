@@ -9,6 +9,8 @@ public class Piece extends Entity {
 
 	public Piece(Vector2 pos, Texture texture) {
 		super(texture, pos);
+		setRotation(Math.atan2(pos.y, pos.x));
+		this.radius = (float) Math.sqrt(Math.pow(pos.x, 2) + Math.pow(pos.y, 2));
 	}
 
 	public Piece(float radius, float degrees, Texture texture) {
@@ -22,12 +24,8 @@ public class Piece extends Entity {
 		return "Piece [" + getPosition();
 	}
 
-	private float degrees = 0f;
-
 	@Override
 	public void updateAct() {
-		degrees += 10f;
-		setRotation(degrees);
 	}
 
 	public Piece move(float radiusOffset) {
