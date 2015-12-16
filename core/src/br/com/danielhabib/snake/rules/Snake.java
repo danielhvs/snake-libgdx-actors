@@ -216,6 +216,10 @@ public class Snake extends Actor {
 		this.speed -= offset;
 	}
 
+	public float getSpeed() {
+		return speed;
+	}
+
 	public Rectangle getBounds() {
 		return getHead().getBounds();
 	}

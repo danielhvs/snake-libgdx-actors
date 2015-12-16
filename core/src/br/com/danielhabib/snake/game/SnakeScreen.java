@@ -46,6 +46,7 @@ public class SnakeScreen extends AbstractScreen {
 	private int level;
 	private OrthogonalTiledMapRenderer renderer;
 	private TextureManager manager;
+	private Snake snake;
 
 	public SnakeScreen(Object... params) {
 		this.level = (Integer) params[0];
@@ -134,7 +135,7 @@ public class SnakeScreen extends AbstractScreen {
 		pieces.addAll(piecesList);
 		pieces.add(tail);
 
-		Snake snake = new Snake(pieces, pieceTexture, new Vector2(Entity.SIZE, 0));
+		snake = new Snake(pieces, pieceTexture, new Vector2(Entity.SIZE, 0));
 		AFruitRule fruitRule = new AFruitRule(worldMap, fruitsList, snake);
 		AMovingRules movingRules = new MapMovingRules(new MovingRules(snake), identityRule, worldMap, wallsList, snake,
 				SIZE * (layer.getWidth() - 1), SIZE * (layer.getHeight() - 1));
@@ -179,6 +180,14 @@ public class SnakeScreen extends AbstractScreen {
 
 	private void addListenersTo(final Label title) {
 		title.addListener(new SnakeListener() {
+			@Override
+			public boolean handle(Actor source, Type type) {
+				if (SnakeEvent.Type.speed.equals(type)) {
+					TextFactory.addNotifyAnimation(title, source, String.valueOf(snake.getSpeed()) + "!", Color.GREEN);
+				}
+				return false;
+			}
+
 			@Override
 			public boolean addTail(Actor source, Event event) {
 				TextFactory.addNotifyAnimation(title, source, "yummi!", Color.WHITE);
