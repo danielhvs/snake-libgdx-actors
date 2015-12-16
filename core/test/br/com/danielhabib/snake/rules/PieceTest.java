@@ -9,37 +9,30 @@ import com.badlogic.gdx.math.Vector2;
 public class PieceTest extends BaseTest {
 
 	@Test
-	public void itRepresentsAPointAndADirection() throws Exception {
-		Piece piece = newPiece(new Vector2(0, 0), Direction.RIGHT);
+	public void itRepresentsAThetaAndARadius() throws Exception {
+		Piece piece = newPiece(1f, 0f);
 
-		assertEquals(Direction.RIGHT, piece.getNormDirection());
-		assertPoints(new Vector2(0, 0), piece.getPosition());
+		assertEquals(0f, piece.getRotation(), 0.01f);
+		assertPoints(new Vector2(1, 0), piece.getPosition());
 	}
 
 	@Test
-	public void move_MovesTowardsDirection() throws Exception {
-		Piece piece = newPiece(new Vector2(0, 0), Direction.RIGHT);
-		Piece moved = piece.move(0f);
+	public void move_IncrementsRadius() throws Exception {
+		Piece piece = newPiece(1f, 90f);
 
-		assertPoints(new Vector2(1, 0), moved.getPosition());
-	}
+		Piece moved = piece.move(1f);
 
-	@Test
-	public void itCanMoveToSpecificPoint() throws Exception {
-		Piece piece = newPiece(new Vector2(0, 0), Direction.RIGHT);
-
-		Piece moved = piece.move(new Vector2(10, 0));
-
-		assertPoints(new Vector2(10, 0), moved.getPosition());
+		assertPoints(new Vector2(0, 2), moved.getPosition());
 	}
 
 	@Test
 	public void itCanChangeTheDirection() throws Exception {
-		Piece piece = newPiece(new Vector2(0, 0), Direction.RIGHT);
+		Piece piece = newPiece(1f, 90f);
 
-		Piece turned = piece.turn(Direction.UP);
+		piece.setRotation(180f);
+		piece.move(1f);
 
-		assertEquals(Direction.UP, turned.getNormDirection());
+		assertPoints(new Vector2(-2, 0), piece.getPosition());
 	}
 
 }
