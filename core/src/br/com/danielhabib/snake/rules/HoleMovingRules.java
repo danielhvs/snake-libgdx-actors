@@ -53,7 +53,7 @@ public class HoleMovingRules extends AMovingRules {
 		if (snake.getPosition().epsilonEquals(hole.getInitialPoint(), 0.01f)) {
 			snake.move(hole.getFinalPoint());
 		} else {
-			snake.move();
+			snake.move(delta);
 		}
 	}
 

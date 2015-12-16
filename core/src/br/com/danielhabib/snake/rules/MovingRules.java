@@ -8,11 +8,7 @@ public class MovingRules extends AMovingRules {
 
 	@Override
 	public void act(float delta) {
-		update(snake);
-	}
-
-	public Snake update(Snake snake) {
-		return snake.move();
+		snake.move(delta);
 	}
 
 }

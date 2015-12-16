@@ -2,7 +2,6 @@ package br.com.danielhabib.snake.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -24,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
 import br.com.danielhabib.snake.rules.BoingWall;
-import br.com.danielhabib.snake.rules.Direction;
 import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.IRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
@@ -72,7 +70,7 @@ public class SnakeScreen extends AbstractScreen {
 		List<EventFirerEntity> wallsList = new ArrayList<EventFirerEntity>();
 		List<Actor> worldMap = new ArrayList<Actor>();
 		Texture texture = null;
-		Stack<Piece> pieces = new Stack<Piece>();
+		List<Piece> pieces = new ArrayList<Piece>();
 		List<Piece> piecesList = new ArrayList<Piece>();
 		manager = new TextureManager();
 		FruitBuilder fruitBuilder = new FruitBuilder(manager);
@@ -92,13 +90,13 @@ public class SnakeScreen extends AbstractScreen {
 					texture = tile.getTextureRegion().getTexture();
 					manager.put(rule.toString(), texture);
 					if ("fruit".equals(rule.toString())) {
-						fruitsList.add(new Fruit(texture, new Vector2(x, y)));
+						fruitsList.add(new Fruit(texture, new Vector2(x * SIZE, y * SIZE)));
 					} else if ("poison".equals(rule.toString())) {
-						fruitsList.add(new PoisonedFruit(texture, new Vector2(x, y)));
+						fruitsList.add(new PoisonedFruit(texture, new Vector2(x * SIZE, y * SIZE)));
 					} else if ("identityRule".equals(rule.toString())) {
-						wallsList.add(new Wall(texture, new Vector2(x, y)));
+						wallsList.add(new Wall(texture, new Vector2(x * SIZE, y * SIZE)));
 					} else if ("boingRule".equals(rule.toString())) {
-						final BoingWall boingWall = new BoingWall(texture, new Vector2(x, y));
+						final BoingWall boingWall = new BoingWall(texture, new Vector2(x * SIZE, y * SIZE));
 						wallsList.add(boingWall);
 						boingWall.addListener(new SnakeListener() {
 							@Override
@@ -115,27 +113,27 @@ public class SnakeScreen extends AbstractScreen {
 						});
 
 					} else if ("head".equals(rule.toString())) {
-						head = new Head(new Vector2(x, y), Direction.RIGHT, texture);
+						head = new Head(new Vector2(x * SIZE, y * SIZE), texture);
 					} else if ("piece".equals(rule.toString())) {
 						pieceTexture = texture;
-						piecesList.add(new Piece(new Vector2(x, y), Direction.RIGHT, texture));
+						piecesList.add(new Piece(new Vector2(x * SIZE, y * SIZE), texture));
 					} else if ("tail".equals(rule.toString())) {
-						tail = new Tail(new Vector2(x, y), Direction.RIGHT, texture);
+						tail = new Tail(new Vector2(x * SIZE, y * SIZE), texture);
 					}
 				}
 			}
 		}
 
-		pieces.push(head);
+		pieces.add(head);
 		// FIXME: Order pieces!? Indicate only head and tail in the map? Init
 		// with only one piece?
 		pieces.addAll(piecesList);
-		pieces.push(tail);
+		pieces.add(tail);
 
-		Snake snake = new Snake(pieces, pieceTexture);
+		Snake snake = new Snake(pieces, pieceTexture, new Vector2(Entity.SIZE, 0));
 		AFruitRule fruitRule = new AFruitRule(worldMap, fruitsList, snake);
 		AMovingRules movingRules = new MapMovingRules(new MovingRules(snake), identityRule, worldMap, wallsList, snake,
-				layer.getWidth() - 1, layer.getHeight() - 1);
+				SIZE * (layer.getWidth() - 1), SIZE * (layer.getHeight() - 1));
 		Actor controller = new SnakeController(movingRules, snake);
 
 		addListenersTo(snake);
@@ -166,29 +164,13 @@ public class SnakeScreen extends AbstractScreen {
 		TimingFruitGenerator wallGenerator = new TimingFruitGenerator(layer, wallBuilder, (WorldManager) movingRules,
 				layer.getWidth() - 1, layer.getHeight() - 1, 6f);
 
-		addActor(fruitGenerator);
-		addActor(poisonGenerator);
-		addActor(wallGenerator);
+		// addActor(fruitGenerator);
+		// addActor(poisonGenerator);
+		// addActor(wallGenerator);
 
 		// FIXME: Use this renderer?
 		// renderer = new OrthogonalTiledMapRenderer(map);
 		// renderer.setView((OrthographicCamera) getCamera());
-	}
-
-	private void buildLevel1() {
-		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
-		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
-		final Label title = new Label("", labelStyle);
-		final Label counter1 = new Label("", labelStyle);
-		final Label counter2 = new Label("", labelStyle);
-		final Label counter3 = new Label("", labelStyle);
-		Texture headTexture = new Texture(Gdx.files.internal("head.png"));
-		Texture tailTexture = new Texture(Gdx.files.internal("tail.png"));
-		Texture pieceTexture = new Texture(Gdx.files.internal("circle.png"));
-		Texture wallTexture = new Texture(Gdx.files.internal("box.png"));
-		Texture appleTexture = new Texture(Gdx.files.internal("apple.png"));
-		Texture poisonTexture = new Texture(Gdx.files.internal("poison.png"));
-		Texture holeTexture = new Texture(Gdx.files.internal("hole.jpg"));
 	}
 
 	private void addListenersTo(final Label title) {

@@ -14,56 +14,20 @@ public class SnakeController extends Actor {
 		this.snake = snake;
 	}
 
-	public Snake up(Snake snake) {
-		if (Direction.RIGHT.equals(snake.getDirection())) {
-			return movingRules.turnLeft(snake);
-		} else if (Direction.LEFT.equals(snake.getDirection())) {
-			return movingRules.turnRight(snake);
-		} else {
-			return snake;
-		}
+	public Snake left(Snake snake, float delta) {
+			return movingRules.turnLeft(snake, delta);
 	}
 
-	public Snake down(Snake snake) {
-		if (Direction.RIGHT.equals(snake.getDirection())) {
-			return movingRules.turnRight(snake);
-		} else if (Direction.LEFT.equals(snake.getDirection())) {
-			return movingRules.turnLeft(snake);
-		} else {
-			return snake;
-		}
-	}
-
-	public Snake left(Snake snake) {
-		if (Direction.UP.equals(snake.getDirection())) {
-			return movingRules.turnLeft(snake);
-		} else if (Direction.DOWN.equals(snake.getDirection())) {
-			return movingRules.turnRight(snake);
-		} else {
-			return snake;
-		}
-	}
-
-	public Snake right(Snake snake) {
-		if (Direction.UP.equals(snake.getDirection())) {
-			return movingRules.turnRight(snake);
-		} else if (Direction.DOWN.equals(snake.getDirection())) {
-			return movingRules.turnLeft(snake);
-		} else {
-			return snake;
-		}
+	public Snake right(Snake snake, float delta) {
+			return movingRules.turnRight(snake, delta);
 	}
 
 	@Override
 	public void act(float delta) {
-		if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-			left(snake);
-		} else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-			right(snake);
-		} else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-			up(snake);
-		} else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-			down(snake);
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+			left(snake, delta);
+		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+			right(snake, delta);
 		}
 	}
 

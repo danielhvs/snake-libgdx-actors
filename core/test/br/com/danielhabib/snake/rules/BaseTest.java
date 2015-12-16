@@ -57,11 +57,11 @@ public class BaseTest {
 	protected Snake newSnake(float x, float y, Direction direction) {
 		Stack<Piece> pieces = new Stack<Piece>();
 		pieces.push(new Piece(new Vector2(x, y), direction, texture));
-		return new Snake(pieces,texture);
+		return new Snake(pieces,texture, new Vector2(Entity.SIZE, 0));
 	}
 
 	protected Snake newSnake(Stack<Piece> pieces) {
-		return new Snake(pieces, texture);
+		return new Snake(pieces, texture, new Vector2(Entity.SIZE, 0));
 	}
 
 	protected Piece newPiece(Vector2 vector, Direction direction) {

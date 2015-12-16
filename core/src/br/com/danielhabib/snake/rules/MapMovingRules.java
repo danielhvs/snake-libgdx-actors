@@ -1,7 +1,6 @@
 package br.com.danielhabib.snake.rules;
 
 import java.util.List;
-import java.util.Stack;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -35,11 +34,11 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		time += delta;
-		if (time > 0.125) {
+		// time += delta;
+		// if (time > 1) {
 			update(delta);
 			time = 0;
-		}
+		// }
 	}
 
 	@Override
@@ -53,29 +52,29 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 			ruleWhenCollidedWithItSelf.fireEvent(snake);
 			return;
 		} else {
-			EventFirerEntity entity = snakeWouldColideWithWall(snake);
+			EventFirerEntity entity = snakeWouldColideWithWall(snake, delta);
 			if (!EventFirerEntity.NOP.equals(entity)) {
 				entity.fireEvent();
 				return;
 			}
 		}
 		// Mirror
-		Vector2 nextPosition = snake.getNextPosition();
-		if (nextPosition.x > lastX) {
-			snake.move(new Vector2(0, snake.getPosition().y));
-		} else if (nextPosition.x < 0) {
-			snake.move(new Vector2(lastX, snake.getPosition().y));
-		} else if (nextPosition.y > lastY) {
-			snake.move(new Vector2(snake.getPosition().x, 0));
-		} else if (nextPosition.y < 0) {
-			snake.move(new Vector2(snake.getPosition().x, lastY));
-		} else {
+		// Vector2 nextPosition = snake.getNextPosition(delta);
+		// if (nextPosition.x > lastX) {
+		// snake.move(new Vector2(0, snake.getPosition().y));
+		// } else if (nextPosition.x < 0) {
+		// snake.move(new Vector2(lastX, snake.getPosition().y));
+		// } else if (nextPosition.y > lastY) {
+		// snake.move(new Vector2(snake.getPosition().x, 0));
+		// } else if (nextPosition.y < 0) {
+		// snake.move(new Vector2(snake.getPosition().x, lastY));
+		// } else {
 			ruleWhenFree.act(delta);
-		}
+		// }
 	}
 
-	private EventFirerEntity snakeWouldColideWithWall(Snake snake) {
-		Vector2 nextPositionSnake = snake.getNextPosition();
+	private EventFirerEntity snakeWouldColideWithWall(Snake snake, float delta) {
+		Vector2 nextPositionSnake = snake.getNextPosition(delta);
 		for (EventFirerEntity entity : wallsList) {
 			if (entity.getPosition().epsilonEquals(nextPositionSnake, 0.01f)) {
 				return entity;
@@ -85,13 +84,13 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 	}
 
 	private boolean snakeWouldEatItSelf(Snake snake) {
-		Stack<Vector2> nextPositions = snake.getNextPositions();
-		Vector2 headPosition = nextPositions.pop();
-		for (Vector2 piecePosition : nextPositions) {
-			if (headPosition.epsilonEquals(piecePosition, 0.1f)) {
-				return true;
-			}
-		}
+		// Stack<Vector2> nextPositions = snake.getNextPositions();
+		// Vector2 headPosition = nextPositions.pop();
+		// for (Vector2 piecePosition : nextPositions) {
+		// if (headPosition.epsilonEquals(piecePosition, 0.1f)) {
+		// return true;
+		// }
+		// }
 		return false;
 	}
 

@@ -19,7 +19,7 @@ public class PieceTest extends BaseTest {
 	@Test
 	public void move_MovesTowardsDirection() throws Exception {
 		Piece piece = newPiece(new Vector2(0, 0), Direction.RIGHT);
-		Piece moved = piece.move();
+		Piece moved = piece.move(0f);
 
 		assertPoints(new Vector2(1, 0), moved.getPosition());
 	}

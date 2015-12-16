@@ -29,7 +29,7 @@ public abstract class Entity extends Actor {
 		super.act(delta);
 		updateAct();
 		Color color = getColor();
-		sprite.setPosition(getX() * SIZE, getY() * SIZE);
+		sprite.setPosition(getX(), getY());
 		sprite.setRotation(getRotation());
 		sprite.setColor(color.r, color.g, color.b, color.a);
 	}
