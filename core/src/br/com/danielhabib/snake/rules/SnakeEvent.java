@@ -22,6 +22,6 @@ public class SnakeEvent extends Event {
 	}
 
 	static public enum Type {
-		revert, addTail, removeTail, colided,
+		revert, addTail, removeTail, colided, speed
 	}
 }

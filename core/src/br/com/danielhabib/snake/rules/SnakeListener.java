@@ -4,6 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
+import br.com.danielhabib.snake.rules.SnakeEvent.Type;
+
 public class SnakeListener implements EventListener {
 
 	@Override
@@ -22,8 +24,12 @@ public class SnakeListener implements EventListener {
 			return removeTail(snakeEvent.getSource(), event);
 		case colided:
 			return colided(snakeEvent.getSource(), event);
+		default:
+			return handle(snakeEvent.getSource(), snakeEvent.getType());
 		}
+	}
 
+	public boolean handle(Actor source, Type type) {
 		return false;
 	}
 

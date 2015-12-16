@@ -17,11 +17,13 @@ public class Snake extends Actor {
 	private Texture pieceTexture;
 	// FIXME: remove direction!? We have rotation already.
 	private Vector2 direction;
+	private float speed;
 
 	public Snake(List<Piece> pieces, Texture pieceTexture, Vector2 direction) {
 		this.pieces = pieces;
 		this.pieceTexture = pieceTexture;
 		this.direction = direction;
+		this.speed = 4f;
 	}
 
 	public Piece getTail() {
@@ -78,7 +80,6 @@ public class Snake extends Actor {
 	}
 
 	public Vector2 getNextPosition(float delta) {
-		float speed = 4;
 		return getPosition().add(getDirection().scl(speed * delta));
 	}
 
@@ -205,6 +206,14 @@ public class Snake extends Actor {
 			thisPart.setRotation((float) Math.toDegrees(angle));
 		}
 		return this;
+	}
+
+	public void incSpeed(float offset) {
+		this.speed += offset;
+	}
+
+	public void decSpeed(float offset) {
+		this.speed -= offset;
 	}
 
 	public Rectangle getBounds() {

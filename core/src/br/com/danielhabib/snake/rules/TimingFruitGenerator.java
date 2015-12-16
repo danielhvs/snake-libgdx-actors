@@ -35,7 +35,7 @@ public class TimingFruitGenerator extends Actor {
 			Array<Vector2> allMapPositions = new Array<Vector2>();
 			for (int x = 0; x < layer.getWidth(); x++) {
 				for (int y = 0; y < layer.getHeight(); y++) {
-					allMapPositions.add(new Vector2(x, y));
+					allMapPositions.add(new Vector2(x * Entity.SIZE, y * Entity.SIZE));
 				}
 			}
 

@@ -31,7 +31,10 @@ import br.com.danielhabib.snake.rules.NOPRule;
 import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.rules.SnakeController;
+import br.com.danielhabib.snake.rules.SnakeEvent;
+import br.com.danielhabib.snake.rules.SnakeEvent.Type;
 import br.com.danielhabib.snake.rules.SnakeListener;
+import br.com.danielhabib.snake.rules.SpeedBuilder;
 import br.com.danielhabib.snake.rules.TextFactory;
 import br.com.danielhabib.snake.rules.TimingFruitGenerator;
 import br.com.danielhabib.snake.rules.Wall;
@@ -74,6 +77,7 @@ public class SnakeScreen extends AbstractScreen {
 		List<Piece> piecesList = new ArrayList<Piece>();
 		manager = new TextureManager();
 		FruitBuilder fruitBuilder = new FruitBuilder(manager);
+		SpeedBuilder speedBuilder = new SpeedBuilder(manager);
 		PoisonBuilder poisonBuilder = new PoisonBuilder(manager);
 		WallBuilder wallBuilder = new WallBuilder(manager);
 		Head head = null;
@@ -159,13 +163,13 @@ public class SnakeScreen extends AbstractScreen {
 
 		TimingFruitGenerator fruitGenerator = new TimingFruitGenerator(layer, fruitBuilder, fruitRule, layer.getWidth() - 1,
 				layer.getHeight() - 1, 4f);
-		TimingFruitGenerator poisonGenerator = new TimingFruitGenerator(layer, poisonBuilder, fruitRule, layer.getWidth() - 1,
+		TimingFruitGenerator poisonGenerator = new TimingFruitGenerator(layer, speedBuilder, fruitRule, layer.getWidth() - 1,
 				layer.getHeight() - 1, 2f);
 		TimingFruitGenerator wallGenerator = new TimingFruitGenerator(layer, wallBuilder, (WorldManager) movingRules,
-				layer.getWidth() - 1, layer.getHeight() - 1, 6f);
+				layer.getWidth() - 1, layer.getHeight() - 1, 1f);
 
 		// addActor(fruitGenerator);
-		// addActor(poisonGenerator);
+		addActor(poisonGenerator);
 		// addActor(wallGenerator);
 
 		// FIXME: Use this renderer?
@@ -197,6 +201,14 @@ public class SnakeScreen extends AbstractScreen {
 
 	private void addListenersTo(final Snake snake) {
 		snake.addListener(new SnakeListener() {
+			@Override
+			public boolean handle(Actor source, Type type) {
+				if (type.equals(SnakeEvent.Type.speed)) {
+					snake.incSpeed(1f);
+				}
+				return false;
+			}
+
 			@Override
 			public boolean revert(Actor source, Event event) {
 				snake.revert();
