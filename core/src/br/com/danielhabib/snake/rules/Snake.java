@@ -45,8 +45,7 @@ public class Snake extends Actor {
 	public Snake move(float delta) {
 		Piece snakeHead = pieces.get(0);
 		int snakeLength = pieces.size() - 1;
-		float speed = 4f;
-		Vector2 newPosition = snakeHead.getPosition().add(getDirection().scl(speed * delta));//
+		Vector2 newPosition = getNextPosition(delta);
 		snakeHead.setPosition(newPosition.x, newPosition.y);
 		for (int i = 1; i <= snakeLength; i++) {
 			Piece partBefore = pieces.get(i - 1);

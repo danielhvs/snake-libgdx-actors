@@ -3,6 +3,7 @@ package br.com.danielhabib.snake.rules;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -36,8 +37,8 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 		super.act(delta);
 		// time += delta;
 		// if (time > 1) {
-			update(delta);
-			time = 0;
+		update(delta);
+		time = 0;
 		// }
 	}
 
@@ -48,13 +49,16 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 	}
 
 	public void update(float delta) {
+		checking = true;
 		if (snakeWouldEatItSelf(snake)) {
 			ruleWhenCollidedWithItSelf.fireEvent(snake);
+			checking = false;
 			return;
 		} else {
 			EventFirerEntity entity = snakeWouldColideWithWall(snake, delta);
 			if (!EventFirerEntity.NOP.equals(entity)) {
 				entity.fireEvent();
+				checking = false;
 				return;
 			}
 		}
@@ -69,14 +73,16 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 		// } else if (nextPosition.y < 0) {
 		// snake.move(new Vector2(snake.getPosition().x, lastY));
 		// } else {
-			ruleWhenFree.act(delta);
+		ruleWhenFree.act(delta);
 		// }
+		checking = false;
 	}
 
 	private EventFirerEntity snakeWouldColideWithWall(Snake snake, float delta) {
 		Vector2 nextPositionSnake = snake.getNextPosition(delta);
+		Rectangle snakeBounds = snake.getBounds().setPosition(nextPositionSnake.x, nextPositionSnake.y);
 		for (EventFirerEntity entity : wallsList) {
-			if (entity.getPosition().epsilonEquals(nextPositionSnake, 0.01f)) {
+			if (snakeBounds.contains(entity.getBounds()) || snakeBounds.overlaps(entity.getBounds())) {
 				return entity;
 			}
 		}
