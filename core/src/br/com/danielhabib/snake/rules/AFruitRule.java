@@ -2,7 +2,7 @@ package br.com.danielhabib.snake.rules;
 
 import java.util.List;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
@@ -24,8 +24,9 @@ public class AFruitRule extends Actor implements WorldManager {
 	public void act(float delta) {
 		EventFirerEntity toRemove = null;
 		for (EventFirerEntity fruit : fruits) {
-			Vector2 position = new Vector2(fruit.getX(), fruit.getY());
-			if (snake.getPosition().equals(position)) {
+			Rectangle snakeBounds = snake.getBounds();
+			Rectangle fruitBounds = fruit.getBounds();
+			if (snakeBounds.contains(fruitBounds) || snakeBounds.overlaps(fruitBounds)) {
 				toRemove = fruit;
 				fruit.fireEvent();
 				break;
