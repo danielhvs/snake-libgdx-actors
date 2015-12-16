@@ -60,8 +60,8 @@ public class Snake extends Actor {
 		float deltaY = pieceBefore.getY() - thisPiece.getY();
 		float angle = (float) Math.atan2(deltaY, deltaX);
 
-		thisPiece.setX(pieceBefore.getX() - (float) Math.cos(angle) * Entity.SIZE);
-		thisPiece.setY(pieceBefore.getY() - (float) Math.sin(angle) * Entity.SIZE);
+		thisPiece.setX(pieceBefore.getX() - (float) Math.cos(angle) * pieceBefore.getWidth());
+		thisPiece.setY(pieceBefore.getY() - (float) Math.sin(angle) * pieceBefore.getHeight());
 		thisPiece.setRotation((float) Math.toDegrees(angle));
 	}
 
@@ -202,18 +202,22 @@ public class Snake extends Actor {
 
 	public Snake move(Vector2 newPoint) {
 		// // FIXME: moves instantly.
-		// Vector2 headPoint = newPoint;
-		// Vector2 headDirection = pieces.get(0).getDirection();
-		// for (int i = 0; i < pieces.size(); i++) {
-		// Piece piece = pieces.get(i);
-		// Vector2 lastHeadPoint = piece.getPosition();
-		// Vector2 lastDirection = piece.getDirection();
-		//
-		// piece.move(headPoint).turn(headDirection);
-		//
-		// headPoint = lastHeadPoint;
-		// headDirection = lastDirection;
-		// }
+		Piece snakeHead = pieces.get(0);
+		int snakeLength = pieces.size() - 1;
+		Vector2 newPosition = newPoint;
+		snakeHead.setPosition(newPosition.x, newPosition.y);
+		for (int i = 1; i <= snakeLength; i++) {
+			Piece partBefore = pieces.get(i - 1);
+			Piece thisPart = pieces.get(i);
+			float deltaX = partBefore.getX() - thisPart.getX();
+			float deltaY = partBefore.getY() - thisPart.getY();
+			float angle = (float) Math.atan2(deltaY, deltaX);
+
+			// + sign here.
+			thisPart.setX(partBefore.getX() + (float) Math.cos(angle) * thisPart.getWidth());
+			thisPart.setY(partBefore.getY() + (float) Math.sin(angle) * thisPart.getHeight());
+			thisPart.setRotation((float) Math.toDegrees(angle));
+		}
 		return this;
 	}
 
