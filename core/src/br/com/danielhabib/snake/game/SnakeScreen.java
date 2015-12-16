@@ -158,6 +158,12 @@ public class SnakeScreen extends AbstractScreen {
 
 		for (Actor actor : worldMap) {
 			addActor(actor);
+			actor.debug();
+		}
+
+		for (Piece piece : pieces) {
+			addActor(piece);
+			piece.debug();
 		}
 
 		addActor(title);
@@ -172,7 +178,6 @@ public class SnakeScreen extends AbstractScreen {
 		// addActor(fruitGenerator);
 		addActor(poisonGenerator);
 		// addActor(wallGenerator);
-
 		// FIXME: Use this renderer?
 		// renderer = new OrthogonalTiledMapRenderer(map);
 		// renderer.setView((OrthographicCamera) getCamera());

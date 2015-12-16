@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Stack;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -43,6 +42,8 @@ public class Snake extends Actor {
 		setNewPositionAndRotation(oldTail, newTail);
 		oldTail.setTexture(pieceTexture);
 		pieces.add(newTail);
+		newTail.debug();
+		getStage().addActor(newTail);
 		return this;
 	}
 
@@ -91,6 +92,7 @@ public class Snake extends Actor {
 			Piece piece = pieces.get(getTailIndex() - 1);
 			getTail().setPosition(piece.getPosition().x, piece.getPosition().y);
 			getTail().setRotation(piece.getRotation());
+			piece.remove();
 			pieces.remove(piece);
 		}
 		return this;
@@ -137,6 +139,7 @@ public class Snake extends Actor {
 		return piece.getSprite().getTexture();
 	}
 
+	// FIXME: Remove
 	public Stack<Piece> copyPieces() {
 		Stack<Piece> copy = new Stack<Piece>();
 		copy.addAll(pieces);
@@ -173,22 +176,8 @@ public class Snake extends Actor {
 		return true;
 	}
 
-	@Override
-	public void act(float delta) {
-		for (Piece piece : pieces) {
-			piece.act(delta);
-		}
-	}
-
-	@Override
-	public void draw(Batch batch, float parentAlpha) {
-		for (Piece piece : pieces) {
-			piece.draw(batch, parentAlpha);
-		}
-	}
-
 	public Snake move(Vector2 newPoint) {
-		// // FIXME: moves instantly.
+		// moves instantly.
 		Piece snakeHead = pieces.get(0);
 		int snakeLength = pieces.size() - 1;
 		Vector2 newPosition = newPoint;
@@ -223,5 +212,6 @@ public class Snake extends Actor {
 	public Rectangle getBounds() {
 		return getHead().getBounds();
 	}
+
 
 }

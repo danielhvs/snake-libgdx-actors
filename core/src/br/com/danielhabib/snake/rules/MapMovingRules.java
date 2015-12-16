@@ -30,8 +30,6 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 		this.lastY = lastY;
 	}
 
-	private static float time = 0;
-
 	@Override
 	public void act(float delta) {
 		super.act(delta);
@@ -106,7 +104,6 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 		wallsList.add(entity);
 		worldMap.add(entity);
 		getStage().addActor(entity);
-		Vector2 pos = entity.getPosition();
 		entity.addAction(Actions.alpha(0f));
 		entity.addAction(Actions.fadeIn(1f));
 	}
