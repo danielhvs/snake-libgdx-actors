@@ -15,6 +15,7 @@ public class Snake extends Actor {
 
 	private List<Piece> pieces;
 	private Texture pieceTexture;
+	// FIXME: remove direction!? We have rotation already.
 	private Vector2 direction;
 
 	public Snake(List<Piece> pieces, Texture pieceTexture, Vector2 direction) {
@@ -27,6 +28,7 @@ public class Snake extends Actor {
 		return pieces.get(getTailIndex());
 	}
 
+	// FIXME: Remove.
 	public Snake addTail(int x, int y) {
 		// pieces.add(new Piece(new Vector2(x, y), getTail().getDirection(),
 		// getTextureOf(getHead())));
@@ -120,29 +122,13 @@ public class Snake extends Actor {
 		return this;
 	}
 
-	// FIXME!? Test.
 	public Snake revert() {
-		// Stack<Piece> newPieces = new Stack<Piece>();
-		// Stack<Piece> piecesCopy = copyPieces();
-		// Piece newHead = piecesCopy.pop();
-		// Piece newHeadPiece = new Head(newHead.getPosition(),
-		// newHead.getDirection().rotate(180f),
-		// getTextureOf(getHead()));
-		// newPieces.push(newHeadPiece);
-		// Texture tailTexture = getTextureOf(getTail());
-		// while (piecesCopy.size() > 1) {
-		// Piece pop = piecesCopy.pop();
-		// Piece newPiece = new Piece(pop.getPosition(),
-		// pop.getDirection().rotate(180f), pieceTexture);
-		// newPieces.push(newPiece);
-		// }
-		// if (piecesCopy.size() == 1) {
-		// Piece pop = piecesCopy.pop();
-		// Piece newPiece = new Tail(pop.getPosition(),
-		// pop.getDirection().rotate(180f), tailTexture);
-		// newPieces.push(newPiece);
-		// }
-		// this.pieces = newPieces;
+		Vector2 headPosition = getHead().getPosition();
+		Vector2 tailPosition = getTail().getPosition();
+		getHead().setPosition(tailPosition.x, tailPosition.y);
+		getTail().setPosition(headPosition.x, headPosition.y);
+		direction.rotate(180);
+		getHead().rotateBy(180);
 		return this;
 	}
 
