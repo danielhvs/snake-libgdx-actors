@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import br.com.danielhabib.snake.game.Tail;
+
 public class Snake extends Actor {
 
 	private List<Piece> pieces;
@@ -32,19 +34,11 @@ public class Snake extends Actor {
 	}
 
 	public Snake addTail() {
-		// FIXME
-		// Piece tail = getTail();
-		// Vector2 tailDirection = tail.getDirection();
-		// Vector2 point = tail.getPosition().cpy();
-		// Vector2 newPoint = point.sub(tail.getDirection());
-		// Piece newTail = new Tail(newPoint, tailDirection,
-		// tail.getSprite().getTexture());
-		// Piece newPiece = new Piece(tail.getPosition(), tailDirection,
-		// pieceTexture);
-		//
-		// pieces.remove(getTailIndex());
-		// pieces.add(newPiece);
-		// pieces.add(newTail);
+		Piece oldTail = getTail();
+		Piece newTail = new Tail(new Vector2(0, 0), getTextureOf(oldTail));
+		setNewPositionAndRotation(oldTail, newTail);
+		oldTail.setTexture(pieceTexture);
+		pieces.add(newTail);
 		return this;
 	}
 
@@ -57,14 +51,19 @@ public class Snake extends Actor {
 		for (int i = 1; i <= snakeLength; i++) {
 			Piece partBefore = pieces.get(i - 1);
 			Piece thisPart = pieces.get(i);
-			float deltaX = partBefore.getX() - thisPart.getX();
-			float deltaY = partBefore.getY() - thisPart.getY();
-			float angle = (float) Math.atan2(deltaY, deltaX);
-			thisPart.setX(partBefore.getX() - (float) Math.cos(angle) * Entity.SIZE);
-			thisPart.setY(partBefore.getY() - (float) Math.sin(angle) * Entity.SIZE);
-			thisPart.setRotation((float) Math.toDegrees(angle));
+			setNewPositionAndRotation(partBefore, thisPart);
 		}
 		return this;
+	}
+
+	private void setNewPositionAndRotation(Piece pieceBefore, Piece thisPiece) {
+		float deltaX = pieceBefore.getX() - thisPiece.getX();
+		float deltaY = pieceBefore.getY() - thisPiece.getY();
+		float angle = (float) Math.atan2(deltaY, deltaX);
+
+		thisPiece.setX(pieceBefore.getX() - (float) Math.cos(angle) * Entity.SIZE);
+		thisPiece.setY(pieceBefore.getY() - (float) Math.sin(angle) * Entity.SIZE);
+		thisPiece.setRotation((float) Math.toDegrees(angle));
 	}
 
 	public Stack<Vector2> getNextPositions() {

@@ -18,11 +18,19 @@ public abstract class Entity extends Actor {
 		// For NOP.
 	}
 
+	public void setTexture(Texture texture) {
+		this.sprite = new Sprite(texture);
+		sprite.setSize(texture.getWidth(), texture.getHeight());
+		sprite.setOriginCenter();
+		setWidth(texture.getWidth());
+		setHeight(texture.getHeight());
+	}
+
 	public Entity(Texture texture, Vector2 pos) {
 		this.sprite = new Sprite(texture);
-		sprite.setSize(SIZE, SIZE);
+		sprite.setSize(texture.getWidth(), texture.getHeight());
 		sprite.setOriginCenter();
-		setBounds(pos.x, pos.y, SIZE, SIZE);
+		setBounds(pos.x, pos.y, texture.getWidth(), texture.getHeight());
 	}
 
 	@Override
