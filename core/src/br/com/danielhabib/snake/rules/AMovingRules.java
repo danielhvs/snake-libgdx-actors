@@ -5,28 +5,17 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public abstract class AMovingRules extends Actor {
 
 	protected Snake snake;
-	private float speed = 250f;
-	protected boolean checking = false;
 
 	public AMovingRules(Snake snake) {
 		this.snake = snake;
 	}
 
-	// FIXME: Transaction!?
-	public Snake turnLeft(Snake snake, float delta) {
-		if (!checking) {
-			return snake.turn(snake.getDirection().rotate(delta * speed));
-		} else {
-			return snake;
-		}
+	public void turnLeft(Snake snake, float delta) {
+		snake.turn(snake.getDirection().rotate(snake.getSpeed() / 2f));
 	}
 
-	public Snake turnRight(Snake snake, float delta) {
-		if (!checking) {
-			return snake.turn(snake.getDirection().rotate(-delta * speed));
-		} else {
-			return snake;
-		}
+	public void turnRight(Snake snake, float delta) {
+		snake.turn(snake.getDirection().rotate(-snake.getSpeed() / 2f));
 	}
 
 }

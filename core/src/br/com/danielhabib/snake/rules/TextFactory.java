@@ -10,11 +10,11 @@ public class TextFactory {
 	public static void addNotifyAnimation(Label label, Actor source, String string, Color color) {
 		label.setFontScale(0.75f);
 		float x = source.getX() - source.getWidth() / 2;
-		label.addAction(Actions.moveTo(x, source.getY() + Entity.SIZE, 0));
+		label.addAction(Actions.moveTo(x, source.getY() + source.getHeight(), 0));
 		label.addAction(Actions.alpha(1.0f));
 		label.setText(string);
 		label.setColor(color);
-		label.addAction(Actions.moveTo(x, source.getY() + 2.5f * Entity.SIZE, 1.0f));
+		label.addAction(Actions.moveTo(x, source.getY() + 2.5f * source.getHeight(), 1.0f));
 		label.addAction(Actions.fadeOut(1.5f));
 	}
 

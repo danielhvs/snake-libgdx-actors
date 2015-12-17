@@ -14,7 +14,6 @@ public class Snake extends Actor {
 
 	private List<Piece> pieces;
 	private Texture pieceTexture;
-	// FIXME: remove direction!? We have rotation already.
 	private Vector2 direction;
 	private float speed;
 
@@ -22,18 +21,11 @@ public class Snake extends Actor {
 		this.pieces = pieces;
 		this.pieceTexture = pieceTexture;
 		this.direction = direction;
-		this.speed = 4f;
+		this.speed = 5f;
 	}
 
 	public Piece getTail() {
 		return pieces.get(getTailIndex());
-	}
-
-	// FIXME: Remove.
-	public Snake addTail(int x, int y) {
-		// pieces.add(new Piece(new Vector2(x, y), getTail().getDirection(),
-		// getTextureOf(getHead())));
-		return this;
 	}
 
 	public Snake addTail() {
@@ -137,13 +129,6 @@ public class Snake extends Actor {
 
 	private Texture getTextureOf(Piece piece) {
 		return piece.getSprite().getTexture();
-	}
-
-	// FIXME: Remove
-	public Stack<Piece> copyPieces() {
-		Stack<Piece> copy = new Stack<Piece>();
-		copy.addAll(pieces);
-		return copy;
 	}
 
 	@Override

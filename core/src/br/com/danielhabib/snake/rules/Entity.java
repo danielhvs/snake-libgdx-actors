@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.Align;
 public abstract class Entity extends Actor {
 
 	public static final Entity NOEntity = new NOPEntity();
-	public static int SIZE = 32;
 	protected Sprite sprite;
 
 	public Entity() {

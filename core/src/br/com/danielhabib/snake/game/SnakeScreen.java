@@ -23,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
 import br.com.danielhabib.snake.rules.BoingWall;
-import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.IRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
 import br.com.danielhabib.snake.rules.MovingRules;
@@ -42,7 +41,6 @@ import br.com.danielhabib.snake.rules.WorldManager;
 
 public class SnakeScreen extends AbstractScreen {
 
-	private static final int SIZE = Entity.SIZE;
 	private int level;
 	private OrthogonalTiledMapRenderer renderer;
 	private TextureManager manager;
@@ -95,13 +93,16 @@ public class SnakeScreen extends AbstractScreen {
 					texture = tile.getTextureRegion().getTexture();
 					manager.put(rule.toString(), texture);
 					if ("fruit".equals(rule.toString())) {
-						fruitsList.add(new Fruit(texture, new Vector2(x * SIZE, y * SIZE)));
+						fruitsList
+								.add(new Fruit(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
 					} else if ("poison".equals(rule.toString())) {
-						fruitsList.add(new PoisonedFruit(texture, new Vector2(x * SIZE, y * SIZE)));
+						fruitsList.add(new PoisonedFruit(texture,
+								new Vector2(x * texture.getWidth(), y * texture.getHeight())));
 					} else if ("identityRule".equals(rule.toString())) {
-						wallsList.add(new Wall(texture, new Vector2(x * SIZE, y * SIZE)));
+						wallsList.add(new Wall(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
 					} else if ("boingRule".equals(rule.toString())) {
-						final BoingWall boingWall = new BoingWall(texture, new Vector2(x * SIZE, y * SIZE));
+						final BoingWall boingWall = new BoingWall(texture,
+								new Vector2(x * texture.getWidth(), y * texture.getHeight()));
 						wallsList.add(boingWall);
 						boingWall.addListener(new SnakeListener() {
 							@Override
@@ -118,12 +119,12 @@ public class SnakeScreen extends AbstractScreen {
 						});
 
 					} else if ("head".equals(rule.toString())) {
-						head = new Head(new Vector2(x * SIZE, y * SIZE), texture);
+						head = new Head(new Vector2(x * texture.getWidth(), y * texture.getHeight()), texture);
 					} else if ("piece".equals(rule.toString())) {
 						pieceTexture = texture;
-						piecesList.add(new Piece(new Vector2(x * SIZE, y * SIZE), texture));
+						piecesList.add(new Piece(new Vector2(x * texture.getWidth(), y * texture.getHeight()), texture));
 					} else if ("tail".equals(rule.toString())) {
-						tail = new Tail(new Vector2(x * SIZE, y * SIZE), texture);
+						tail = new Tail(new Vector2(x * texture.getWidth(), y * texture.getHeight()), texture);
 					}
 				}
 			}
@@ -135,10 +136,10 @@ public class SnakeScreen extends AbstractScreen {
 		pieces.addAll(piecesList);
 		pieces.add(tail);
 
-		snake = new Snake(pieces, pieceTexture, new Vector2(Entity.SIZE, 0));
+		snake = new Snake(pieces, pieceTexture, new Vector2(head.getWidth(), 0));
 		AFruitRule fruitRule = new AFruitRule(worldMap, fruitsList, snake);
 		AMovingRules movingRules = new MapMovingRules(new MovingRules(snake), identityRule, worldMap, wallsList, snake,
-				SIZE * (layer.getWidth() - 1), SIZE * (layer.getHeight() - 1));
+				layer.getTileWidth() * (layer.getWidth() - 1), layer.getTileWidth() * (layer.getHeight() - 1));
 		Actor controller = new SnakeController(movingRules, snake);
 
 		addListenersTo(snake);

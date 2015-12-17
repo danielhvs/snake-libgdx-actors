@@ -14,12 +14,12 @@ public class SnakeController extends Actor {
 		this.snake = snake;
 	}
 
-	public Snake left(Snake snake, float delta) {
-			return movingRules.turnLeft(snake, delta);
+	public void left(Snake snake, float delta) {
+		movingRules.turnLeft(snake, delta);
 	}
 
-	public Snake right(Snake snake, float delta) {
-			return movingRules.turnRight(snake, delta);
+	public void right(Snake snake, float delta) {
+		movingRules.turnRight(snake, delta);
 	}
 
 	@Override

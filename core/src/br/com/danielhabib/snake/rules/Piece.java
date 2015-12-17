@@ -13,12 +13,8 @@ public class Piece extends Entity {
 		return "Piece [" + getPosition();
 	}
 
-	private float degrees = 0f;
-
 	@Override
 	public void updateAct() {
-		degrees += 10f;
-		// setRotation(degrees);
 	}
 
 }
