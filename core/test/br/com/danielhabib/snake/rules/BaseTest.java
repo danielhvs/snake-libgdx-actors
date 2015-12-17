@@ -64,8 +64,8 @@ public class BaseTest {
 		return new Snake(pieces, texture, new Vector2(Entity.SIZE, 0));
 	}
 
-	protected Piece newPiece(float radius, float degrees) {
-		return new Piece(radius, degrees, texture);
+	protected Piece newPiece(Vector2 vector, Direction direction) {
+		return new Piece(vector, direction, texture);
 	}
 
 	protected Piece newPiece(int x, int y) {
