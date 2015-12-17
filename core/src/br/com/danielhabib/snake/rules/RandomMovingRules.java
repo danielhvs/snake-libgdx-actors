@@ -15,19 +15,17 @@ public class RandomMovingRules extends MapMovingRules {
 	}
 
 	@Override
-	public Snake turnLeft(Snake snake, float delta) {
-		return turnRight(snake, delta);
+	public void turnLeft(Snake snake, float delta) {
+		turnRight(snake, delta);
 	}
 
 	@Override
-	public Snake turnRight(Snake snake, float delta) {
+	public void turnRight(Snake snake, float delta) {
 		double random = Math.random();
 		if (random < 0.3) {
-			return super.turnLeft(snake, delta);
+			super.turnLeft(snake, delta);
 		} else if (random > 0.8) {
-			return super.turnRight(snake, delta);
-		} else {
-			return snake;
+			super.turnRight(snake, delta);
 		}
 	}
 
