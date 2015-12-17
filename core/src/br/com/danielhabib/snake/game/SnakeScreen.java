@@ -176,7 +176,7 @@ public class SnakeScreen extends AbstractScreen {
 				layer.getWidth() - 1, layer.getHeight() - 1, 1f);
 
 		// addActor(fruitGenerator);
-		addActor(poisonGenerator);
+		// addActor(poisonGenerator);
 		// addActor(wallGenerator);
 		// FIXME: Use this renderer?
 		// renderer = new OrthogonalTiledMapRenderer(map);

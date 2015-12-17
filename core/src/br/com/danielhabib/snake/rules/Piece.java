@@ -18,7 +18,7 @@ public class Piece extends Entity {
 	@Override
 	public void updateAct() {
 		degrees += 10f;
-		setRotation(degrees);
+		// setRotation(degrees);
 	}
 
 }

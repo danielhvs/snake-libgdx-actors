@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Align;
 
 public abstract class Entity extends Actor {
 
@@ -31,6 +32,7 @@ public abstract class Entity extends Actor {
 		sprite.setSize(texture.getWidth(), texture.getHeight());
 		sprite.setOriginCenter();
 		setBounds(pos.x, pos.y, texture.getWidth(), texture.getHeight());
+		setOrigin(Align.center);
 	}
 
 	@Override
