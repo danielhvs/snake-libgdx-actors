@@ -43,7 +43,7 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 	}
 
 	public void update(float delta) {
-		if (snakeWouldEatItSelf(snake)) {
+		if (snake.isEatingItSelf()) {
 			ruleWhenCollidedWithItSelf.fireEvent(snake);
 			return;
 		} else {
@@ -77,17 +77,6 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 			}
 		}
 		return EventFirerEntity.NOP;
-	}
-
-	private boolean snakeWouldEatItSelf(Snake snake) {
-		// Stack<Vector2> nextPositions = snake.getNextPositions();
-		// Vector2 headPosition = nextPositions.pop();
-		// for (Vector2 piecePosition : nextPositions) {
-		// if (headPosition.epsilonEquals(piecePosition, 0.1f)) {
-		// return true;
-		// }
-		// }
-		return false;
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package br.com.danielhabib.snake.rules;
 
-import java.util.Stack;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -58,16 +56,6 @@ public class Snake extends Actor {
 		thisPiece.setX(pieceBefore.getX() - (float) Math.cos(angle) * pieceBefore.getWidth());
 		thisPiece.setY(pieceBefore.getY() - (float) Math.sin(angle) * pieceBefore.getHeight());
 		thisPiece.setRotation((float) Math.toDegrees(angle));
-	}
-
-	public Stack<Vector2> getNextPositions() {
-		// Stack<Vector2> nextPositions = new Stack<Vector2>();
-		// for (int i = 1; i < pieces.size(); i++) {
-		// nextPositions.push(pieces.get(i).getNextPosition());
-		// }
-		// nextPositions.push(getHead().getNextPosition());
-		// return nextPositions;
-		return new Stack<Vector2>();
 	}
 
 	public Vector2 getNextPosition(float delta) {
@@ -199,5 +187,17 @@ public class Snake extends Actor {
 		return getHead().getBounds();
 	}
 
+	public boolean isEatingItSelf() {
+		Piece head = getHead();
+		// Disconsiders the first piece.
+		for (int i = 2; i < pieces.size; i++) {
+			Rectangle headBounds = head.getBounds();
+			Rectangle pieceBounds = pieces.get(i).getBounds();
+			if (headBounds.contains(pieceBounds) || headBounds.overlaps(pieceBounds)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 }
