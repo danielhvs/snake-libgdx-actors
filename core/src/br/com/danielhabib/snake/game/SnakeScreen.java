@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.utils.Array;
 
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
@@ -72,15 +73,15 @@ public class SnakeScreen extends AbstractScreen {
 		List<EventFirerEntity> wallsList = new ArrayList<EventFirerEntity>();
 		List<Actor> worldMap = new ArrayList<Actor>();
 		Texture texture = null;
-		List<Piece> pieces = new ArrayList<Piece>();
-		List<Piece> piecesList = new ArrayList<Piece>();
+		Array<Piece> pieces = Array.with();
+		Array<Piece> piecesList = Array.with();
 		manager = new TextureManager();
 		FruitBuilder fruitBuilder = new FruitBuilder(manager);
 		SpeedBuilder speedBuilder = new SpeedBuilder(manager);
 		PoisonBuilder poisonBuilder = new PoisonBuilder(manager);
 		WallBuilder wallBuilder = new WallBuilder(manager);
-		Head head = null;
-		Tail tail = null;
+		Piece head = null;
+		Piece tail = null;
 		Texture pieceTexture = null;
 
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
@@ -119,12 +120,12 @@ public class SnakeScreen extends AbstractScreen {
 						});
 
 					} else if ("head".equals(rule.toString())) {
-						head = new Head(new Vector2(x * texture.getWidth(), y * texture.getHeight()), texture);
+						head = new Piece(new Vector2(x * texture.getWidth(), y * texture.getHeight()), texture);
 					} else if ("piece".equals(rule.toString())) {
 						pieceTexture = texture;
 						piecesList.add(new Piece(new Vector2(x * texture.getWidth(), y * texture.getHeight()), texture));
 					} else if ("tail".equals(rule.toString())) {
-						tail = new Tail(new Vector2(x * texture.getWidth(), y * texture.getHeight()), texture);
+						tail = new Piece(new Vector2(x * texture.getWidth(), y * texture.getHeight()), texture);
 					}
 				}
 			}

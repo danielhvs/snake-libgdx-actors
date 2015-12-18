@@ -1,23 +1,21 @@
 package br.com.danielhabib.snake.rules;
 
-import java.util.List;
 import java.util.Stack;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-
-import br.com.danielhabib.snake.game.Tail;
+import com.badlogic.gdx.utils.Array;
 
 public class Snake extends Actor {
 
-	private List<Piece> pieces;
+	private Array<Piece> pieces;
 	private Texture pieceTexture;
 	private Vector2 direction;
 	private float speed;
 
-	public Snake(List<Piece> pieces, Texture pieceTexture, Vector2 direction) {
+	public Snake(Array<Piece> pieces, Texture pieceTexture, Vector2 direction) {
 		this.pieces = pieces;
 		this.pieceTexture = pieceTexture;
 		this.direction = direction;
@@ -30,7 +28,7 @@ public class Snake extends Actor {
 
 	public Snake addTail() {
 		Piece oldTail = getTail();
-		Piece newTail = new Tail(new Vector2(0, 0), getTextureOf(oldTail));
+		Piece newTail = new Piece(new Vector2(0, 0), getTextureOf(oldTail));
 		setNewPositionAndRotation(oldTail, newTail);
 		oldTail.setTexture(pieceTexture);
 		pieces.add(newTail);
@@ -41,7 +39,7 @@ public class Snake extends Actor {
 
 	public Snake move(float delta) {
 		Piece snakeHead = pieces.get(0);
-		int snakeLength = pieces.size() - 1;
+		int snakeLength = pieces.size - 1;
 		Vector2 newPosition = getNextPosition(delta);
 		snakeHead.setPosition(newPosition.x, newPosition.y);
 		for (int i = 1; i <= snakeLength; i++) {
@@ -77,7 +75,7 @@ public class Snake extends Actor {
 	}
 
 	public Snake removeTail() {
-		int size = pieces.size();
+		int size = pieces.size;
 		if (size <= 2) {
 			return this;
 		} else {
@@ -85,7 +83,7 @@ public class Snake extends Actor {
 			getTail().setPosition(piece.getPosition().x, piece.getPosition().y);
 			getTail().setRotation(piece.getRotation());
 			piece.remove();
-			pieces.remove(piece);
+			pieces.removeValue(piece, true);
 		}
 		return this;
 	}
@@ -95,7 +93,7 @@ public class Snake extends Actor {
 	}
 
 	private int getTailIndex() {
-		return pieces.size() - 1;
+		return pieces.size - 1;
 	}
 
 	public Vector2 getPosition() {
@@ -118,12 +116,15 @@ public class Snake extends Actor {
 	}
 
 	public Snake revert() {
-		Vector2 headPosition = getHead().getPosition();
-		Vector2 tailPosition = getTail().getPosition();
-		getHead().setPosition(tailPosition.x, tailPosition.y);
-		getTail().setPosition(headPosition.x, headPosition.y);
-		direction.rotate(180);
+		Texture headTexture = getTextureOf(getHead());
+		getHead().setTexture(getTextureOf(getTail()));
+		getTail().setTexture(headTexture);
+
 		getHead().rotateBy(180);
+		getTail().rotateBy(180);
+		direction.setAngle(getTail().getRotation());
+
+		pieces.reverse();
 		return this;
 	}
 
@@ -164,7 +165,7 @@ public class Snake extends Actor {
 	public Snake move(Vector2 newPoint) {
 		// moves instantly.
 		Piece snakeHead = pieces.get(0);
-		int snakeLength = pieces.size() - 1;
+		int snakeLength = pieces.size - 1;
 		Vector2 newPosition = newPoint;
 		snakeHead.setPosition(newPosition.x, newPosition.y);
 		for (int i = 1; i <= snakeLength; i++) {
