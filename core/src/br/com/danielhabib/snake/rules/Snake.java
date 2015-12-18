@@ -10,14 +10,12 @@ public class Snake extends Actor {
 
 	private Array<Piece> pieces;
 	private Texture pieceTexture;
-	private Vector2 direction;
-	private float speed;
+	private Vector2 velocity;
 
-	public Snake(Array<Piece> pieces, Texture pieceTexture, Vector2 direction) {
+	public Snake(Array<Piece> pieces, Texture pieceTexture, Vector2 velocity) {
 		this.pieces = pieces;
 		this.pieceTexture = pieceTexture;
-		this.direction = direction;
-		this.speed = 5f;
+		this.velocity = velocity;
 	}
 
 	public Piece getTail() {
@@ -59,7 +57,7 @@ public class Snake extends Actor {
 	}
 
 	public Vector2 getNextPosition(float delta) {
-		return getPosition().add(getDirection().scl(speed * delta));
+		return getPosition().add(getVelocity().scl(delta));
 	}
 
 	public Snake removeTail() {
@@ -88,18 +86,18 @@ public class Snake extends Actor {
 		return getHead().getPosition().cpy();
 	}
 
-	public Vector2 getDirection() {
-		return direction.cpy();
+	public Vector2 getVelocity() {
+		return velocity.cpy();
 	}
 
 	@Override
 	public String toString() {
-		return pieces.toString() + " DIRECTION: " + direction;
+		return pieces.toString() + " VELOCITY: " + velocity;
 	}
 
-	public Snake turn(Vector2 direction) {
-		this.direction = direction;
-		getHead().setRotation(direction.angle());
+	public Snake turn(float angle) {
+		velocity.rotate(angle);
+		getHead().setRotation(velocity.angle());
 		return this;
 	}
 
@@ -110,7 +108,7 @@ public class Snake extends Actor {
 
 		getHead().rotateBy(180);
 		getTail().rotateBy(180);
-		direction.setAngle(getTail().getRotation());
+		velocity.setAngle(getTail().getRotation());
 
 		pieces.reverse();
 		return this;
@@ -171,16 +169,13 @@ public class Snake extends Actor {
 		return this;
 	}
 
-	public void incSpeed(float offset) {
-		this.speed += offset;
-	}
-
-	public void decSpeed(float offset) {
-		this.speed -= offset;
-	}
-
-	public float getSpeed() {
-		return speed;
+	/**
+	 * @param percent
+	 *            should be, for instance, 1.1f to increase and 0.9f to
+	 *            decrease.
+	 */
+	public void incSpeed(float percent) {
+		velocity.scl(percent);
 	}
 
 	public Rectangle getBounds() {

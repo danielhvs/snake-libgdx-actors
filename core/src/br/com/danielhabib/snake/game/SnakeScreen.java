@@ -95,7 +95,7 @@ public class SnakeScreen extends AbstractScreen {
 					manager.put(rule.toString(), texture);
 					if ("fruit".equals(rule.toString())) {
 						fruitsList
-								.add(new Fruit(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
+						.add(new Fruit(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
 					} else if ("poison".equals(rule.toString())) {
 						fruitsList.add(new PoisonedFruit(texture,
 								new Vector2(x * texture.getWidth(), y * texture.getHeight())));
@@ -137,7 +137,7 @@ public class SnakeScreen extends AbstractScreen {
 		pieces.addAll(piecesList);
 		pieces.add(tail);
 
-		snake = new Snake(pieces, pieceTexture, new Vector2(head.getWidth(), 0));
+		snake = new Snake(pieces, pieceTexture, new Vector2(5 * head.getWidth(), 0));
 		AFruitRule fruitRule = new AFruitRule(worldMap, fruitsList, snake);
 		AMovingRules movingRules = new MapMovingRules(new MovingRules(snake), identityRule, worldMap, wallsList, snake,
 				layer.getTileWidth() * (layer.getWidth() - 1), layer.getTileWidth() * (layer.getHeight() - 1));
@@ -173,7 +173,7 @@ public class SnakeScreen extends AbstractScreen {
 		TimingFruitGenerator fruitGenerator = new TimingFruitGenerator(layer, fruitBuilder, fruitRule, layer.getWidth() - 1,
 				layer.getHeight() - 1, 4f);
 		TimingFruitGenerator poisonGenerator = new TimingFruitGenerator(layer, speedBuilder, fruitRule, layer.getWidth() - 1,
-				layer.getHeight() - 1, 2f);
+				layer.getHeight() - 1, .5f);
 		TimingFruitGenerator wallGenerator = new TimingFruitGenerator(layer, wallBuilder, (WorldManager) movingRules,
 				layer.getWidth() - 1, layer.getHeight() - 1, 1f);
 
@@ -190,7 +190,7 @@ public class SnakeScreen extends AbstractScreen {
 			@Override
 			public boolean handle(Actor source, Type type) {
 				if (SnakeEvent.Type.speed.equals(type)) {
-					TextFactory.addNotifyAnimation(title, source, String.valueOf(snake.getSpeed()) + "!", Color.GREEN);
+					TextFactory.addNotifyAnimation(title, source, String.valueOf(snake.getVelocity()) + "!", Color.GREEN);
 				}
 				return false;
 			}
@@ -220,7 +220,7 @@ public class SnakeScreen extends AbstractScreen {
 			@Override
 			public boolean handle(Actor source, Type type) {
 				if (type.equals(SnakeEvent.Type.speed)) {
-					snake.incSpeed(1f);
+					snake.incSpeed(1.1f);
 				}
 				return false;
 			}

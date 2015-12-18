@@ -20,7 +20,7 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 	private List<Actor> worldMap;
 
 	public MapMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, List<Actor> worldMap, List<EventFirerEntity> wallsList,
- Snake snake, float lastX, float lastY) {
+			Snake snake, float lastX, float lastY) {
 		super(snake);
 		this.ruleWhenFree = ruleWhenFree;
 		this.ruleWhenCollidedWithItSelf = ruleWhenCollidedWithItSelf;
@@ -45,7 +45,7 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 	public void update(float delta) {
 		if (snake.isEatingItSelf()) {
 			ruleWhenCollidedWithItSelf.fireEvent(snake);
-			return;
+			// return;
 		} else {
 			EventFirerEntity entity = snakeWouldColideWithWall(snake, delta);
 			if (!EventFirerEntity.NOP.equals(entity)) {

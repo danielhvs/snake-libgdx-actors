@@ -11,11 +11,11 @@ public abstract class AMovingRules extends Actor {
 	}
 
 	public void turnLeft(Snake snake, float delta) {
-		snake.turn(snake.getDirection().rotate(snake.getSpeed() / 2f));
+		snake.turn(2.5f);
 	}
 
 	public void turnRight(Snake snake, float delta) {
-		snake.turn(snake.getDirection().rotate(-snake.getSpeed() / 2f));
+		snake.turn(-2.5f);
 	}
 
 }
