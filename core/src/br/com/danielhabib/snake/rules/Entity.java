@@ -42,6 +42,7 @@ public abstract class Entity extends Actor {
 		sprite.setPosition(getX(), getY());
 		sprite.setRotation(getRotation());
 		sprite.setColor(color.r, color.g, color.b, color.a);
+		sprite.setScale(getScaleX(), getScaleY());
 	}
 
 	@Override

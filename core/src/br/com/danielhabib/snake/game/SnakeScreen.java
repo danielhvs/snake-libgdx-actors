@@ -1,8 +1,5 @@
 package br.com.danielhabib.snake.game;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -69,9 +66,9 @@ public class SnakeScreen extends AbstractScreen {
 		final Label title = new Label("", labelStyle);
 		TiledMap map = new TmxMapLoader().load("map" + level + ".tmx");
 		IRule identityRule = new NOPRule();
-		List<EventFirerEntity> fruitsList = new ArrayList<EventFirerEntity>();
-		List<EventFirerEntity> wallsList = new ArrayList<EventFirerEntity>();
-		List<Actor> worldMap = new ArrayList<Actor>();
+		Array<EventFirerEntity> fruitsList = Array.with();
+		Array<EventFirerEntity> wallsList = Array.with();
+		Array<Actor> worldMap = Array.with();
 		Texture texture = null;
 		Array<Piece> pieces = Array.with();
 		Array<Piece> piecesList = Array.with();
@@ -95,7 +92,7 @@ public class SnakeScreen extends AbstractScreen {
 					manager.put(rule.toString(), texture);
 					if ("fruit".equals(rule.toString())) {
 						fruitsList
-						.add(new Fruit(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
+								.add(new Fruit(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
 					} else if ("poison".equals(rule.toString())) {
 						fruitsList.add(new PoisonedFruit(texture,
 								new Vector2(x * texture.getWidth(), y * texture.getHeight())));
@@ -151,22 +148,7 @@ public class SnakeScreen extends AbstractScreen {
 		addActor(fruitRule);
 
 		worldMap.add(snake);
-		for (Actor actor : wallsList) {
-			worldMap.add(actor);
-		}
-		for (Actor actor : fruitsList) {
-			worldMap.add(actor);
-		}
-
-		for (Actor actor : worldMap) {
-			addActor(actor);
-			actor.debug();
-		}
-
-		for (Piece piece : pieces) {
-			addActor(piece);
-			piece.debug();
-		}
+		addActor(snake);
 
 		addActor(title);
 
@@ -177,6 +159,13 @@ public class SnakeScreen extends AbstractScreen {
 		TimingFruitGenerator wallGenerator = new TimingFruitGenerator(layer, wallBuilder, (WorldManager) movingRules,
 				layer.getWidth() - 1, layer.getHeight() - 1, 1f);
 
+		Array<Actor> actors = Array.with();
+		actors.addAll(wallsList);
+		actors.addAll(fruitsList);
+		Array<Actor> piecesActors = Array.with();
+		piecesActors.addAll(pieces);
+		MapGenerator generator = new MapGenerator(actors, worldMap, piecesActors);
+		addActor(generator);
 		// addActor(fruitGenerator);
 		// addActor(poisonGenerator);
 		// addActor(wallGenerator);

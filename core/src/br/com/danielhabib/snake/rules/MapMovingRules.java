@@ -1,25 +1,25 @@
 package br.com.danielhabib.snake.rules;
 
-import java.util.List;
-
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.utils.Array;
 
 import br.com.danielhabib.snake.game.EventFirerEntity;
 
 public class MapMovingRules extends AMovingRules implements WorldManager {
 
-	private List<EventFirerEntity> wallsList;
+	private Array<EventFirerEntity> wallsList;
 	private AMovingRules ruleWhenFree;
 	private IRule ruleWhenCollidedWithItSelf;
 	private float lastX;
 	private float lastY;
-	private List<Actor> worldMap;
+	private Array<Actor> worldMap;
 
-	public MapMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, List<Actor> worldMap, List<EventFirerEntity> wallsList,
+	public MapMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Array<Actor> worldMap,
+			Array<EventFirerEntity> wallsList,
 			Snake snake, float lastX, float lastY) {
 		super(snake);
 		this.ruleWhenFree = ruleWhenFree;
@@ -43,6 +43,9 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 	}
 
 	public void update(float delta) {
+		if (snake.hasActions()) {
+			return;
+		}
 		if (snake.isEatingItSelf()) {
 			ruleWhenCollidedWithItSelf.fireEvent(snake);
 			// return;
@@ -80,7 +83,7 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 	}
 
 	@Override
-	public List<Actor> getMap() {
+	public Array<Actor> getMap() {
 		return worldMap;
 	}
 

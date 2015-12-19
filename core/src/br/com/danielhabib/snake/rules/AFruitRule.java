@@ -1,20 +1,19 @@
 package br.com.danielhabib.snake.rules;
 
-import java.util.List;
-
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.utils.Array;
 
 import br.com.danielhabib.snake.game.EventFirerEntity;
 
 public class AFruitRule extends Actor implements WorldManager {
 
-	private List<EventFirerEntity> fruits;
+	private Array<EventFirerEntity> fruits;
 	private Snake snake;
-	private List<Actor> worldMap;
+	private Array<Actor> worldMap;
 
-	public AFruitRule(List<Actor> worldMap, List<EventFirerEntity> fruits, Snake snake) {
+	public AFruitRule(Array<Actor> worldMap, Array<EventFirerEntity> fruits, Snake snake) {
 		this.worldMap = worldMap;
 		this.fruits = fruits;
 		this.snake = snake;
@@ -22,6 +21,9 @@ public class AFruitRule extends Actor implements WorldManager {
 
 	@Override
 	public void act(float delta) {
+		if (snake.hasActions()) {
+			return;
+		}
 		EventFirerEntity toRemove = null;
 		for (EventFirerEntity fruit : fruits) {
 			Rectangle snakeBounds = snake.getBounds();
@@ -38,13 +40,13 @@ public class AFruitRule extends Actor implements WorldManager {
 	private void removeFromWorld(EventFirerEntity toRemove) {
 		if (toRemove != null) {
 			toRemove.remove();
-			fruits.remove(toRemove);
-			worldMap.remove(toRemove);
+			fruits.removeValue(toRemove, true);
+			worldMap.removeValue(toRemove, true);
 		}
 	}
 
 	@Override
-	public List<Actor> getMap() {
+	public Array<Actor> getMap() {
 		return worldMap;
 	}
 

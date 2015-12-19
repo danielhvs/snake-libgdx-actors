@@ -195,4 +195,13 @@ public class Snake extends Actor {
 		return false;
 	}
 
+	@Override
+	public boolean hasActions() {
+		boolean hasActions = false;
+		for (Piece piece : pieces) {
+			hasActions |= piece.hasActions();
+		}
+		return hasActions | super.hasActions();
+	}
+
 }

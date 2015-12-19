@@ -1,16 +1,14 @@
 package br.com.danielhabib.snake.rules;
 
-import java.util.List;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
 
 import br.com.danielhabib.snake.game.EventFirerEntity;
 
 public class RandomMovingRules extends MapMovingRules {
 
-
-	public RandomMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, List<Actor> worldMap,
-			List<EventFirerEntity> wallsList, Snake snake, int lastX, int lastY) {
+	public RandomMovingRules(AMovingRules ruleWhenFree, IRule ruleWhenCollidedWithItSelf, Array<Actor> worldMap,
+			Array<EventFirerEntity> wallsList, Snake snake, int lastX, int lastY) {
 		super(ruleWhenFree, ruleWhenCollidedWithItSelf, worldMap, wallsList, snake, lastX, lastY);
 	}
 
