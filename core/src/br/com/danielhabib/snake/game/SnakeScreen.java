@@ -1,5 +1,12 @@
 package br.com.danielhabib.snake.game;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -29,7 +36,6 @@ import br.com.danielhabib.snake.rules.Entity;
 import br.com.danielhabib.snake.rules.HoleMovingRules;
 import br.com.danielhabib.snake.rules.IRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
-import br.com.danielhabib.snake.rules.MovingRules;
 import br.com.danielhabib.snake.rules.NOPRule;
 import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.RotatingEntity;
@@ -90,30 +96,11 @@ public class SnakeScreen extends AbstractScreen {
 		Piece head = null;
 		Piece tail = null;
 		Texture pieceTexture = null;
-		Entity init = null;
-		Entity end = null;
-		WormHole wormHole = null;
-
+		List<Entity> inits = new ArrayList<Entity>();
+		List<Entity> ends = new ArrayList<Entity>();
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
-		MapObjects objects = map.getLayers().get(1).getObjects();
-		for (MapObject object : objects) {
-			if(object.getName().equals("init1")) {
-				RectangleMapObject rectangle = (RectangleMapObject) object;
-				Rectangle pos = rectangle.getRectangle();
-				init = new RotatingEntity(holeTexture, new Vector2(pos.x, pos.y), 10f);
-			} else if (object.getName().equals("end1")) {
-				RectangleMapObject rectangle = (RectangleMapObject) object;
-				Rectangle pos = rectangle.getRectangle();
-				end = new StaticEntity(holeTexture, new Vector2(pos.x, pos.y));
-			}
-			// FIXME: improve this parse. Not good yet.
-			if (init != null && end != null) {
-				wormHole = new WormHole(init, end);
-				/// FIXME: add a workHole to the rules.
-				// init = null;
-				// end = null;
-			}
-		}
+		Array<WormHole> wormHoles = loadWormHoles(map, holeTexture, inits, ends);
+
 		for (int x = 0; x < layer.getWidth(); x++) {
 			for (int y = 0; y < layer.getHeight(); y++) {
 				Cell cell = layer.getCell(x, y);
@@ -134,19 +121,7 @@ public class SnakeScreen extends AbstractScreen {
 						final BoingWall boingWall = new BoingWall(texture,
 								new Vector2(x * texture.getWidth(), y * texture.getHeight()));
 						wallsList.add(boingWall);
-						boingWall.addListener(new SnakeListener() {
-							@Override
-							public boolean revert(Actor actor, Event event) {
-								if (boingWall == actor) {
-									boingWall.addAction(
-											Actions.sequence(Actions.rotateBy(25f, 0.1f), Actions.rotateBy(-25f, 0.1f),
-													Actions.rotateBy(-25f, 0.1f), Actions.rotateBy(25f, 0.1f))
-											);
-								}
-								return super.revert(actor, event);
-
-							}
-						});
+						addListenersTo(boingWall);
 
 					} else if ("head".equals(rule.toString())) {
 						head = new Piece(new Vector2(x * texture.getWidth(), y * texture.getHeight()), texture);
@@ -167,7 +142,7 @@ public class SnakeScreen extends AbstractScreen {
 		pieces.add(tail);
 
 		snake = new Snake(pieces, pieceTexture, new Vector2(5 * head.getWidth(), 0));
-		AMovingRules internalMovingRules = wormHole != null ? new HoleMovingRules(wormHole, snake) : new MovingRules(snake);
+		AMovingRules internalMovingRules = new HoleMovingRules(wormHoles, snake);
 		AFruitRule fruitRule = new AFruitRule(worldMap, fruitsList, snake);
 		AMovingRules movingRules = new MapMovingRules(internalMovingRules, identityRule, worldMap, wallsList, snake,
 				layer.getTileWidth() * (layer.getWidth() - 1), layer.getTileWidth() * (layer.getHeight() - 1));
@@ -182,7 +157,6 @@ public class SnakeScreen extends AbstractScreen {
 
 		worldMap.add(snake);
 		addActor(snake);
-
 		addActor(title);
 
 		TimingFruitGenerator fruitGenerator = new TimingFruitGenerator(layer, fruitBuilder, fruitRule, layer.getWidth() - 1,
@@ -195,11 +169,9 @@ public class SnakeScreen extends AbstractScreen {
 		Array<Actor> actors = Array.with();
 		actors.addAll(wallsList);
 		actors.addAll(fruitsList);
-		if (init != null) {
-			actors.add(init);
-		}
-		if (end != null) {
-			actors.add(end);
+		for (WormHole wormHole : wormHoles) {
+			actors.add(wormHole.getFinalPoint());
+			actors.add(wormHole.getInitialPoint());
 		}
 		Array<Actor> piecesActors = Array.with();
 		piecesActors.addAll(pieces);
@@ -211,6 +183,52 @@ public class SnakeScreen extends AbstractScreen {
 		// FIXME: Use this renderer?
 		// renderer = new OrthogonalTiledMapRenderer(map);
 		// renderer.setView((OrthographicCamera) getCamera());
+	}
+
+	private void addListenersTo(final BoingWall boingWall) {
+		boingWall.addListener(new SnakeListener() {
+			@Override
+			public boolean revert(Actor actor, Event event) {
+				if (boingWall == actor) {
+					boingWall.addAction(
+							Actions.sequence(Actions.rotateBy(25f, 0.1f), Actions.rotateBy(-25f, 0.1f),
+									Actions.rotateBy(-25f, 0.1f), Actions.rotateBy(25f, 0.1f))
+							);
+				}
+				return super.revert(actor, event);
+
+			}
+		});
+	}
+
+	private Array<WormHole> loadWormHoles(TiledMap map, Texture holeTexture, List<Entity> inits, List<Entity> ends) {
+		Array<WormHole> wormHoles = Array.with();
+		if (map.getLayers().getCount() > 1) {
+			MapObjects objects = map.getLayers().get(1).getObjects();
+			Map<String, Entity> mapa = new HashMap<String, Entity>();
+			for (MapObject object : objects) {
+				if (object.getName().startsWith("init")) {
+					Rectangle pos = getRectangle(object);
+					Integer index = Integer.valueOf(StringUtils.substringAfter(object.getName(), "init"));
+					mapa.put("init" + index, new RotatingEntity(holeTexture, new Vector2(pos.x, pos.y), 10f));
+				} else if (object.getName().startsWith("end")) {
+					Rectangle pos = getRectangle(object);
+					Integer index = Integer.valueOf(StringUtils.substringAfter(object.getName(), "end"));
+					mapa.put("end" + index, new StaticEntity(holeTexture, new Vector2(pos.x, pos.y)));
+				}
+			}
+
+			for (int i = 0; i < mapa.size() / 2; i++) {
+				wormHoles.add(new WormHole(mapa.get("init" + i), mapa.get("end" + i)));
+			}
+		}
+		return wormHoles;
+	}
+
+	private Rectangle getRectangle(MapObject object) {
+		RectangleMapObject rectangle = (RectangleMapObject) object;
+		Rectangle pos = rectangle.getRectangle();
+		return pos;
 	}
 
 	private void addListenersTo(final Label title) {
