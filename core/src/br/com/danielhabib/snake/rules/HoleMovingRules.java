@@ -1,6 +1,7 @@
 package br.com.danielhabib.snake.rules;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 public class HoleMovingRules extends AMovingRules {
 
@@ -9,12 +10,6 @@ public class HoleMovingRules extends AMovingRules {
 	public HoleMovingRules(WormHole hole, Snake snake) {
 		super(snake);
 		this.hole = hole;
-	}
-
-	@Override
-	public void draw(Batch batch, float parentAlpha) {
-		hole.act(0);
-		hole.draw(batch, parentAlpha);
 	}
 
 	@Override
@@ -49,8 +44,10 @@ public class HoleMovingRules extends AMovingRules {
 
 	@Override
 	public void act(float delta) {
-		hole.act(delta);
-		if (snake.getPosition().epsilonEquals(hole.getInitialPoint(), 0.01f)) {
+		Vector2 nextPositionSnake = snake.getNextPosition(delta);
+		Rectangle snakeBounds = snake.getBounds().setPosition(nextPositionSnake.x, nextPositionSnake.y);
+		Rectangle holeBounds = new Rectangle(hole.getInitialPoint().x, hole.getInitialPoint().y, 32, 32);
+		if (snakeBounds.overlaps(holeBounds)) {
 			snake.move(hole.getFinalPoint());
 		} else {
 			snake.move(delta);

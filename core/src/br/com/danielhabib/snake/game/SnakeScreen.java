@@ -4,12 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -21,21 +25,26 @@ import com.badlogic.gdx.utils.Array;
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
 import br.com.danielhabib.snake.rules.BoingWall;
+import br.com.danielhabib.snake.rules.Entity;
+import br.com.danielhabib.snake.rules.HoleMovingRules;
 import br.com.danielhabib.snake.rules.IRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
 import br.com.danielhabib.snake.rules.MovingRules;
 import br.com.danielhabib.snake.rules.NOPRule;
 import br.com.danielhabib.snake.rules.Piece;
+import br.com.danielhabib.snake.rules.RotatingEntity;
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.rules.SnakeController;
 import br.com.danielhabib.snake.rules.SnakeEvent;
 import br.com.danielhabib.snake.rules.SnakeEvent.Type;
 import br.com.danielhabib.snake.rules.SnakeListener;
 import br.com.danielhabib.snake.rules.SpeedBuilder;
+import br.com.danielhabib.snake.rules.StaticEntity;
 import br.com.danielhabib.snake.rules.TextFactory;
 import br.com.danielhabib.snake.rules.TimingFruitGenerator;
 import br.com.danielhabib.snake.rules.Wall;
 import br.com.danielhabib.snake.rules.WorldManager;
+import br.com.danielhabib.snake.rules.WormHole;
 
 public class SnakeScreen extends AbstractScreen {
 
@@ -66,6 +75,7 @@ public class SnakeScreen extends AbstractScreen {
 		final Label title = new Label("", labelStyle);
 		TiledMap map = new TmxMapLoader().load("map" + level + ".tmx");
 		IRule identityRule = new NOPRule();
+		Texture holeTexture = new Texture(Gdx.files.internal("hole.jpg"));
 		Array<EventFirerEntity> fruitsList = Array.with();
 		Array<EventFirerEntity> wallsList = Array.with();
 		Array<Actor> worldMap = Array.with();
@@ -80,8 +90,30 @@ public class SnakeScreen extends AbstractScreen {
 		Piece head = null;
 		Piece tail = null;
 		Texture pieceTexture = null;
+		Entity init = null;
+		Entity end = null;
+		WormHole wormHole = null;
 
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
+		MapObjects objects = map.getLayers().get(1).getObjects();
+		for (MapObject object : objects) {
+			if(object.getName().equals("init1")) {
+				RectangleMapObject rectangle = (RectangleMapObject) object;
+				Rectangle pos = rectangle.getRectangle();
+				init = new RotatingEntity(holeTexture, new Vector2(pos.x, pos.y), 10f);
+			} else if (object.getName().equals("end1")) {
+				RectangleMapObject rectangle = (RectangleMapObject) object;
+				Rectangle pos = rectangle.getRectangle();
+				end = new StaticEntity(holeTexture, new Vector2(pos.x, pos.y));
+			}
+			// FIXME: improve this parse. Not good yet.
+			if (init != null && end != null) {
+				wormHole = new WormHole(init, end);
+				/// FIXME: add a workHole to the rules.
+				// init = null;
+				// end = null;
+			}
+		}
 		for (int x = 0; x < layer.getWidth(); x++) {
 			for (int y = 0; y < layer.getHeight(); y++) {
 				Cell cell = layer.getCell(x, y);
@@ -92,7 +124,7 @@ public class SnakeScreen extends AbstractScreen {
 					manager.put(rule.toString(), texture);
 					if ("fruit".equals(rule.toString())) {
 						fruitsList
-								.add(new Fruit(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
+						.add(new Fruit(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
 					} else if ("poison".equals(rule.toString())) {
 						fruitsList.add(new PoisonedFruit(texture,
 								new Vector2(x * texture.getWidth(), y * texture.getHeight())));
@@ -135,8 +167,9 @@ public class SnakeScreen extends AbstractScreen {
 		pieces.add(tail);
 
 		snake = new Snake(pieces, pieceTexture, new Vector2(5 * head.getWidth(), 0));
+		AMovingRules internalMovingRules = wormHole != null ? new HoleMovingRules(wormHole, snake) : new MovingRules(snake);
 		AFruitRule fruitRule = new AFruitRule(worldMap, fruitsList, snake);
-		AMovingRules movingRules = new MapMovingRules(new MovingRules(snake), identityRule, worldMap, wallsList, snake,
+		AMovingRules movingRules = new MapMovingRules(internalMovingRules, identityRule, worldMap, wallsList, snake,
 				layer.getTileWidth() * (layer.getWidth() - 1), layer.getTileWidth() * (layer.getHeight() - 1));
 		Actor controller = new SnakeController(movingRules, snake);
 
@@ -162,6 +195,12 @@ public class SnakeScreen extends AbstractScreen {
 		Array<Actor> actors = Array.with();
 		actors.addAll(wallsList);
 		actors.addAll(fruitsList);
+		if (init != null) {
+			actors.add(init);
+		}
+		if (end != null) {
+			actors.add(end);
+		}
 		Array<Actor> piecesActors = Array.with();
 		piecesActors.addAll(pieces);
 		MapGenerator generator = new MapGenerator(actors, worldMap, piecesActors);
