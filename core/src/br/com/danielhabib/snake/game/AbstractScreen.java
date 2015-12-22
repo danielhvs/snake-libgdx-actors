@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public abstract class AbstractScreen extends Stage implements Screen {
 
-	private boolean paused;
+	private boolean paused = false;
 	protected AbstractScreen() {
 		super(new ScreenViewport(new OrthographicCamera()), new SpriteBatch());
 	}

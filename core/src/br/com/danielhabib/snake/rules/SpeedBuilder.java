@@ -16,6 +16,6 @@ public class SpeedBuilder implements EntityBuilder {
 
 	@Override
 	public EventFirerEntity build(Vector2 pos) {
-		return new SpeedFruit(manager.getTexture("identityRule"), pos);
+		return new SpeedFruit(manager.getTexture("speed"), pos);
 	}
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public abstract class AMovingRules extends Actor {
 
+	private static final float DEGREES_PER_MOVEMENT = 3.5f;
 	protected Snake snake;
 
 	public AMovingRules(Snake snake) {
@@ -11,11 +12,11 @@ public abstract class AMovingRules extends Actor {
 	}
 
 	public void turnLeft(Snake snake, float delta) {
-		snake.turn(2.5f);
+		snake.turn(DEGREES_PER_MOVEMENT);
 	}
 
 	public void turnRight(Snake snake, float delta) {
-		snake.turn(-2.5f);
+		snake.turn(-DEGREES_PER_MOVEMENT);
 	}
 
 }

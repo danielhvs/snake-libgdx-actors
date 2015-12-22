@@ -28,7 +28,6 @@ public class Snake extends Actor {
 		setNewPositionAndRotation(oldTail, newTail);
 		oldTail.setTexture(pieceTexture);
 		pieces.add(newTail);
-		newTail.debug();
 		getStage().addActor(newTail);
 		return this;
 	}
@@ -66,10 +65,9 @@ public class Snake extends Actor {
 			return this;
 		} else {
 			Piece piece = pieces.get(getTailIndex() - 1);
-			getTail().setPosition(piece.getPosition().x, piece.getPosition().y);
-			getTail().setRotation(piece.getRotation());
-			piece.remove();
-			pieces.removeValue(piece, true);
+			piece.setTexture(getTextureOf(getTail()));
+			getTail().remove();
+			pieces.removeValue(getTail(), true);
 		}
 		return this;
 	}
@@ -88,6 +86,10 @@ public class Snake extends Actor {
 
 	public Vector2 getVelocity() {
 		return velocity.cpy();
+	}
+
+	public float getSpeed() {
+		return velocity.cpy().len();
 	}
 
 	@Override

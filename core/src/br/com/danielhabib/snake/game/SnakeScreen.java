@@ -81,7 +81,7 @@ public class SnakeScreen extends AbstractScreen {
 		final Label title = new Label("", labelStyle);
 		TiledMap map = new TmxMapLoader().load("map" + level + ".tmx");
 		IRule identityRule = new NOPRule();
-		Texture holeTexture = new Texture(Gdx.files.internal("hole.jpg"));
+		Texture holeTexture = new Texture(Gdx.files.internal("hole.png"));
 		Array<EventFirerEntity> fruitsList = Array.with();
 		Array<EventFirerEntity> wallsList = Array.with();
 		Array<Actor> worldMap = Array.with();
@@ -111,18 +111,21 @@ public class SnakeScreen extends AbstractScreen {
 					manager.put(rule.toString(), texture);
 					if ("fruit".equals(rule.toString())) {
 						fruitsList
-						.add(new Fruit(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
+								.add(new Fruit(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
 					} else if ("poison".equals(rule.toString())) {
 						fruitsList.add(new PoisonedFruit(texture,
 								new Vector2(x * texture.getWidth(), y * texture.getHeight())));
-					} else if ("identityRule".equals(rule.toString())) {
+					} else if ("speed".equals(rule.toString())) {
+						fruitsList.add(new SpeedFruit(texture,
+								new Vector2(x * texture.getWidth(), y * texture.getHeight())));
+					}
+					else if ("identityRule".equals(rule.toString())) {
 						wallsList.add(new Wall(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
 					} else if ("boingRule".equals(rule.toString())) {
 						final BoingWall boingWall = new BoingWall(texture,
 								new Vector2(x * texture.getWidth(), y * texture.getHeight()));
 						wallsList.add(boingWall);
 						addListenersTo(boingWall);
-
 					} else if ("head".equals(rule.toString())) {
 						head = new Piece(new Vector2(x * texture.getWidth(), y * texture.getHeight()), texture);
 					} else if ("piece".equals(rule.toString())) {
@@ -160,9 +163,9 @@ public class SnakeScreen extends AbstractScreen {
 		addActor(title);
 
 		TimingFruitGenerator fruitGenerator = new TimingFruitGenerator(layer, fruitBuilder, fruitRule, layer.getWidth() - 1,
-				layer.getHeight() - 1, 4f);
+				layer.getHeight() - 1, 3f);
 		TimingFruitGenerator poisonGenerator = new TimingFruitGenerator(layer, speedBuilder, fruitRule, layer.getWidth() - 1,
-				layer.getHeight() - 1, .5f);
+				layer.getHeight() - 1, 5f);
 		TimingFruitGenerator wallGenerator = new TimingFruitGenerator(layer, wallBuilder, (WorldManager) movingRules,
 				layer.getWidth() - 1, layer.getHeight() - 1, 1f);
 
@@ -177,8 +180,8 @@ public class SnakeScreen extends AbstractScreen {
 		piecesActors.addAll(pieces);
 		MapGenerator generator = new MapGenerator(actors, worldMap, piecesActors);
 		addActor(generator);
-		// addActor(fruitGenerator);
-		// addActor(poisonGenerator);
+		addActor(fruitGenerator);
+		addActor(poisonGenerator);
 		// addActor(wallGenerator);
 		// FIXME: Use this renderer?
 		// renderer = new OrthogonalTiledMapRenderer(map);
@@ -236,7 +239,7 @@ public class SnakeScreen extends AbstractScreen {
 			@Override
 			public boolean handle(Actor source, Type type) {
 				if (SnakeEvent.Type.speed.equals(type)) {
-					TextFactory.addNotifyAnimation(title, source, String.valueOf(snake.getVelocity()) + "!", Color.GREEN);
+					TextFactory.addNotifyAnimation(title, source, String.valueOf(snake.getSpeed()) + "!", Color.GREEN);
 				}
 				return false;
 			}
