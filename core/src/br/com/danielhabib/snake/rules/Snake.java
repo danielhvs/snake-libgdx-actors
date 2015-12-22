@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 
 public class Snake extends Actor {
@@ -11,6 +12,7 @@ public class Snake extends Actor {
 	private Array<Piece> pieces;
 	private Texture pieceTexture;
 	private Vector2 velocity;
+	private boolean isDead;
 
 	public Snake(Array<Piece> pieces, Texture pieceTexture, Vector2 velocity) {
 		this.pieces = pieces;
@@ -195,11 +197,30 @@ public class Snake extends Actor {
 
 	@Override
 	public boolean hasActions() {
-		boolean hasActions = false;
 		for (Piece piece : pieces) {
-			hasActions |= piece.hasActions();
+			if (piece.hasActions()) {
+				return true;
+			}
 		}
-		return hasActions | super.hasActions();
+		return false;
+	}
+
+	public void die() {
+		int sign = 1;
+		for (Piece piece : pieces) {
+			sign *= -1;
+			piece.addAction(Actions.rotateBy(sign * 720f, 0.5f));
+			piece.addAction(Actions.fadeOut(1f));
+		}
+		died();
+	}
+
+	private void died() {
+		this.isDead = true;
+	}
+
+	public boolean isDead() {
+		return isDead;
 	}
 
 }

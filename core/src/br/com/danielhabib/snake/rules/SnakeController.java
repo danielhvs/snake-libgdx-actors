@@ -15,10 +15,16 @@ public class SnakeController extends Actor {
 	}
 
 	public void left(Snake snake, float delta) {
+		if (snake.hasActions() || snake.isDead()) {
+			return;
+		}
 		movingRules.turnLeft(snake, delta);
 	}
 
 	public void right(Snake snake, float delta) {
+		if (snake.hasActions() || snake.isDead()) {
+			return;
+		}
 		movingRules.turnRight(snake, delta);
 	}
 

@@ -43,7 +43,7 @@ public class MapMovingRules extends AMovingRules implements WorldManager {
 	}
 
 	public void update(float delta) {
-		if (snake.hasActions()) {
+		if (snake.hasActions() || snake.isDead()) {
 			return;
 		}
 		if (snake.isEatingItSelf()) {

@@ -21,7 +21,7 @@ public class AFruitRule extends Actor implements WorldManager {
 
 	@Override
 	public void act(float delta) {
-		if (snake.hasActions()) {
+		if (snake.hasActions() || snake.isDead()) {
 			return;
 		}
 		EventFirerEntity toRemove = null;

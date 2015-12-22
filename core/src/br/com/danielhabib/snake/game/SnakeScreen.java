@@ -22,6 +22,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -119,7 +120,10 @@ public class SnakeScreen extends GameScreen {
 								new Vector2(x * texture.getWidth(), y * texture.getHeight())));
 					}
 					else if ("identityRule".equals(rule.toString())) {
-						wallsList.add(new Wall(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
+						final Wall wall = new Wall(texture,
+								new Vector2(x * texture.getWidth(), y * texture.getHeight()));
+						wallsList.add(wall);
+						addListenersTo(wall);
 					} else if ("boingRule".equals(rule.toString())) {
 						final BoingWall boingWall = new BoingWall(texture,
 								new Vector2(x * texture.getWidth(), y * texture.getHeight()));
@@ -187,6 +191,31 @@ public class SnakeScreen extends GameScreen {
 		// renderer.setView((OrthographicCamera) getCamera());
 	}
 
+	private void addListenersTo(final Wall wall) {
+		wall.addListener(new SnakeListener() {
+			@Override
+			public boolean colided(Actor actor, Event event) {
+				if (wall == actor) {
+					wall.addAction(
+							Actions.sequence(
+							Actions.repeat(3,
+							Actions.sequence(
+									Actions.scaleTo(1.5f, 1.5f, .5f),
+									Actions.scaleTo(1f, 1f, .5f)
+							)),
+							new Action() {
+								@Override
+								public boolean act(float delta) {
+									ScreenManager.getInstance().showScreen(ScreenEnum.GAME, 1);
+									return false;
+								}
+					}));
+				}
+				return super.revert(actor, event);
+			}
+		});
+	}
+
 	private void addListenersTo(final BoingWall boingWall) {
 		boingWall.addListener(new SnakeListener() {
 			@Override
@@ -229,18 +258,34 @@ public class SnakeScreen extends GameScreen {
 
 	private Rectangle getRectangle(MapObject object) {
 		RectangleMapObject rectangle = (RectangleMapObject) object;
-		Rectangle pos = rectangle.getRectangle();
-		return pos;
+		return rectangle.getRectangle();
 	}
 
 	private void addListenersTo(final Label title) {
 		title.addListener(new SnakeListener() {
 			@Override
 			public boolean handle(Actor source, Type type) {
-				if (SnakeEvent.Type.speed.equals(type)) {
+				switch (type) {
+				case speed:
 					TextFactory.addNotifyAnimation(title, source, "+speed!", Color.GREEN);
+					break;
+				default:
+					break;
 				}
 				return false;
+			}
+
+			@Override
+			public boolean colided(Actor source, Event event) {
+				title.toFront();
+				title.setFontScale(1f);
+				float x = source.getX() - source.getWidth() / 2;
+				title.addAction(Actions.moveTo(x, source.getY() + source.getHeight(), 0));
+				title.addAction(Actions.alpha(1.0f));
+				title.setText("Sorry, dude, you died!");
+				title.setColor(Color.RED);
+				title.addAction(Actions.moveTo(x, source.getY() + 2.5f * source.getHeight(), 2.0f));
+				return super.colided(source, event);
 			}
 
 			@Override
@@ -270,6 +315,12 @@ public class SnakeScreen extends GameScreen {
 				if (type.equals(SnakeEvent.Type.speed)) {
 					snake.incSpeed(1.1f);
 				}
+				return false;
+			}
+
+			@Override
+			public boolean colided(Actor source, Event event) {
+				snake.die();
 				return false;
 			}
 
