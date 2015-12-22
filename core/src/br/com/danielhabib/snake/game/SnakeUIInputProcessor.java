@@ -11,10 +11,10 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class SnakeUIInputProcessor extends InputAdapter {
 
-	private AbstractScreen screen;
+	private GameScreen screen;
 	private VisDialog dialog;
 
-	public SnakeUIInputProcessor(AbstractScreen screen) {
+	public SnakeUIInputProcessor(GameScreen screen) {
 		this.screen = screen;
 		this.dialog = buildDialog();
 	}

@@ -88,10 +88,6 @@ public class Snake extends Actor {
 		return velocity.cpy();
 	}
 
-	public float getSpeed() {
-		return velocity.cpy().len();
-	}
-
 	@Override
 	public String toString() {
 		return pieces.toString() + " VELOCITY: " + velocity;

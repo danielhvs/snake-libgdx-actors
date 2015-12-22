@@ -52,12 +52,11 @@ import br.com.danielhabib.snake.rules.Wall;
 import br.com.danielhabib.snake.rules.WorldManager;
 import br.com.danielhabib.snake.rules.WormHole;
 
-public class SnakeScreen extends AbstractScreen {
+public class SnakeScreen extends GameScreen {
 
 	private int level;
 	private OrthogonalTiledMapRenderer renderer;
 	private TextureManager manager;
-	private Snake snake;
 
 	public SnakeScreen(Object... params) {
 		this.level = (Integer) params[0];
@@ -239,7 +238,7 @@ public class SnakeScreen extends AbstractScreen {
 			@Override
 			public boolean handle(Actor source, Type type) {
 				if (SnakeEvent.Type.speed.equals(type)) {
-					TextFactory.addNotifyAnimation(title, source, String.valueOf(snake.getSpeed()) + "!", Color.GREEN);
+					TextFactory.addNotifyAnimation(title, source, "+speed!", Color.GREEN);
 				}
 				return false;
 			}
