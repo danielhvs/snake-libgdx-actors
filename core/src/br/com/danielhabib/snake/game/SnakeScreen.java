@@ -190,6 +190,7 @@ public class SnakeScreen extends GameScreen {
 		// FIXME: Use this renderer?
 		// renderer = new OrthogonalTiledMapRenderer(map);
 		// renderer.setView((OrthographicCamera) getCamera());
+		soundWalking.loop();
 	}
 
 	private void addListenersTo(final Wall wall) {
@@ -322,21 +323,22 @@ public class SnakeScreen extends GameScreen {
 
 			@Override
 			public boolean colided(Actor source, Event event) {
-				snake.die();
 				soundDied.play();
+				snake.die();
 				return false;
 			}
 
 			@Override
 			public boolean revert(Actor source, Event event) {
+				soundRevert.play();
 				snake.revert();
 				return false;
 			}
 
 			@Override
 			public boolean addTail(Actor source, Event event) {
-				snake.addTail();
 				soundApple.play();
+				snake.addTail();
 				return false;
 			}
 
@@ -367,6 +369,7 @@ public class SnakeScreen extends GameScreen {
 
 	@Override
 	public void dispose() {
+		super.dispose();
 		manager.dispose();
 	}
 

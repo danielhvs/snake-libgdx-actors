@@ -2,6 +2,7 @@ package br.com.danielhabib.snake.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,6 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public abstract class AbstractScreen extends Stage implements Screen {
+
+	protected Sound soundDied;
+	protected Sound soundApple;
+	protected Sound soundRevert;
+	protected Sound soundWalking;
+	private Sound music;
 
 	protected AbstractScreen() {
 		super(new ScreenViewport(new OrthographicCamera()), new SpriteBatch());
@@ -50,6 +57,23 @@ public abstract class AbstractScreen extends Stage implements Screen {
 
 	@Override
 	public void resume() {
+	}
+
+	@Override
+	public void dispose() {
+		// FIXME: Sound manager.
+		dispose(soundDied);
+		dispose(soundApple);
+		dispose(soundRevert);
+		dispose(soundWalking);
+		super.dispose();
+	}
+
+	private void dispose(Sound sound) {
+		if (sound != null) {
+			sound.stop();
+			sound.dispose();
+		}
 	}
 
 }
