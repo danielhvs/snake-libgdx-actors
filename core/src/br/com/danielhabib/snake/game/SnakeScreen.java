@@ -336,6 +336,7 @@ public class SnakeScreen extends GameScreen {
 			@Override
 			public boolean addTail(Actor source, Event event) {
 				snake.addTail();
+				soundApple.play();
 				return false;
 			}
 

@@ -16,6 +16,7 @@ public abstract class GameScreen extends AbstractScreen {
 	protected Snake snake;
 	private Label fpsLabel;
 	protected Sound soundDied;
+	protected Sound soundApple;
 
 	@Override
 	public void render(float delta) {
@@ -36,6 +37,7 @@ public abstract class GameScreen extends AbstractScreen {
 	@Override
 	public void buildStage() {
 		soundDied = Gdx.audio.newSound(Gdx.files.internal("dead.mp3"));
+		soundApple = Gdx.audio.newSound(Gdx.files.internal("apple.wav"));
 		BitmapFont font = new BitmapFont();
 		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
 		fpsLabel = new FpsCountingLabel("", labelStyle);
