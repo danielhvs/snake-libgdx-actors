@@ -2,19 +2,18 @@ package br.com.danielhabib.snake.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 import br.com.danielhabib.snake.rules.Snake;
 
 public abstract class GameScreen extends AbstractScreen {
 	private boolean paused = false;
 	protected Snake snake;
-	protected FPSLogger fps;
-
-	public GameScreen() {
-		this.fps = new FPSLogger();
-	}
+	private Label fpsLabel;
 
 	@Override
 	public void render(float delta) {
@@ -30,7 +29,14 @@ public abstract class GameScreen extends AbstractScreen {
 		getBatch().setProjectionMatrix(getCamera().combined);
 
 		draw();
-		fps.log();
+	}
+
+	@Override
+	public void buildStage() {
+		BitmapFont font = new BitmapFont();
+		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
+		fpsLabel = new FpsCountingLabel("", labelStyle);
+		addActor(fpsLabel);
 	}
 
 	@Override

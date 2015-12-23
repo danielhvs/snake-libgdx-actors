@@ -65,6 +65,7 @@ public class SnakeScreen extends GameScreen {
 
 	@Override
 	public void buildStage() {
+		super.buildStage();
 		buildTiledLevel();
 	}
 
@@ -111,7 +112,7 @@ public class SnakeScreen extends GameScreen {
 					manager.put(rule.toString(), texture);
 					if ("fruit".equals(rule.toString())) {
 						fruitsList
-								.add(new Fruit(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
+						.add(new Fruit(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
 					} else if ("poison".equals(rule.toString())) {
 						fruitsList.add(new PoisonedFruit(texture,
 								new Vector2(x * texture.getWidth(), y * texture.getHeight())));
@@ -198,18 +199,18 @@ public class SnakeScreen extends GameScreen {
 				if (wall == actor) {
 					wall.addAction(
 							Actions.sequence(
-							Actions.repeat(3,
-							Actions.sequence(
-									Actions.scaleTo(1.5f, 1.5f, .5f),
-									Actions.scaleTo(1f, 1f, .5f)
-							)),
-							new Action() {
-								@Override
-								public boolean act(float delta) {
-									ScreenManager.getInstance().showScreen(ScreenEnum.GAME, 1);
-									return false;
-								}
-					}));
+									Actions.repeat(3,
+											Actions.sequence(
+													Actions.scaleTo(1.5f, 1.5f, .5f),
+													Actions.scaleTo(1f, 1f, .5f)
+													)),
+									new Action() {
+										@Override
+										public boolean act(float delta) {
+											ScreenManager.getInstance().showScreen(ScreenEnum.GAME, 1);
+											return false;
+										}
+									}));
 				}
 				return super.revert(actor, event);
 			}
@@ -261,6 +262,7 @@ public class SnakeScreen extends GameScreen {
 		return rectangle.getRectangle();
 	}
 
+	// FIXME: Using only one title per method overlaps itself.
 	private void addListenersTo(final Label title) {
 		title.addListener(new SnakeListener() {
 			@Override
