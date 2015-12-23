@@ -2,6 +2,7 @@ package br.com.danielhabib.snake.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,6 +15,7 @@ public abstract class GameScreen extends AbstractScreen {
 	private boolean paused = false;
 	protected Snake snake;
 	private Label fpsLabel;
+	protected Sound soundDied;
 
 	@Override
 	public void render(float delta) {
@@ -33,6 +35,7 @@ public abstract class GameScreen extends AbstractScreen {
 
 	@Override
 	public void buildStage() {
+		soundDied = Gdx.audio.newSound(Gdx.files.internal("dead.mp3"));
 		BitmapFont font = new BitmapFont();
 		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
 		fpsLabel = new FpsCountingLabel("", labelStyle);

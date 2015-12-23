@@ -323,6 +323,7 @@ public class SnakeScreen extends GameScreen {
 			@Override
 			public boolean colided(Actor source, Event event) {
 				snake.die();
+				soundDied.play();
 				return false;
 			}
 
