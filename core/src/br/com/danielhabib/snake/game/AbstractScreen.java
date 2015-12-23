@@ -15,7 +15,9 @@ public abstract class AbstractScreen extends Stage implements Screen {
 	protected Sound soundApple;
 	protected Sound soundRevert;
 	protected Sound soundWalking;
-	private Sound music;
+	protected Sound soundPoison;
+	protected Sound soundSpeed;
+	protected Sound music;
 
 	protected AbstractScreen() {
 		super(new ScreenViewport(new OrthographicCamera()), new SpriteBatch());
@@ -66,6 +68,7 @@ public abstract class AbstractScreen extends Stage implements Screen {
 		dispose(soundApple);
 		dispose(soundRevert);
 		dispose(soundWalking);
+		dispose(soundPoison);
 		super.dispose();
 	}
 

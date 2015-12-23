@@ -316,6 +316,7 @@ public class SnakeScreen extends GameScreen {
 			@Override
 			public boolean handle(Actor source, Type type) {
 				if (type.equals(SnakeEvent.Type.speed)) {
+					soundSpeed.play();
 					snake.incSpeed(1.1f);
 				}
 				return false;
@@ -344,6 +345,7 @@ public class SnakeScreen extends GameScreen {
 
 			@Override
 			public boolean removeTail(Actor source, Event event) {
+				soundPoison.play();
 				snake.removeTail();
 				return false;
 			}
