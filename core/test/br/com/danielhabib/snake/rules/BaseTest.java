@@ -3,8 +3,6 @@ package br.com.danielhabib.snake.rules;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import java.util.Stack;
-
 import org.junit.Before;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -17,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 
 public class BaseTest {
 
@@ -46,30 +45,34 @@ public class BaseTest {
 
 	}
 
+	protected Snake newSnake(int x, int y, Vector2 velocity) {
+		Array<Piece> pieces = new Array<Piece>();
+		pieces.add(new Piece(new Vector2(x, y), texture));
+		return new Snake(pieces, texture, velocity);
+	}
+
 	protected Snake newSnake(int x, int y) {
-		return newSnake(x, y, Direction.RIGHT);
+		return newSnake(new Vector2(x, y));
 	}
 
-	protected Snake newSnake(Vector2 point, Direction direction) {
-		return newSnake(point.x, point.y, direction);
+	protected Snake newSnake(Vector2 point) {
+		return newSnake(point.x, point.y);
 	}
 
-	protected Snake newSnake(float x, float y, Direction direction) {
-		Stack<Piece> pieces = new Stack<Piece>();
-		pieces.push(new Piece(new Vector2(x, y), direction, texture));
-		return new Snake(pieces,texture, new Vector2(Entity.SIZE, 0));
+	protected Snake newSnake(float x, float y) {
+		return newSnake(new Vector2(32, 0));
 	}
 
-	protected Snake newSnake(Stack<Piece> pieces) {
-		return new Snake(pieces, texture, new Vector2(Entity.SIZE, 0));
+	protected Snake newSnake(Array<Piece> pieces) {
+		return new Snake(pieces, texture, new Vector2(32, 0));
 	}
 
-	protected Piece newPiece(Vector2 vector, Direction direction) {
-		return new Piece(vector, direction, texture);
+	protected Piece newPiece(Vector2 vector) {
+		return new Piece(vector, texture);
 	}
 
 	protected Piece newPiece(int x, int y) {
-		return newPiece(new Vector2(x, y), Direction.RIGHT);
+		return newPiece(new Vector2(x, y));
 	}
 
 	protected void assertPoints(Vector2 expected, Vector2 actual) {
@@ -78,17 +81,16 @@ public class BaseTest {
 	}
 
 	protected void assertSnake(Snake expected, Snake actual) {
-		Stack<Piece> expectedPieces = expected.copyPieces();
-		Stack<Piece> actualPieces = actual.copyPieces();
-		assertEquals("Pieces size", expectedPieces.size(), actualPieces.size());
-		for (int i = 0; i < expectedPieces.size(); i++) {
+		Array<Piece> expectedPieces = expected.getPieces();
+		Array<Piece> actualPieces = actual.getPieces();
+		assertEquals("Pieces size", expectedPieces.size, actualPieces.size);
+		for (int i = 0; i < expectedPieces.size; i++) {
 			assertPiece(expectedPieces.get(i), actualPieces.get(i));
 		}
 	}
 
-	protected void assertPiece(Piece expectedPiece, Piece actualPieces) {
-		assertPoints(expectedPiece.getPosition(), actualPieces.getPosition());
-		assertEquals(expectedPiece.getNormDirection(), actualPieces.getNormDirection());
+	protected void assertPiece(Piece expectedPiece, Piece actualPiece) {
+		assertPoints(expectedPiece.getPosition(), actualPiece.getPosition());
 	}
 
 	protected AFruitRule newFruitRule(Vector2 position, IRule rule) {

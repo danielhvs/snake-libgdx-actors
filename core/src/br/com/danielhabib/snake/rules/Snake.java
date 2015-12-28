@@ -223,4 +223,8 @@ public class Snake extends Actor {
 		return isDead;
 	}
 
+	public Array<Piece> getPieces() {
+		return pieces;
+	}
+
 }

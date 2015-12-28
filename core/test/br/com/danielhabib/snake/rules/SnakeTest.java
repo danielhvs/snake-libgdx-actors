@@ -2,13 +2,11 @@ package br.com.danielhabib.snake.rules;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-import java.util.Stack;
-
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 public class SnakeTest extends BaseTest {
 
@@ -28,65 +26,65 @@ public class SnakeTest extends BaseTest {
 
 	@Test
 	public void move_ManyPieces_MovesAllPieces() throws Exception {
-		Snake snake = newSnake(3, 1).addTail(2, 1).addTail(1, 1).addTail(0, 1);
+		Snake snake = newSnake(3, 1).addTail().addTail().addTail();
 
 		Snake actual = snake.move(new Vector2(4, 1));
 
-		Snake expected = newSnake(4, 1).addTail(3, 1).addTail(2, 1).addTail(1, 1);
+		Snake expected = newSnake(4, 1).addTail().addTail().addTail();
 		assertSnake(expected, actual);
 	}
 
 	@Test
 	public void getPosition_ManyPieces_ReturnsAllPositions() throws Exception {
-		Snake snake = newSnake(3, 1).addTail(2, 1).addTail(1, 1).addTail(0, 1);
+		Snake snake = newSnake(3, 1).addTail().addTail().addTail();
 
-		List<Piece> pieces = snake.copyPieces();
+		Array<Piece> pieces = snake.getPieces();
 
-		assertPiece(newPiece(new Vector2(3, 1), Direction.RIGHT), pieces.get(0));
-		assertPiece(newPiece(new Vector2(2, 1), Direction.RIGHT), pieces.get(1));
-		assertPiece(newPiece(new Vector2(1, 1), Direction.RIGHT), pieces.get(2));
-		assertPiece(newPiece(new Vector2(0, 1), Direction.RIGHT), pieces.get(3));
+		assertPiece(newPiece(new Vector2(3, 1)), pieces.get(0));
+		assertPiece(newPiece(new Vector2(2, 1)), pieces.get(1));
+		assertPiece(newPiece(new Vector2(1, 1)), pieces.get(2));
+		assertPiece(newPiece(new Vector2(0, 1)), pieces.get(3));
 	}
 
 	@Test
 	public void addTail_NoParameter_AddsAfterLastTail() throws Exception {
-		Snake snake = newSnake(3, 1).addTail(2, 1).addTail(1, 1).addTail();
-		Snake expected = newSnake(3, 1).addTail(2, 1).addTail(1, 1).addTail(0, 1);
+		Snake snake = newSnake(3, 1).addTail().addTail().addTail();
+		Snake expected = newSnake(3, 1).addTail().addTail().addTail();
 
 		assertSnake(expected, snake);
 	}
 
 	@Test
 	public void addTail_2PiecedSnake_MaintainsDirection() throws Exception {
-		Snake snake = newSnake(0, 0, Direction.LEFT).addTail();
+		Snake snake = newSnake(0, 0, new Vector2(1, 0)).addTail();
 
-		assertEquals(Direction.LEFT, snake.getTail().getNormDirection());
+		assertEquals(new Vector2(1, 0), snake.getVelocity());
 	}
 
 	@Ignore("See later the size rules about the snakes and textures...")
 	public void removeTail_OneHeadedSnake_ReturnsSnakeEnd() throws Exception {
 		Snake snake = newSnake(0, 0).removeTail();
 
-		assertEquals(new Stack<Piece>(), snake.copyPieces());
+		assertEquals(new Array<Piece>(), snake.getPieces());
 	}
 
 	@Ignore("See later the size rules about the snakes and textures...")
 	public void removeTail_TwoHeadedSnake_ReturnsOneHeaded() throws Exception {
-		Snake snake = newSnake(0, 0).addTail(1, 0).removeTail();
+		Snake snake = newSnake(0, 0).addTail().removeTail();
 
 		assertEquals(newSnake(0, 0), snake);
 	}
 
 	@Test
 	public void revert_RevertsSnakePosition() throws Exception {
-		Snake snake = newSnake(0, 0).revert();
+		Snake snake = newSnake(0, 0, new Vector2(1, 0)).revert();
 
-		assertEquals(Direction.LEFT, snake.getTail().getNormDirection());
+		assertEquals(new Vector2(-1, 0), snake.getVelocity());
 	}
 
 	@Test
 	public void revert_2PiecedSnake_RevertsSnakePosition() throws Exception {
-		Snake expected = newSnake(0, 0, Direction.LEFT).addTail();
+		Snake expected = newSnake(0, 0).addTail();
 
 		Snake original = newSnake(1, 0).addTail();
 		Snake snake = original.revert();
@@ -96,30 +94,30 @@ public class SnakeTest extends BaseTest {
 
 	@Test
 	public void revert_ManyPiecedSnake_RevertsSnakeAndTailPosition() throws Exception {
-		Stack<Piece> pieces = new Stack<Piece>();
-		pieces.push(newPiece(new Vector2(2, 0), Direction.RIGHT));
-		pieces.push(newPiece(new Vector2(1, 0), Direction.RIGHT));
-		pieces.push(newPiece(new Vector2(0, 1), Direction.UP));
-		pieces.push(newPiece(new Vector2(-1, 1), Direction.RIGHT));
+		Array<Piece> pieces = new Array<Piece>();
+		pieces.add(newPiece(new Vector2(2, 0)));
+		pieces.add(newPiece(new Vector2(1, 0)));
+		pieces.add(newPiece(new Vector2(0, 1)));
+		pieces.add(newPiece(new Vector2(-1, 1)));
 
-		Stack<Piece> expectedPieces = new Stack<Piece>();
-		expectedPieces.push(newPiece(new Vector2(-1, 1), Direction.LEFT));
-		expectedPieces.push(newPiece(new Vector2(0, 1), Direction.DOWN));
-		expectedPieces.push(newPiece(new Vector2(1, 0), Direction.LEFT));
-		expectedPieces.push(newPiece(new Vector2(2, 0), Direction.LEFT));
+		Array<Piece> expectedPieces = new Array<Piece>();
+		expectedPieces.add(newPiece(new Vector2(-1, 1)));
+		expectedPieces.add(newPiece(new Vector2(0, 1)));
+		expectedPieces.add(newPiece(new Vector2(1, 0)));
+		expectedPieces.add(newPiece(new Vector2(2, 0)));
 
-		Snake snake = new Snake(pieces, texture, new Vector2(Entity.SIZE, 0)).revert();
+		Snake snake = new Snake(pieces, texture, new Vector2(1, 0)).revert();
 
-		assertSnake(new Snake(expectedPieces, texture, new Vector2(Entity.SIZE, 0)), snake);
+		assertSnake(new Snake(expectedPieces, texture, new Vector2(1, 0)), snake);
 	}
 
 	@Test
 	public void turn_ChangesHeadDirection() throws Exception {
-		Snake snake = newSnake(0, 0, Direction.RIGHT);
+		Snake snake = newSnake(0, 0);
 
-		Snake turned = snake.turn(Direction.UP);
+		Snake turned = snake.turn(1f);
 
-		assertEquals(Direction.UP, turned.getDirection());
+		assertEquals(32f, turned.getVelocity().angle());
 	}
 
 }

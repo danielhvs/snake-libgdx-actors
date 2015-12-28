@@ -2,11 +2,11 @@ package br.com.danielhabib.snake.rules;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 import org.mockito.Mock;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 public class MapMovingRulesTest extends BaseTest {
 	private static final Vector2 ORIGIN = new Vector2(0, 0);
@@ -99,13 +99,13 @@ public class MapMovingRulesTest extends BaseTest {
 	// }
 
 	private Snake snakeSize5() {
-		Stack<Piece> pieces = new Stack<Piece>();
-		pieces.push(newPiece(new Vector2(5, 0), Direction.DOWN));
-		pieces.push(newPiece(new Vector2(4, 0), Direction.RIGHT));
-		pieces.push(newPiece(new Vector2(4, 1), Direction.UP));
-		pieces.push(newPiece(new Vector2(5, 1), Direction.LEFT));
-		pieces.push(newPiece(new Vector2(6, 1), Direction.LEFT));
-		return new Snake(pieces, texture, new Vector2(Entity.SIZE, 0));
+		Array<Piece> pieces = new Array<Piece>();
+		pieces.add(newPiece(new Vector2(5, 0)));
+		pieces.add(newPiece(new Vector2(4, 0)));
+		pieces.add(newPiece(new Vector2(4, 1)));
+		pieces.add(newPiece(new Vector2(5, 1)));
+		pieces.add(newPiece(new Vector2(6, 1)));
+		return new Snake(pieces, texture, new Vector2(32, 0));
 	}
 
 	private Map<Entity, IRule> wallAwayFromSnake() {
