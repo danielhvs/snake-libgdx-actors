@@ -14,7 +14,6 @@ public abstract class AbstractScreen extends Stage implements Screen {
 	protected Sound soundDied;
 	protected Sound soundApple;
 	protected Sound soundRevert;
-	protected Sound soundWalking;
 	protected Sound soundPoison;
 	protected Sound soundSpeed;
 	protected Sound music;
@@ -67,7 +66,6 @@ public abstract class AbstractScreen extends Stage implements Screen {
 		dispose(soundDied);
 		dispose(soundApple);
 		dispose(soundRevert);
-		dispose(soundWalking);
 		dispose(soundPoison);
 		super.dispose();
 	}

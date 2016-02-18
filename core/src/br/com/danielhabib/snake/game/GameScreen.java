@@ -36,7 +36,6 @@ public abstract class GameScreen extends AbstractScreen {
 		soundDied = Gdx.audio.newSound(Gdx.files.internal("dead.mp3"));
 		soundApple = Gdx.audio.newSound(Gdx.files.internal("apple.wav"));
 		soundRevert = Gdx.audio.newSound(Gdx.files.internal("revert.wav"));
-		soundWalking = Gdx.audio.newSound(Gdx.files.internal("walking.mp3"));
 		soundPoison = Gdx.audio.newSound(Gdx.files.internal("poison.mp3"));
 		soundSpeed = Gdx.audio.newSound(Gdx.files.internal("speed.wav"));
 		BitmapFont font = new BitmapFont();

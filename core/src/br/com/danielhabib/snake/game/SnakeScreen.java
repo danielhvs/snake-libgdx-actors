@@ -190,7 +190,6 @@ public class SnakeScreen extends GameScreen {
 		// FIXME: Use this renderer?
 		// renderer = new OrthogonalTiledMapRenderer(map);
 		// renderer.setView((OrthographicCamera) getCamera());
-		soundWalking.loop();
 	}
 
 	private void addListenersTo(final Wall wall) {
