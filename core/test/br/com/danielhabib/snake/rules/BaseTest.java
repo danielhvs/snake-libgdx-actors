@@ -12,12 +12,27 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
+import br.com.danielhabib.snake.game.EntityBuilder;
+import br.com.danielhabib.snake.game.EventFirerEntity;
+
 public class BaseTest {
+	@Mock
+	EventFirerEntity eventFirerEntity;
+
+	@Mock
+	EntityBuilder entityBuilder;
+
+	@Mock
+	WorldManager worldManager;
+
+	@Mock
+	TiledMapTileLayer layer;
 
 	@Mock
 	Texture texture;
@@ -42,7 +57,6 @@ public class BaseTest {
 		MockitoAnnotations.initMocks(this);
 		when(texture.getWidth()).thenReturn(32);
 		when(texture.getHeight()).thenReturn(32);
-
 	}
 
 	protected Snake newSnake(int x, int y, Vector2 velocity) {

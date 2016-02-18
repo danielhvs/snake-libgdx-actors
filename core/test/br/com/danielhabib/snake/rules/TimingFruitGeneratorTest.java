@@ -1,39 +1,53 @@
 package br.com.danielhabib.snake.rules;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
 
+import br.com.danielhabib.snake.game.EventFirerEntity;
 
-public class TimingFruitGeneratorTest {
+public class TimingFruitGeneratorTest extends BaseTest {
+
+	@Before
+	public void setup() {
+		when(layer.getWidth()).thenReturn(2);
+		when(layer.getHeight()).thenReturn(2);
+		when(texture.getWidth()).thenReturn(4);
+		when(texture.getHeight()).thenReturn(4);
+		when(worldManager.getMap()).thenReturn(new Array<Actor>());
+		when(entityBuilder.build(Matchers.isA(Vector2.class))).thenReturn(eventFirerEntity);
+	}
+
 	@Test
 	public void itGeneratesFruit_WhenTimesPassesFromTimeout() throws Exception {
-		List<Actor> map = new ArrayList<Actor>();
-		TimingFruitGenerator generator = newGenerator(map, 1f);
+		TimingFruitGenerator generator = newGenerator(1f);
 
 		generator.act(0.1f);
 		generator.act(0.9f);
 		generator.act(0.9f);
 
-		assertEquals(1, map.size());
+		verify(worldManager).put(eq(eventFirerEntity));
 	}
 
 	@Test
 	public void itDoesntGenerateFruit_WhenTimeDidntPassFromTimeout() throws Exception {
-		List<Actor> map = new ArrayList<Actor>();
-		TimingFruitGenerator generator = newGenerator(map, 1f);
+		TimingFruitGenerator generator = newGenerator(1f);
 
 		generator.act(0.99f);
 
-		assertEquals(0, map.size());
+		verify(worldManager, never()).put(Matchers.isA(EventFirerEntity.class));
 	}
 
-	private TimingFruitGenerator newGenerator(List<Actor> list, float timeoutSeconds) {
-		return new TimingFruitGenerator(null, null, null, 0, 0, timeoutSeconds);
+	private TimingFruitGenerator newGenerator(float timeoutSeconds) {
+		return new TimingFruitGenerator(layer, entityBuilder, worldManager, 0, 0, timeoutSeconds);
 	}
 }
