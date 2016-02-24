@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 import br.com.danielhabib.snake.rules.Snake;
+import br.com.danielhabib.snake.rules.SoundManagerFactory;
+import br.com.danielhabib.snake.rules.SoundReader;
 
 public abstract class GameScreen extends AbstractScreen {
 	private boolean paused = false;
@@ -33,11 +35,7 @@ public abstract class GameScreen extends AbstractScreen {
 
 	@Override
 	public void buildStage() {
-		soundDied = Gdx.audio.newSound(Gdx.files.internal("dead.mp3"));
-		soundApple = Gdx.audio.newSound(Gdx.files.internal("apple.wav"));
-		soundRevert = Gdx.audio.newSound(Gdx.files.internal("revert.wav"));
-		soundPoison = Gdx.audio.newSound(Gdx.files.internal("poison.mp3"));
-		soundSpeed = Gdx.audio.newSound(Gdx.files.internal("speed.wav"));
+		sounds = new SoundManagerFactory().newSoundManager(new SoundReader());
 		BitmapFont font = new BitmapFont();
 		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
 		fpsLabel = new FpsCountingLabel("", labelStyle);

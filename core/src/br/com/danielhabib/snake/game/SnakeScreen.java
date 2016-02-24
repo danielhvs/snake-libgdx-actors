@@ -315,7 +315,7 @@ public class SnakeScreen extends GameScreen {
 			@Override
 			public boolean handle(Actor source, Type type) {
 				if (type.equals(SnakeEvent.Type.speed)) {
-					soundSpeed.play();
+					sounds.play(Type.speed);
 					snake.incSpeed(1.1f);
 				}
 				return false;
@@ -323,28 +323,29 @@ public class SnakeScreen extends GameScreen {
 
 			@Override
 			public boolean colided(Actor source, Event event) {
-				soundDied.play();
+				// DRY: it can be sounds.play(type) inside the handle method.
+				sounds.play(Type.died);
 				snake.die();
 				return false;
 			}
 
 			@Override
 			public boolean revert(Actor source, Event event) {
-				soundRevert.play();
+				sounds.play(Type.revert);
 				snake.revert();
 				return false;
 			}
 
 			@Override
 			public boolean addTail(Actor source, Event event) {
-				soundApple.play();
+				sounds.play(Type.addTail);
 				snake.addTail();
 				return false;
 			}
 
 			@Override
 			public boolean removeTail(Actor source, Event event) {
-				soundPoison.play();
+				sounds.play(Type.removeTail);
 				snake.removeTail();
 				return false;
 			}
