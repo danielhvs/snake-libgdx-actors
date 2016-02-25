@@ -12,7 +12,7 @@ import br.com.danielhabib.snake.rules.SoundManager;
 
 public abstract class AbstractScreen extends Stage implements Screen {
 
-	protected SoundManager sounds;
+	protected SoundManager sounds = SoundManager.NoSoundManager;
 
 	protected AbstractScreen() {
 		super(new ScreenViewport(new OrthographicCamera()), new SpriteBatch());
@@ -31,8 +31,6 @@ public abstract class AbstractScreen extends Stage implements Screen {
 
 		draw();
 	}
-
-	// FIXME: Dispose.
 
 	@Override
 	public void show() {

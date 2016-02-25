@@ -19,7 +19,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -56,8 +55,7 @@ import br.com.danielhabib.snake.rules.WormHole;
 public class SnakeScreen extends GameScreen {
 
 	private int level;
-	private OrthogonalTiledMapRenderer renderer;
-	private TextureManager manager;
+	private TextureManager textures;
 
 	public SnakeScreen(Object... params) {
 		this.level = (Integer) params[0];
@@ -71,8 +69,6 @@ public class SnakeScreen extends GameScreen {
 
 	@Override
 	public void draw() {
-		// FIXME: Use this renderer?
-		// renderer.render();
 		super.draw();
 	}
 
@@ -89,11 +85,11 @@ public class SnakeScreen extends GameScreen {
 		Texture texture = null;
 		Array<Piece> pieces = Array.with();
 		Array<Piece> piecesList = Array.with();
-		manager = new TextureManager();
-		FruitBuilder fruitBuilder = new FruitBuilder(manager);
-		SpeedBuilder speedBuilder = new SpeedBuilder(manager);
-		PoisonBuilder poisonBuilder = new PoisonBuilder(manager);
-		WallBuilder wallBuilder = new WallBuilder(manager);
+		textures = new TextureManager();
+		FruitBuilder fruitBuilder = new FruitBuilder(textures);
+		SpeedBuilder speedBuilder = new SpeedBuilder(textures);
+		PoisonBuilder poisonBuilder = new PoisonBuilder(textures);
+		WallBuilder wallBuilder = new WallBuilder(textures);
 		Piece head = null;
 		Piece tail = null;
 		Texture pieceTexture = null;
@@ -109,7 +105,7 @@ public class SnakeScreen extends GameScreen {
 					TiledMapTile tile = cell.getTile();
 					Object rule = tile.getProperties().get("rule");
 					texture = tile.getTextureRegion().getTexture();
-					manager.put(rule.toString(), texture);
+					textures.put(rule.toString(), texture);
 					if ("fruit".equals(rule.toString())) {
 						fruitsList
 						.add(new Fruit(texture, new Vector2(x * texture.getWidth(), y * texture.getHeight())));
@@ -187,9 +183,6 @@ public class SnakeScreen extends GameScreen {
 		addActor(fruitGenerator);
 		addActor(poisonGenerator);
 		// addActor(wallGenerator);
-		// FIXME: Use this renderer?
-		// renderer = new OrthogonalTiledMapRenderer(map);
-		// renderer.setView((OrthographicCamera) getCamera());
 	}
 
 	private void addListenersTo(final Wall wall) {
@@ -372,7 +365,7 @@ public class SnakeScreen extends GameScreen {
 	@Override
 	public void dispose() {
 		super.dispose();
-		manager.dispose();
+		textures.dispose();
 	}
 
 }
