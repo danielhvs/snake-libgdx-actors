@@ -26,11 +26,31 @@ public abstract class GameScreen extends AbstractScreen {
 			act(delta);
 		}
 
-		getCamera().position.set(snake.getPosition().x, snake.getPosition().y, 0f);
+		getCamera().position.set(calculateXCamera(), calculateYCamera(), 0f);
 		getCamera().update();
 		getBatch().setProjectionMatrix(getCamera().combined);
 
 		draw();
+	}
+
+	private float calculateYCamera() {
+		float center = getHeight() / 2;
+		if (snake.getPosition().y >= center) {
+			return snake.getPosition().y;
+		}
+		else {
+			return center;
+		}
+	}
+
+	private float calculateXCamera() {
+		float center = getWidth() / 2;
+		if (snake.getPosition().x >= center) {
+			return snake.getPosition().x;
+		}
+		else {
+			return center;
+		}
 	}
 
 	@Override
