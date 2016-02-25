@@ -34,6 +34,7 @@ public class SnakeUIInputProcessor extends InputAdapter {
 	private void showDialog() {
 		if (!showingExitDialog) {
 			dialog.show(screen);
+			dialog.setPosition(screen.snake.getPosition().x, screen.snake.getPosition().y);
 			screen.pauseGame();
 		}
 	}
