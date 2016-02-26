@@ -3,6 +3,8 @@ package br.com.danielhabib.snake.game;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
@@ -34,9 +36,16 @@ public class SnakeUIInputProcessor extends InputAdapter {
 	private void showDialog() {
 		if (!showingExitDialog) {
 			dialog.show(screen);
-			dialog.setPosition(screen.snake.getPosition().x, screen.snake.getPosition().y);
+			Camera camera = screen.getCamera();
+			float xPosition = getCenterPoint(camera.viewportWidth, camera.position.x, dialog.getWidth());
+			float yPosition = getCenterPoint(camera.viewportHeight, camera.position.y, dialog.getHeight());
+			dialog.setPosition(xPosition, yPosition);
 			screen.pauseGame();
 		}
+	}
+
+	private float getCenterPoint(float viewportWidth, float x, float width) {
+		return (x - viewportWidth / 2) + (viewportWidth - width) / 2;
 	}
 
 	private VisDialog buildDialog() {
