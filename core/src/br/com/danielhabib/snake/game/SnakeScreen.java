@@ -8,9 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -25,8 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Array;
 
 import br.com.danielhabib.snake.rules.AFruitRule;
@@ -37,6 +33,7 @@ import br.com.danielhabib.snake.rules.HoleMovingRules;
 import br.com.danielhabib.snake.rules.IRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
 import br.com.danielhabib.snake.rules.NOPRule;
+import br.com.danielhabib.snake.rules.NotificationPresenter;
 import br.com.danielhabib.snake.rules.Piece;
 import br.com.danielhabib.snake.rules.RotatingEntity;
 import br.com.danielhabib.snake.rules.Snake;
@@ -46,7 +43,6 @@ import br.com.danielhabib.snake.rules.SnakeEvent.Type;
 import br.com.danielhabib.snake.rules.SnakeListener;
 import br.com.danielhabib.snake.rules.SpeedBuilder;
 import br.com.danielhabib.snake.rules.StaticEntity;
-import br.com.danielhabib.snake.rules.TextFactory;
 import br.com.danielhabib.snake.rules.TimingFruitGenerator;
 import br.com.danielhabib.snake.rules.Wall;
 import br.com.danielhabib.snake.rules.WorldManager;
@@ -67,15 +63,7 @@ public class SnakeScreen extends GameScreen {
 		buildTiledLevel();
 	}
 
-	@Override
-	public void draw() {
-		super.draw();
-	}
-
 	private void buildTiledLevel() {
-		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
-		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
-		final Label title = new Label("", labelStyle);
 		TiledMap map = new TmxMapLoader().load("map" + level + ".tmx");
 		IRule identityRule = new NOPRule();
 		Texture holeTexture = new Texture(Gdx.files.internal("hole.png"));
@@ -152,7 +140,6 @@ public class SnakeScreen extends GameScreen {
 		Actor controller = new SnakeController(movingRules, snake);
 
 		addListenersTo(snake);
-		addListenersTo(title);
 
 		addActor(movingRules);
 		addActor(controller);
@@ -160,7 +147,9 @@ public class SnakeScreen extends GameScreen {
 
 		worldMap.add(snake);
 		addActor(snake);
-		addActor(title);
+		NotificationPresenter notificationPresenter = new NotificationPresenter();
+		notificationPresenter.addListeners();
+		addActor(notificationPresenter);
 
 		TimingFruitGenerator fruitGenerator = new TimingFruitGenerator(layer, fruitBuilder, fruitRule, layer.getWidth() - 1,
 				layer.getHeight() - 1, 3f);
@@ -253,54 +242,6 @@ public class SnakeScreen extends GameScreen {
 	private Rectangle getRectangle(MapObject object) {
 		RectangleMapObject rectangle = (RectangleMapObject) object;
 		return rectangle.getRectangle();
-	}
-
-	// FIXME: Using only one title per method overlaps itself.
-	private void addListenersTo(final Label title) {
-		title.addListener(new SnakeListener() {
-			@Override
-			public boolean handle(Actor source, Type type) {
-				switch (type) {
-				case speed:
-					TextFactory.addNotifyAnimation(title, source, "+speed!", Color.GREEN);
-					break;
-				default:
-					break;
-				}
-				return false;
-			}
-
-			@Override
-			public boolean colided(Actor source, Event event) {
-				title.toFront();
-				title.setFontScale(1f);
-				float x = source.getX() - source.getWidth() / 2;
-				title.addAction(Actions.moveTo(x, source.getY() + source.getHeight(), 0));
-				title.addAction(Actions.alpha(1.0f));
-				title.setText("Sorry, dude, you died!");
-				title.setColor(Color.RED);
-				title.addAction(Actions.moveTo(x, source.getY() + 2.5f * source.getHeight(), 2.0f));
-				return super.colided(source, event);
-			}
-
-			@Override
-			public boolean addTail(Actor source, Event event) {
-				TextFactory.addNotifyAnimation(title, source, "yummi!", Color.WHITE);
-				return false;
-			}
-
-			@Override
-			public boolean removeTail(Actor source, Event event) {
-				TextFactory.addNotifyAnimation(title, source, "ick!", Color.RED);
-				return false;
-			}
-
-			@Override
-			public boolean revert(Actor source, Event event) {
-				TextFactory.addNotifyAnimation(title, source, "boing!", Color.YELLOW);
-				return false;
-			}
-		});
 	}
 
 	private void addListenersTo(final Snake snake) {

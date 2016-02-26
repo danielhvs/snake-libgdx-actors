@@ -60,7 +60,6 @@ public abstract class GameScreen extends AbstractScreen {
 		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
 		fpsLabel = new FpsCountingLabel("", labelStyle);
 		addActor(fpsLabel);
-
 	}
 
 	@Override
