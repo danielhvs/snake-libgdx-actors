@@ -16,6 +16,7 @@ public class Splash extends AbstractScreen {
 
 		VisTextButton playButton = ButtonFactory.newButton("Go go go!");
 		VisTextButton levelButton = ButtonFactory.newButton("Let's see...");
+		VisTextButton configButton = ButtonFactory.newButton("Change stuff...");
 		VisTextButton quitButton = ButtonFactory.newButton("I'm out!");
 
 		// Use Vistable?
@@ -29,10 +30,12 @@ public class Splash extends AbstractScreen {
 
 		UIFactory.addButtonToTable(playButton, table);
 		UIFactory.addButtonToTable(levelButton, table);
+		UIFactory.addButtonToTable(configButton, table);
 		UIFactory.addButtonToTable(quitButton, table);
 
 		playButton.addListener(UIFactory.createListener(ScreenEnum.GAME, 1));
 		levelButton.addListener(UIFactory.createListener(ScreenEnum.LEVEL_SELECT));
+		configButton.addListener(UIFactory.createListener(ScreenEnum.CONFIG));
 		quitButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

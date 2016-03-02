@@ -22,6 +22,13 @@ public enum ScreenEnum {
 			// TODO: add level.
 			return new SnakeScreen(params);
 		}
+	},
+
+	CONFIG {
+		@Override
+		public AbstractScreen getScreen(Object... params) {
+			return new ConfigScreen();
+		}
 	};
 
 	public abstract AbstractScreen getScreen(Object... params);
