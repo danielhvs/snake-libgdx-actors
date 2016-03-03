@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
@@ -110,5 +111,9 @@ public class BaseTest {
 	protected AFruitRule newFruitRule(Vector2 position, IRule rule) {
 		Mockito.when(apple.getPosition()).thenReturn(position);
 		return null;// new AFruitRule(null, drawingManager, snake);
+	}
+
+	protected void touchDown(InputListener listener) {
+		listener.touchDown(null, 0, 0, 0, 0);
 	}
 }

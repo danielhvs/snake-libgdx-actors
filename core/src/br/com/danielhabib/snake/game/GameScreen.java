@@ -9,10 +9,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 import br.com.danielhabib.snake.rules.Snake;
-import br.com.danielhabib.snake.rules.SoundManagerFactory;
-import br.com.danielhabib.snake.rules.SoundReader;
+import br.com.danielhabib.snake.rules.SoundManager;
 
 public abstract class GameScreen extends AbstractScreen {
+
+	protected GameScreen(SoundManager sounds) {
+		super(sounds);
+	}
+
 	private boolean paused = false;
 	protected Snake snake;
 	private Label fpsLabel;
@@ -55,7 +59,6 @@ public abstract class GameScreen extends AbstractScreen {
 
 	@Override
 	public void buildStage() {
-		sounds = new SoundManagerFactory().newSoundManager(new SoundReader());
 		BitmapFont font = new BitmapFont();
 		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
 		fpsLabel = new FpsCountingLabel("", labelStyle);

@@ -1,5 +1,6 @@
 package br.com.danielhabib.snake.rules;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -44,6 +45,31 @@ public class SoundManagerTest {
 		sounds.dispose();
 
 		verify(sound).dispose();
+	}
+
+	@Test
+	public void itCanDisableSound() throws Exception {
+		when(soundReader.readSound("tail.wav")).thenReturn(sound);
+		SoundManager sounds = new SoundManager(soundReader);
+
+		sounds.put(Type.addTail, "tail.wav");
+		sounds.disable();
+		sounds.play(Type.addTail);
+
+		verify(sound, never()).play();
+	}
+
+	@Test
+	public void itCanEnableSound() throws Exception {
+		when(soundReader.readSound("tail.wav")).thenReturn(sound);
+		SoundManager sounds = new SoundManager(soundReader);
+
+		sounds.put(Type.addTail, "tail.wav");
+		sounds.disable();
+		sounds.enable();
+		sounds.play(Type.addTail);
+
+		verify(sound).play();
 	}
 
 }

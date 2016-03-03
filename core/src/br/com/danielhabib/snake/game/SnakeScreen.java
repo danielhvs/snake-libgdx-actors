@@ -41,6 +41,7 @@ import br.com.danielhabib.snake.rules.SnakeController;
 import br.com.danielhabib.snake.rules.SnakeEvent;
 import br.com.danielhabib.snake.rules.SnakeEvent.Type;
 import br.com.danielhabib.snake.rules.SnakeListener;
+import br.com.danielhabib.snake.rules.SoundManager;
 import br.com.danielhabib.snake.rules.SpeedBuilder;
 import br.com.danielhabib.snake.rules.StaticEntity;
 import br.com.danielhabib.snake.rules.TimingFruitGenerator;
@@ -53,7 +54,8 @@ public class SnakeScreen extends GameScreen {
 	private int level;
 	private TextureManager textures;
 
-	public SnakeScreen(Object... params) {
+	public SnakeScreen(SoundManager soundManager, Object... params) {
+		super(soundManager);
 		this.level = (Integer) params[0];
 	}
 
@@ -257,7 +259,9 @@ public class SnakeScreen extends GameScreen {
 
 			@Override
 			public boolean colided(Actor source, Event event) {
-				// DRY: it can be sounds.play(type) inside the handle method.
+				// DRY: it can be
+				// sounds.play(type)
+				// inside the handle method.
 				sounds.play(Type.died);
 				snake.die();
 				return false;

@@ -8,7 +8,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 
+import br.com.danielhabib.snake.rules.SoundManager;
+
 public class Splash extends AbstractScreen {
+
+	protected Splash(SoundManager sounds) {
+		super(sounds);
+	}
 
 	@Override
 	public void buildStage() {
@@ -21,7 +27,6 @@ public class Splash extends AbstractScreen {
 
 		// Use Vistable?
 		Table table = new Table();
-
 
 		title.setFontScale(1);
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

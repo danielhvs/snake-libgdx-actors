@@ -3,6 +3,10 @@ package br.com.danielhabib.snake.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 
+import br.com.danielhabib.snake.rules.SoundManager;
+import br.com.danielhabib.snake.rules.SoundManagerFactory;
+import br.com.danielhabib.snake.rules.SoundReader;
+
 public class ScreenManager {
 
 	// Singleton: unique instance
@@ -10,6 +14,8 @@ public class ScreenManager {
 
 	// Reference to game
 	private Game game;
+
+	private SoundManager soundManager;
 
 	// Singleton!?: private constructor
 	private ScreenManager() {
@@ -27,13 +33,14 @@ public class ScreenManager {
 	// Initialization with the game class
 	public void initialize(Game game) {
 		this.game = game;
+		this.soundManager = new SoundManagerFactory().newSoundManager(new SoundReader());
 	}
 
 	public void showScreen(ScreenEnum screenEnum, Object... params) {
 
 		Screen previousScreen = game.getScreen();
 
-		AbstractScreen newScreen = screenEnum.getScreen(params);
+		AbstractScreen newScreen = screenEnum.getScreen(soundManager, params);
 		newScreen.buildStage();
 		game.setScreen(newScreen);
 
@@ -41,4 +48,5 @@ public class ScreenManager {
 			previousScreen.dispose();
 		}
 	}
+
 }

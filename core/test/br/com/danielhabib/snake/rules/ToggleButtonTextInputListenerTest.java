@@ -11,7 +11,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
-public class ToggleButtonTextInputListenerTest {
+public class ToggleButtonTextInputListenerTest extends BaseTest {
 	@Mock
 	TextButton button;
 
@@ -29,7 +29,5 @@ public class ToggleButtonTextInputListenerTest {
 		verify(button).setText(Matchers.eq("off"));
 	}
 
-	private void touchDown(ToggleButtonTextInputListener listener) {
-		listener.touchDown(null, 0, 0, 0, 0);
-	}
+
 }

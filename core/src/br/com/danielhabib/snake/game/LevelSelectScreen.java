@@ -6,7 +6,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 
+import br.com.danielhabib.snake.rules.SoundManager;
+
 public class LevelSelectScreen extends AbstractScreen {
+
+	protected LevelSelectScreen(SoundManager sounds) {
+		super(sounds);
+	}
 
 	@Override
 	public void buildStage() {

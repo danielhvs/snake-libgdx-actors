@@ -11,10 +11,12 @@ import br.com.danielhabib.snake.rules.SnakeEvent.Type;
 public class SoundManager {
 	private SoundReader soundReader;
 	private Map<Type, Sound> sounds = new HashMap<Type, Sound>();
+	private boolean enabled;
 	public static final SoundManager NoSoundManager = new NOPSoundManager(null);
 
 	public SoundManager(SoundReader soundReader) {
 		this.soundReader = soundReader;
+		this.enabled = true;
 	}
 
 	public void put(Type type, String fileName) {
@@ -22,7 +24,10 @@ public class SoundManager {
 	}
 
 	public void play(Type type) {
-		sounds.get(type).play();
+		if (enabled) {
+			long played = sounds.get(type).play();
+			System.out.println("Played? " + played);
+		}
 	}
 
 	public void dispose() {
@@ -44,6 +49,18 @@ public class SoundManager {
 		public void dispose() {
 		}
 
+	}
+
+	public void disable() {
+		this.enabled = false;
+	}
+
+	public void enable() {
+		this.enabled = true;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
 	}
 
 }
