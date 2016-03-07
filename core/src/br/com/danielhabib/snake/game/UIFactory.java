@@ -45,4 +45,11 @@ public class UIFactory {
 		return new Label("", labelStyle);
 	}
 
+	public static void setTitle(Label title, Table table) {
+		title.setFontScale(1);
+		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		table.add(title);
+		table.getCell(title).spaceBottom(100);
+	}
+
 }

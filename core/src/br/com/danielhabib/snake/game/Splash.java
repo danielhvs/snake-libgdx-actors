@@ -25,14 +25,8 @@ public class Splash extends AbstractScreen {
 		VisTextButton configButton = ButtonFactory.newButton("Change stuff...");
 		VisTextButton quitButton = ButtonFactory.newButton("I'm out!");
 
-		// Use Vistable?
 		Table table = new Table();
-
-		title.setFontScale(1);
-		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		table.add(title);
-		table.getCell(title).spaceBottom(100);
-
+		UIFactory.setTitle(title, table);
 		UIFactory.addButtonToTable(playButton, table);
 		UIFactory.addButtonToTable(levelButton, table);
 		UIFactory.addButtonToTable(configButton, table);

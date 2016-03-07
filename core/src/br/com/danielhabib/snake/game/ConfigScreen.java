@@ -1,6 +1,5 @@
 package br.com.danielhabib.snake.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -26,12 +25,7 @@ public class ConfigScreen extends AbstractScreen {
 		VisTextButton backButton = ButtonFactory.newButton("<-- Back");
 
 		Table table = new Table();
-
-		title.setFontScale(1);
-		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		table.add(title);
-		table.getCell(title).spaceBottom(100);
-
+		UIFactory.setTitle(title, table);
 		UIFactory.addButtonToTable(soundButton, table);
 		UIFactory.addButtonToTable(musicButton, table);
 		UIFactory.addButtonToTable(backButton, table);
