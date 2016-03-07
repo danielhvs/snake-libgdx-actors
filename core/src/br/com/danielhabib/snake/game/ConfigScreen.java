@@ -1,8 +1,6 @@
 package br.com.danielhabib.snake.game;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 
 import br.com.danielhabib.snake.rules.CompositeInputListener;
@@ -18,17 +16,11 @@ public class ConfigScreen extends AbstractScreen {
 
 	@Override
 	public void buildStage() {
-		Label title = new VisLabel("Let's change some stuff...");
-
 		VisTextButton soundButton = ButtonFactory.newButton(sounds.isEnabled() ? "Sound" : "NO_SOUND");
 		VisTextButton musicButton = ButtonFactory.newButton("Music");
 		VisTextButton backButton = ButtonFactory.newButton("<-- Back");
 
-		Table table = new Table();
-		UIFactory.setTitle(title, table);
-		UIFactory.addButtonToTable(soundButton, table);
-		UIFactory.addButtonToTable(musicButton, table);
-		UIFactory.addButtonToTable(backButton, table);
+		Table table = UIFactory.newMenu("Let's change some stuff...", soundButton, musicButton, backButton);
 
 		soundButton.addListener(new CompositeInputListener(
 				new ToggleButtonTextInputListener(soundButton, "Sound", "NO_SOUND"),
@@ -37,7 +29,6 @@ public class ConfigScreen extends AbstractScreen {
 		backButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
 
 		addActor(table);
-
 	}
 
 }

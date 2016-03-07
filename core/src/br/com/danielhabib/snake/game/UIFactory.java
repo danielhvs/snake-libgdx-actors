@@ -7,12 +7,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class UIFactory {
 
@@ -30,7 +31,7 @@ public class UIFactory {
 		};
 	}
 
-	public static void addButtonToTable(VisTextButton playButton, Table table) {
+	private static void addButtonToTable(Button playButton, Table table) {
 		int width = Gdx.graphics.getWidth() / 4;
 		int height = Gdx.graphics.getHeight() / 10;
 		table.row();
@@ -45,11 +46,23 @@ public class UIFactory {
 		return new Label("", labelStyle);
 	}
 
-	public static void setTitle(Label title, Table table) {
+	private static void setTitle(Label title, Table table) {
 		title.setFontScale(1);
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		table.add(title);
 		table.getCell(title).spaceBottom(100);
+	}
+
+	public static Table newMenu(String titleText, Button... buttons) {
+		Table table = new Table();
+		Label title = new VisLabel("OMG! Crazy Snakes!");
+		UIFactory.setTitle(title, table);
+
+		for (Button button : buttons) {
+			addButtonToTable(button, table);
+		}
+
+		return table;
 	}
 
 }

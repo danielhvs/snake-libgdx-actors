@@ -25,11 +25,11 @@ public class SoundManager {
 
 	public void play(Type type) {
 		if (enabled) {
-			long played = sounds.get(type).play();
-			System.out.println("Played? " + played);
+			sounds.get(type).play();
 		}
 	}
 
+	// FIXME: It never disposes yet...
 	public void dispose() {
 		Collection<Sound> allSounds = sounds.values();
 		for (Sound sound : allSounds) {
