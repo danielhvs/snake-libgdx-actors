@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 import br.com.danielhabib.snake.rules.Snake;
+import br.com.danielhabib.snake.rules.SnakeTimer;
 import br.com.danielhabib.snake.rules.SoundManager;
 
 public abstract class GameScreen extends AbstractScreen {
@@ -62,6 +63,8 @@ public abstract class GameScreen extends AbstractScreen {
 		BitmapFont font = new BitmapFont();
 		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
 		fpsLabel = new FpsCountingLabel("", labelStyle);
+		SnakeTimer timer = new SnakeTimer(UIFactory.newLabel());
+		addActor(timer);
 		addActor(fpsLabel);
 	}
 
