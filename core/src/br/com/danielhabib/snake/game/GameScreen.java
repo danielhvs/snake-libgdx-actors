@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
@@ -16,11 +17,13 @@ public abstract class GameScreen extends AbstractScreen {
 
 	protected GameScreen(SoundManager sounds) {
 		super(sounds);
+		uiStage = new Stage();
 	}
 
 	private boolean paused = false;
 	protected Snake snake;
 	private Label fpsLabel;
+	private Stage uiStage;
 
 	@Override
 	public void render(float delta) {
@@ -30,11 +33,13 @@ public abstract class GameScreen extends AbstractScreen {
 		if (!paused) {
 			act(delta);
 		}
+		uiStage.act(delta);
 
 		getCamera().position.set(calculateXCamera(), calculateYCamera(), 0f);
 		getCamera().update();
 		getBatch().setProjectionMatrix(getCamera().combined);
 
+		uiStage.draw();
 		draw();
 	}
 
@@ -63,9 +68,13 @@ public abstract class GameScreen extends AbstractScreen {
 		BitmapFont font = new BitmapFont();
 		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
 		fpsLabel = new FpsCountingLabel("", labelStyle);
-		SnakeTimer timer = new SnakeTimer(UIFactory.newLabel());
-		addActor(timer);
+		buildUiStage();
 		addActor(fpsLabel);
+	}
+
+	private void buildUiStage() {
+		SnakeTimer timer = new SnakeTimer(UIFactory.newLabel());
+		uiStage.addActor(timer);
 	}
 
 	@Override
