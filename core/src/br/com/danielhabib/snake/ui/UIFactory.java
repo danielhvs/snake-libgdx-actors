@@ -58,7 +58,7 @@ public class UIFactory {
 
 	public static Table newMenu(String titleText, Button... buttons) {
 		Table table = new Table();
-		Label title = new VisLabel("OMG! Crazy Snakes!");
+		Label title = new VisLabel(titleText);
 		UIFactory.setTitle(title, table);
 
 		for (Button button : buttons) {

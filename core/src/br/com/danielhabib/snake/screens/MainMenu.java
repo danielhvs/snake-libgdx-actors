@@ -10,9 +10,9 @@ import br.com.danielhabib.snake.sound.SoundManager;
 import br.com.danielhabib.snake.ui.ButtonFactory;
 import br.com.danielhabib.snake.ui.UIFactory;
 
-public class Splash extends AbstractScreen {
+public class MainMenu extends AbstractScreen {
 
-	public Splash(SoundManager sounds) {
+	public MainMenu(SoundManager sounds) {
 		super(sounds);
 	}
 

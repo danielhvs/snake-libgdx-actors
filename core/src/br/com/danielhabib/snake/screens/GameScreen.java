@@ -10,10 +10,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.sound.SoundManager;
+import br.com.danielhabib.snake.ui.ButtonFactory;
 import br.com.danielhabib.snake.ui.FpsCountingLabel;
 import br.com.danielhabib.snake.ui.SnakeTimer;
 import br.com.danielhabib.snake.ui.UIFactory;
@@ -84,8 +87,20 @@ public abstract class GameScreen extends AbstractScreen {
 	}
 
 	private void buildUiStage() {
-		SnakeTimer timer = new SnakeTimer(UIFactory.newLabel());
-		uiStage.addActor(timer);
+		SnakeTimer timer = new SnakeTimer();
+
+		VisTextButton playButton = ButtonFactory.newButton("Menu");
+		playButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
+
+		Table table = new Table();
+		// FIXME size?
+		float entitySize = 32f;
+		table.setBounds(0, Gdx.graphics.getHeight() - entitySize, Gdx.graphics.getWidth(), entitySize);
+		table.left();
+
+		table.add(timer);
+		table.add(playButton).expandX().right();
+		uiStage.addActor(table);
 	}
 
 	@Override
@@ -93,6 +108,7 @@ public abstract class GameScreen extends AbstractScreen {
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(this);
 		multiplexer.addProcessor(new SnakeUIInputProcessor(this));
+		multiplexer.addProcessor(uiStage);
 		Gdx.input.setInputProcessor(multiplexer);
 	}
 

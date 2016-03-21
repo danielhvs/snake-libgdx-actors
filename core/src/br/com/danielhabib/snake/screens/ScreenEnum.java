@@ -7,7 +7,7 @@ public enum ScreenEnum {
 	MAIN_MENU {
 		@Override
 		public AbstractScreen getScreen(SoundManager soundManager, Object... params) {
-			return new Splash(soundManager);
+			return new MainMenu(soundManager);
 		}
 	},
 
