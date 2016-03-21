@@ -11,7 +11,9 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.audio.Sound;
 
-import br.com.danielhabib.snake.rules.SnakeEvent.Type;
+import br.com.danielhabib.snake.listeners.SnakeEvent.Type;
+import br.com.danielhabib.snake.sound.SoundManager;
+import br.com.danielhabib.snake.sound.SoundReader;
 
 public class SoundManagerTest {
 	@Mock

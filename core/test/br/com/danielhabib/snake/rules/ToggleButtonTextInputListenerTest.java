@@ -11,6 +11,8 @@ import org.mockito.MockitoAnnotations;
 
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
+import br.com.danielhabib.snake.listeners.ToggleButtonTextInputListener;
+
 public class ToggleButtonTextInputListenerTest extends BaseTest {
 	@Mock
 	TextButton button;

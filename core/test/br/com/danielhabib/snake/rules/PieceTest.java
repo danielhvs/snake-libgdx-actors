@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import com.badlogic.gdx.math.Vector2;
 
+import br.com.danielhabib.snake.entity.Piece;
+
 public class PieceTest extends BaseTest {
 
 	@Test

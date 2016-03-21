@@ -2,6 +2,8 @@ package br.com.danielhabib.snake.rules;
 
 import static org.junit.Assert.assertEquals;
 
+import br.com.danielhabib.snake.listeners.SnakeEvent;
+
 public class PoisonedFruitRuleTest extends IRuleTest {
 
 	@Override

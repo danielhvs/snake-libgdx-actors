@@ -12,6 +12,8 @@ import org.mockito.MockitoAnnotations;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 
+import br.com.danielhabib.snake.listeners.CompositeInputListener;
+
 public class CompositeInputListenerTest extends BaseTest {
 	@Mock
 	InputListener listener1;

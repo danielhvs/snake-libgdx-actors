@@ -3,6 +3,8 @@ package br.com.danielhabib.snake.rules;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import br.com.danielhabib.snake.listeners.SnakeEvent;
+
 public class BoingMovingRules extends ARule {
 	public BoingMovingRules(Stage stage) {
 		super(stage);

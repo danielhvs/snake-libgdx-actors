@@ -8,6 +8,8 @@ import org.junit.Test;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import br.com.danielhabib.snake.entity.Piece;
+
 public class SnakeTest extends BaseTest {
 
 	@Ignore("See later when the application is stable")

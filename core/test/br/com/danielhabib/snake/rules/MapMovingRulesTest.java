@@ -8,6 +8,10 @@ import org.mockito.Mock;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import br.com.danielhabib.snake.entity.Entity;
+import br.com.danielhabib.snake.entity.Piece;
+import br.com.danielhabib.snake.entity.StaticEntity;
+
 public class MapMovingRulesTest extends BaseTest {
 	private static final Vector2 ORIGIN = new Vector2(0, 0);
 

@@ -6,6 +6,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import br.com.danielhabib.snake.sound.SoundConfigInputListener;
+import br.com.danielhabib.snake.sound.SoundManager;
+
 public class SoundConfigInputListenerTest extends BaseTest {
 	@Mock
 	SoundManager soundManager;

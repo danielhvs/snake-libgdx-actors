@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import com.badlogic.gdx.utils.Array;
 
+import br.com.danielhabib.snake.listeners.SnakeEvent;
+
 public abstract class IRuleTest extends BaseTest {
 	@Before
 	public void setup() {

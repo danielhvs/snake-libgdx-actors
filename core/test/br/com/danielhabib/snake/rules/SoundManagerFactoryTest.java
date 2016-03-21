@@ -9,6 +9,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import br.com.danielhabib.snake.sound.SoundManager;
+import br.com.danielhabib.snake.sound.SoundManagerFactory;
+import br.com.danielhabib.snake.sound.SoundReader;
+
 public class SoundManagerFactoryTest {
 	@Mock
 	SoundReader soundReader;

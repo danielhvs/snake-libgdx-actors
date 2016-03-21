@@ -19,8 +19,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
-import br.com.danielhabib.snake.game.EntityBuilder;
-import br.com.danielhabib.snake.game.EventFirerEntity;
+import br.com.danielhabib.snake.entity.Entity;
+import br.com.danielhabib.snake.entity.EventFirerEntity;
+import br.com.danielhabib.snake.entity.Piece;
+import br.com.danielhabib.snake.entity.builders.EntityBuilder;
+import br.com.danielhabib.snake.listeners.SnakeEvent;
 
 public class BaseTest {
 	@Mock

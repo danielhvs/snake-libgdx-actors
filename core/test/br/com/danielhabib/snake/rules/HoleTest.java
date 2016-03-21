@@ -6,6 +6,9 @@ import org.junit.Ignore;
 
 import com.badlogic.gdx.math.Vector2;
 
+import br.com.danielhabib.snake.entity.StaticEntity;
+import br.com.danielhabib.snake.entity.WormHole;
+
 public class HoleTest extends BaseTest {
 	@Ignore("See later when the application is stable")
 	public void hole_ConstructorOnly_DefinesInitialAndFinalPosition() throws Exception {
