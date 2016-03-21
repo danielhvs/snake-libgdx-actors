@@ -45,8 +45,8 @@ import br.com.danielhabib.snake.entity.builders.SpeedBuilder;
 import br.com.danielhabib.snake.entity.builders.TimingFruitGenerator;
 import br.com.danielhabib.snake.entity.builders.WallBuilder;
 import br.com.danielhabib.snake.listeners.SnakeEvent;
-import br.com.danielhabib.snake.listeners.SnakeListener;
 import br.com.danielhabib.snake.listeners.SnakeEvent.Type;
+import br.com.danielhabib.snake.listeners.SnakeListener;
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
 import br.com.danielhabib.snake.rules.HoleMovingRules;
@@ -55,8 +55,8 @@ import br.com.danielhabib.snake.rules.MapMovingRules;
 import br.com.danielhabib.snake.rules.NOPRule;
 import br.com.danielhabib.snake.rules.Snake;
 import br.com.danielhabib.snake.rules.SnakeController;
-import br.com.danielhabib.snake.sound.SoundManager;
 import br.com.danielhabib.snake.rules.WorldManager;
+import br.com.danielhabib.snake.sound.SoundManager;
 
 public class SnakeScreen extends GameScreen {
 
@@ -180,9 +180,12 @@ public class SnakeScreen extends GameScreen {
 		piecesActors.addAll(pieces);
 		MapGenerator generator = new MapGenerator(actors, worldMap, piecesActors);
 		addActor(generator);
-		addActor(fruitGenerator);
-		addActor(poisonGenerator);
-		// addActor(wallGenerator);
+
+		if (level == 1) {
+			addActor(fruitGenerator);
+			addActor(poisonGenerator);
+			// addActor(wallGenerator);
+		}
 	}
 
 	private void addListenersTo(final Wall wall) {
