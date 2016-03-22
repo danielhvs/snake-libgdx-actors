@@ -199,7 +199,7 @@ public class SnakeScreen extends GameScreen {
 			@Override
 			public boolean handle(Actor source, Type type) {
 				if (type.equals(SnakeEvent.Type.win)) {
-					wall.addAction(Actions.sequence(bigAndSmallAction()));
+					wall.addAction(Actions.sequence(bigAndSmallRandomAction()));
 				}
 				return super.handle(source, type);
 			}
@@ -229,6 +229,17 @@ public class SnakeScreen extends GameScreen {
 				};
 			}
 
+			private RepeatAction bigAndSmallRandomAction() {
+				double random = Math.random();
+				float x = (float) (0.5f + random);// 1.5f
+				float y = (float) (0.5f + random);// 1.5f
+				return Actions.repeat(3,
+						Actions.sequence(
+								Actions.scaleTo(x, y, .5f),
+								Actions.scaleTo(1f, 1f, .5f)
+								));
+			}
+			
 			private RepeatAction bigAndSmallAction() {
 				return Actions.repeat(3,
 						Actions.sequence(
