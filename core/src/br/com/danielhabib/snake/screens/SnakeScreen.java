@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.utils.Array;
 
 import br.com.danielhabib.snake.animation.MapGenerator;
@@ -49,6 +50,7 @@ import br.com.danielhabib.snake.listeners.SnakeEvent.Type;
 import br.com.danielhabib.snake.listeners.SnakeListener;
 import br.com.danielhabib.snake.rules.AFruitRule;
 import br.com.danielhabib.snake.rules.AMovingRules;
+import br.com.danielhabib.snake.rules.FruitCountingGoal;
 import br.com.danielhabib.snake.rules.HoleMovingRules;
 import br.com.danielhabib.snake.rules.IRule;
 import br.com.danielhabib.snake.rules.MapMovingRules;
@@ -181,9 +183,13 @@ public class SnakeScreen extends GameScreen {
 		MapGenerator generator = new MapGenerator(actors, worldMap, piecesActors);
 		addActor(generator);
 
+		// FIXME: Separate level configurations.
 		if (level == 1) {
+			FruitCountingGoal goal = new FruitCountingGoal(2, wallsList.toArray());
+			goal.addListeners();
 			addActor(fruitGenerator);
 			addActor(poisonGenerator);
+			addActor(goal);
 			// addActor(wallGenerator);
 		}
 	}
@@ -191,24 +197,44 @@ public class SnakeScreen extends GameScreen {
 	private void addListenersTo(final Wall wall) {
 		wall.addListener(new SnakeListener() {
 			@Override
+			public boolean handle(Actor source, Type type) {
+				if (type.equals(SnakeEvent.Type.win)) {
+					wall.addAction(Actions.sequence(bigAndSmallAction()));
+				}
+				return super.handle(source, type);
+			}
+
+			@Override
 			public boolean colided(Actor actor, Event event) {
 				if (wall == actor) {
-					wall.addAction(
-							Actions.sequence(
-									Actions.repeat(3,
-											Actions.sequence(
-													Actions.scaleTo(1.5f, 1.5f, .5f),
-													Actions.scaleTo(1f, 1f, .5f)
-													)),
-									new Action() {
-										@Override
-										public boolean act(float delta) {
-											ScreenManager.getInstance().showScreen(ScreenEnum.GAME, 1);
-											return false;
-										}
-									}));
+					addAnimationTo(wall);
 				}
 				return super.revert(actor, event);
+			}
+
+			private void addAnimationTo(final Wall wall) {
+				wall.addAction(
+						Actions.sequence(
+								bigAndSmallAction(),
+								resetLevel()));
+			}
+
+			private Action resetLevel() {
+				return new Action() {
+					@Override
+					public boolean act(float delta) {
+						ScreenManager.getInstance().showScreen(ScreenEnum.GAME, level);
+						return false;
+					}
+				};
+			}
+
+			private RepeatAction bigAndSmallAction() {
+				return Actions.repeat(3,
+						Actions.sequence(
+								Actions.scaleTo(1.5f, 1.5f, .5f),
+								Actions.scaleTo(1f, 1f, .5f)
+								));
 			}
 		});
 	}

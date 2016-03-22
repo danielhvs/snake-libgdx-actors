@@ -21,7 +21,8 @@ public class SnakeEvent extends Event {
 		return type;
 	}
 
-	static public enum Type {
-		revert, addTail, removeTail, colided, speed, died
+	// FIXME: Separate it in other event types...? GoalEvent, GameEvent...
+	public static enum Type {
+		revert, addTail, removeTail, colided, speed, died, win
 	}
 }
