@@ -1,38 +1,23 @@
 package br.com.danielhabib.snake.screens;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.widget.VisDialog;
-import com.kotcrab.vis.ui.widget.VisLabel;
 
-public class SnakeUIInputProcessor extends InputAdapter {
+public class SnakeDialog {
 
 	private GameScreen screen;
 	private VisDialog dialog;
 
-	public SnakeUIInputProcessor(GameScreen screen) {
+	public SnakeDialog(GameScreen screen) {
 		this.screen = screen;
 		this.dialog = buildDialog();
 	}
 
-	@Override
-	public boolean keyDown(int keycode) {
-		if (Keys.ESCAPE == keycode) {
-			if (!showingExitDialog) {
-				showDialog();
-			}
-		}
-		return super.keyDown(keycode);
-	}
-
 	private static boolean showingExitDialog;
 
-	private void showDialog() {
+	public void showDialog() {
 		if (!showingExitDialog) {
 			dialog.show(screen);
 			Camera camera = screen.getCamera();
@@ -48,9 +33,7 @@ public class SnakeUIInputProcessor extends InputAdapter {
 	}
 
 	private VisDialog buildDialog() {
-		Label label = new VisLabel("Do you really want to leave?");
-		label.setAlignment(Align.center);
-		VisDialog dialog = new VisDialog("") {
+		VisDialog dialog = new VisDialog("Do you really want to leave?") {
 			@Override
 			protected void result(Object object) {
 				boolean exit = (Boolean) object;
@@ -79,7 +62,6 @@ public class SnakeUIInputProcessor extends InputAdapter {
 
 		};
 
-		dialog.getContentTable().add(label);
 		dialog.button("Yes", true);
 		dialog.button("No", false);
 		dialog.key(Input.Keys.ENTER, true);

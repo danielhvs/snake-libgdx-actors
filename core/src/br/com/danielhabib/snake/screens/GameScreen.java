@@ -27,10 +27,12 @@ public abstract class GameScreen extends AbstractScreen {
 	protected Snake snake;
 	private Label fpsLabel;
 	private Stage uiStage;
+	private SnakeDialog dialog;
 
 	protected GameScreen(SoundManager sounds) {
 		super(sounds);
 		uiStage = new Stage(new ScreenViewport(new OrthographicCamera()), new SpriteBatch());
+		dialog = new SnakeDialog(this);
 	}
 
 	@Override
@@ -40,8 +42,8 @@ public abstract class GameScreen extends AbstractScreen {
 
 		if (!paused) {
 			act(delta);
+			uiStage.act(delta);
 		}
-		uiStage.act(delta);
 
 		getCamera().position.set(calculateXCamera(), calculateYCamera(), 0f);
 		getCamera().update();
@@ -89,8 +91,8 @@ public abstract class GameScreen extends AbstractScreen {
 	private void buildUiStage() {
 		SnakeTimer timer = new SnakeTimer();
 
-		VisTextButton playButton = ButtonFactory.newButton("Menu");
-		playButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
+		VisTextButton menuButton = ButtonFactory.newButton("Menu");
+		menuButton.addListener(UIFactory.createDialogListener(dialog));
 
 		Table table = new Table();
 		// FIXME size?
@@ -99,7 +101,7 @@ public abstract class GameScreen extends AbstractScreen {
 		table.left();
 
 		table.add(timer);
-		table.add(playButton).expandX().right();
+		table.add(menuButton).expandX().right();
 		uiStage.addActor(table);
 	}
 
@@ -107,7 +109,6 @@ public abstract class GameScreen extends AbstractScreen {
 	public void show() {
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(this);
-		multiplexer.addProcessor(new SnakeUIInputProcessor(this));
 		multiplexer.addProcessor(uiStage);
 		Gdx.input.setInputProcessor(multiplexer);
 	}
