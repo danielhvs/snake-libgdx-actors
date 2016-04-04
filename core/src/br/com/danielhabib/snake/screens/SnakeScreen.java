@@ -185,7 +185,10 @@ public class SnakeScreen extends GameScreen {
 
 		// FIXME: Separate level configurations.
 		if (level == 1) {
-			FruitCountingGoal goal = new FruitCountingGoal(2, wallsList.toArray());
+			Array<Actor> winActors = Array.with();
+			winActors.addAll(wallsList);
+			winActors.add(snake);
+			FruitCountingGoal goal = new FruitCountingGoal(2, winActors.toArray());
 			goal.addListeners();
 			addActor(fruitGenerator);
 			addActor(poisonGenerator);
@@ -239,7 +242,7 @@ public class SnakeScreen extends GameScreen {
 								Actions.scaleTo(1f, 1f, .5f)
 								));
 			}
-			
+
 			private RepeatAction bigAndSmallAction() {
 				return Actions.repeat(3,
 						Actions.sequence(
@@ -299,7 +302,9 @@ public class SnakeScreen extends GameScreen {
 		snake.addListener(new SnakeListener() {
 			@Override
 			public boolean handle(Actor source, Type type) {
-				if (type.equals(SnakeEvent.Type.speed)) {
+				if (type.equals(SnakeEvent.Type.win)) {
+					snake.die();
+				} else if (type.equals(SnakeEvent.Type.speed)) {
 					sounds.play(Type.speed);
 					snake.incSpeed(1.1f);
 				}

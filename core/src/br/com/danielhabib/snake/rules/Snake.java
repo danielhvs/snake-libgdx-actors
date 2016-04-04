@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 
 import br.com.danielhabib.snake.entity.Piece;
+import br.com.danielhabib.snake.listeners.SnakeEvent;
 
 public class Snake extends Actor {
 
@@ -218,6 +219,7 @@ public class Snake extends Actor {
 	}
 
 	private void died() {
+		fire(new SnakeEvent(this, SnakeEvent.Type.finishDiedAnimation));
 		this.isDead = true;
 	}
 

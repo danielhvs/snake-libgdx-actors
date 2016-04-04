@@ -27,7 +27,7 @@ public abstract class GameScreen extends AbstractScreen {
 	protected Snake snake;
 	private Label fpsLabel;
 	private Stage uiStage;
-	private SnakeDialog dialog;
+	protected SnakeDialog dialog;
 
 	protected GameScreen(SoundManager sounds) {
 		super(sounds);
